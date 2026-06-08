@@ -1,0 +1,50 @@
+services:
+  # 1. MariaDB Database (Mapped to portfolio-db)
+  portfolio-db:
+    image: mariadb:lts
+    environment:
+      MARIADB_ROOT_PASSWORD: Sairam@1983
+      MARIADB_DATABASE: portfolio
+      MARIADB_USER: portfolio_user
+      MARIADB_PASSWORD: Sairam@1983
+    volumes:
+      - portfolio-db-data:/var/lib/mysql
+    networks:
+      - portfolio-network
+    restart: always
+
+  # 2. Portfolio Web Server (Exposed directly from GitHub)
+  portfolio-web:
+    build: .
+    depends_on:
+      - portfolio-db
+    environment:
+      - DATABASE_URL=mysql://portfolio_user:Sairam%401983@portfolio-db:3306/portfolio
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    networks:
+      - portfolio-network
+    restart: always
+
+  # 3. Database Dashboard (phpMyAdmin)
+  db-dashboard:
+    image: phpmyadmin:latest
+    depends_on:
+      - portfolio-db
+    environment:
+      PMA_HOST: portfolio-db
+      PMA_USER: portfolio_user
+      PMA_PASSWORD: Sairam@1983
+    ports:
+      - "8085:80"
+    networks:
+      - portfolio-network
+    restart: always
+
+volumes:
+  portfolio-db-data:
+
+networks:
+  portfolio-network:
+    driver: bridge

@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinamra Kumar | Product Leadership & AI Strategy</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="MIT-certified Product Leader with 20+ years of experience directing digital transformation, GenAI strategy, and product roadmap execution." />
+    <meta name="keywords" content="Vinamra Kumar, Product Management, Digital Transformation, AI Strategy, GenAI Roadmap, Product Leader, MIT, Sunrise, Lufthansa Systems, Air Traffic Control" />
+    <meta name="author" content="Vinamra Kumar" />
+    <link rel="canonical" href="https://vinamrakumar.com/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vinamrakumar.com/" />
+    <meta property="og:title" content="Vinamra Kumar | Product Leadership & AI Strategy" />
+    <meta property="og:description" content="MIT-certified Product Leader with 20+ years of experience directing digital transformation, GenAI strategy, and product roadmap execution." />
+    <meta property="og:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://vinamrakumar.com/" />
+    <meta property="twitter:title" content="Vinamra Kumar | Product Leadership & AI Strategy" />
+    <meta property="twitter:description" content="MIT-certified Product Leader with 20+ years of experience directing digital transformation, GenAI strategy, and product roadmap execution." />
+    <meta property="twitter:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+
+    <!-- Structured Data JSON-LD (Person Schema) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Vinamra Kumar",
+      "jobTitle": "Manager - Digital Transformation",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Sunrise GmbH"
+      },
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "Massachusetts Institute of Technology (MIT)"
+      },
+      "url": "https://vinamrakumar.com/",
+      "sameAs": [
+        "https://www.linkedin.com/in/vinamrakumar"
+      ],
+      "description": "MIT-certified Product Leader with 20+ years of experience leading complex, high-impact digital products and AI strategies."
+    }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@0.424.0/dist/umd/lucide.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Space Grotesk', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              accent: '#4ecca3',
+              surface: '#050505',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        :root {
+            --color-surface: #050505;
+            --color-ink: #ffffff;
+            --color-ink-faint: rgba(255, 255, 255, 0.4);
+            --color-accent: #4ecca3;
+            --color-border: rgba(255, 255, 255, 0.1);
+            --color-glass: rgba(255, 255, 255, 0.05);
+            --bg-gradient: radial-gradient(circle at 0% 0%, #1a1a2e 0%, #050505 50%), radial-gradient(circle at 100% 100%, #16213e 0%, #050505 50%);
+            color-scheme: dark;
+        }
+
+        [data-mode="light"] {
+            --color-surface: #f8f9fa;
+            --color-ink: #1a1a1a;
+            --color-ink-faint: #6c757d;
+            --color-border: rgba(0, 0, 0, 0.1);
+            --color-glass: rgba(255, 255, 255, 0.8);
+            --bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color-scheme: light;
+        }
+
+        [data-theme="luxury"] { --color-accent: #d4af37; }
+        [data-theme="luxury"][data-mode="dark"] { --bg-gradient: radial-gradient(circle at 0% 0%, #1a1600 0%, #050505 50%), radial-gradient(circle at 100% 100%, #1a1600 0%, #050505 50%); }
+
+        [data-theme="cyber"] { --color-accent: #ff00ff; }
+        [data-theme="cyber"][data-mode="dark"] { --bg-gradient: radial-gradient(circle at 0% 0%, #1a001a 0%, #050505 50%), radial-gradient(circle at 100% 100%, #001a1a 0%, #050505 50%); }
+
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--color-ink);
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.3s, color 0.3s;
+            padding-top: 76px;
+        }
+        
+        .glass {
+            background: var(--color-glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--color-border);
+        }
+
+        .glass-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .display-gradient {
+            background: linear-gradient(to right, var(--color-ink), var(--color-ink-faint));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: var(--color-ink); /* Fallback */
+        }
+
+        [data-mode="light"] .display-gradient {
+            background: none;
+            -webkit-text-fill-color: initial;
+            color: var(--color-ink);
+        }
+
+        .section-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--color-accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        .pill-tag {
+            padding: 4px 12px;
+            font-size: 11px;
+            border: 1px solid var(--color-border);
+            border-radius: 9999px;
+            color: var(--color-ink-faint);
+            transition: all 0.3s;
+        }
+        .pill-tag:hover {
+            color: var(--color-ink);
+            border-color: var(--color-ink);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #252525;
+            border-radius: 10px;
+        }
+        input, textarea {
+            color: var(--color-ink) !important;
+            background-color: var(--color-glass) !important;
+        }
+        input::placeholder, textarea::placeholder {
+            color: var(--color-ink-faint) !important;
+            opacity: 0.5;
+        }
+        .theme-switcher-container {
+            background-color: var(--color-surface);
+            border-color: var(--color-border);
+        }
+        /* Copy Protection */
+        .copy-protected {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        input, textarea {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+        }
+    </style>
+</head>
+<body class="font-sans">
+
+    <!-- Navigation -->
+    <nav class="glass-nav px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <a href="#" onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); event.preventDefault();" class="font-display font-bold text-xl tracking-tighter text-[var(--color-ink)] hover:text-[var(--color-accent)] transition-colors">VK</a>
+                
+                <!-- Mode Toggle -->
+                <div class="flex items-center border border-[var(--color-border)] rounded-full p-1 bg-[var(--color-ink)]/5 backdrop-blur-md shadow-xl shadow-black/20">
+                   <button onclick="toggleMode()" class="p-1.5 rounded-full text-[var(--color-ink)]/40 hover:text-[var(--color-ink)] transition-all flex items-center gap-2 px-3" title="Toggle Mode">
+                       <i data-lucide="sun" id="mode-icon" class="w-3.5 h-3.5"></i>
+                       <span id="mode-label" class="text-[10px] font-mono font-bold uppercase tracking-widest">Light</span>
+                   </button>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="#" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Home</a>
+                    <a href="#projects" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Projects</a>
+                    <a href="#experience" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Experience</a>
+                    <a href="#expertise" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Expertise</a>
+                    <a href="#contact" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Contact</a>
+                </div>
+                <a href="#contact" class="hidden md:inline-block px-5 py-2 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-full text-[11px] font-bold uppercase tracking-wider hover:bg-[var(--color-ink)]/90 transition-all font-mono">Get in touch</a>
+                
+                <!-- Hamburger Button (Mobile Only) -->
+                <button id="hamburger-btn" onclick="toggleMenu()" class="md:hidden p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/5 transition-all text-[var(--color-ink)] focus:outline-none cursor-pointer flex items-center justify-center" aria-label="Toggle menu" aria-expanded="false">
+                    <i data-lucide="menu" id="hamburger-icon" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Dropdown Overlay -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[var(--color-surface)]/95 backdrop-blur-xl border-b border-[var(--color-border)] md:hidden z-40 p-8 flex flex-col gap-6 shadow-2xl">
+            <div class="flex flex-col gap-2">
+                <a href="#" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Home</a>
+                <a href="#projects" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Projects</a>
+                <a href="#experience" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Experience</a>
+                <a href="#expertise" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Expertise</a>
+                <a href="#contact" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Contact</a>
+            </div>
+            <a href="#contact" onclick="toggleMenu()" class="w-full text-center py-4 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-2xl text-[11px] font-bold uppercase tracking-wider hover:opacity-90 transition-all font-mono">Get in touch</a>
+        </div>
+    </nav>
+
+    <main class="px-6 relative z-10 copy-protected">
+        <!-- Hero Section -->
+        <section class="max-w-6xl mx-auto pt-24 pb-32">
+            <div class="grid lg:grid-cols-[1fr_400px] gap-20 items-center">
+                <div>
+                    <span class="section-label mb-8 block">From Controlling Airspace to Controlling Roadmaps</span>
+                    <h1 class="text-7xl md:text-9xl font-bold mb-8 leading-[0.85] tracking-tighter uppercase display-gradient">
+                        Vinamra <br> Kumar
+                    </h1>
+                    <p class="max-w-2xl text-xl text-[var(--color-ink)]/50 font-light leading-relaxed mb-8">
+                        MIT-certified Product Leader with 20+ years of experience bridging business strategy with technical execution to unlock multi-million dollar value. Built NEXUS, an AI troubleshooting platform serving millions of customers at Sunrise GmbH, following a distinguished tenure at Lufthansa Systems and early career foundations in Air Traffic Control.
+                    </p>
+                    <p class="max-w-xl text-sm text-[var(--color-ink)]/30 font-light leading-relaxed mb-12 italic border-l-2 border-[var(--color-accent)]/20 pl-6">
+                        Targeting VP / Head of Digital Product & Transformation roles in Europe. Globally experienced, Swiss-based, and fluent in both engineering depth and boardroom strategy.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 items-center">
+                        <a href="#contact" class="flex items-center gap-2 group border border-[var(--color-ink)]/10 px-6 py-3 rounded-2xl hover:bg-[var(--color-ink)]/5 transition-all">
+                            <i data-lucide="mail" class="w-4 h-4 text-[var(--color-ink)]/40 group-hover:text-[var(--color-ink)] transition-colors"></i>
+                            <span class="text-sm font-medium text-[var(--color-ink)]">Contact Me</span>
+                        </a>
+                        <a href="https://www.linkedin.com/in/vinamrakumar" target="_blank" class="flex items-center gap-2 group border border-[var(--color-ink)]/10 px-6 py-3 rounded-2xl hover:bg-[var(--color-ink)]/5 transition-all">
+                            <i data-lucide="linkedin" class="w-4 h-4 text-[var(--color-ink-faint)] group-hover:text-[var(--color-ink)] transition-colors"></i>
+                            <span class="text-sm font-medium text-[var(--color-ink)]">LinkedIn</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative aspect-square">
+                    <div class="absolute inset-0 rounded-full border-2 border-[var(--color-ink)]/5 animate-[spin_30s_linear_infinite]"></div>
+                    <div class="absolute inset-4 rounded-full border border-[var(--color-ink)]/10"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-[85%] h-[85%] rounded-full glass overflow-hidden border-2 border-[var(--color-ink)]/20">
+                           <img src="hero_hq.jpg" alt="Vinamra Kumar" class="w-full h-full object-cover object-top" loading="eager">
+                        </div>
+                    </div>
+                    <div class="absolute top-10 right-0 w-16 h-16 glass rounded-2xl flex items-center justify-center border border-[var(--color-ink)]/20">
+                        <i data-lucide="award" class="w-8 h-8 text-[var(--color-accent)]"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Deep Dive -->
+        <section id="about" class="max-w-6xl mx-auto pb-32">
+            <div class="grid md:grid-cols-[1fr_2fr] gap-16 items-start">
+                <div>
+                    <span class="section-label">Professional Bio</span>
+                    <h2 class="text-4xl font-bold text-[var(--color-ink)] tracking-tight leading-tight uppercase">
+                        20+ Years of <br>
+                        <span class="text-[var(--color-ink)]/30 italic font-light">Product Leadership.</span>
+                    </h2>
+                </div>
+                <div class="text-lg text-[var(--color-ink)]/60 font-light leading-relaxed space-y-6">
+                    <p>
+                        Product Manager with a proven track record of owning product vision, 
+                        driving cross-functional execution, and delivering measurable outcomes in 
+                        ambiguous and evolving contexts. I specialize in AI-driven product development, 
+                        including GenAI-powered customer assistance platforms.
+                    </p>
+                    <p>
+                        My experience spans highly regulated, large-scale environments like telecom 
+                        (Sunrise GmbH) and aviation (Lufthansa Systems), where I lead teams across IT, 
+                        engineering, and business to design and validate MVPs from concept to rollout.
+                    </p>
+
+                    <!-- Leadership Philosophy Card -->
+                    <div class="p-8 border border-[var(--color-border)] rounded-3xl bg-[var(--color-glass)] backdrop-blur-md relative overflow-hidden mt-8">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-[var(--color-accent)]/5 blur-[80px] -mr-32 -mt-32 rounded-full"></div>
+                        <span class="text-[10px] font-mono text-[var(--color-accent)] uppercase tracking-wider mb-4 block font-bold">Leadership Philosophy</span>
+                        <p class="text-md text-[var(--color-ink)]/80 leading-relaxed font-light italic pl-4 border-l border-[var(--color-accent)]/30">
+                            "Most digital transformations fail — not because of the technology, but because the person leading it has never felt the cost of a system breaking down at 2AM with thousands of people depending on it. I have."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="max-w-6xl mx-auto pb-32">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="border-l border-[var(--color-ink)]/10 pl-6">
+                    <div class="text-3xl md:text-5xl font-display font-medium mb-1 tracking-tighter">CHF 10M</div>
+                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-accent)] mb-1">Financial Impact</div>
+                    <div class="text-[11px] text-[var(--color-ink)]/40 leading-tight">
+                        <div class="flex flex-col gap-1">
+                            <span>10M USD</span>
+                            <span>100Cr INR</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-l border-[var(--color-ink)]/10 pl-6">
+                    <div class="text-3xl md:text-5xl font-display font-medium mb-1 tracking-tighter">20%+</div>
+                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-accent)] mb-1">Cost Reduction</div>
+                    <div class="text-[11px] text-[var(--color-ink)]/20 italic">CAPEX & OPEX</div>
+                </div>
+                <div class="border-l border-[var(--color-ink)]/10 pl-6">
+                    <div class="text-3xl md:text-5xl font-display font-medium mb-1 tracking-tighter">20+ Yrs</div>
+                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-accent)] mb-1">Leadership</div>
+                    <div class="text-[11px] text-[var(--color-ink)]/20 italic">Industry Experience</div>
+                </div>
+                <div class="border-l border-[var(--color-ink)]/10 pl-6">
+                    <div class="text-3xl md:text-5xl font-display font-medium mb-1 tracking-tighter">5M+</div>
+                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-accent)] mb-1">Users</div>
+                    <div class="text-[11px] text-[var(--color-ink)]/20 italic">Impacted daily</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trusted By & Endorsements Section -->
+        <section id="credibility" class="max-w-6xl mx-auto pb-32">
+            <div class="text-center mb-16">
+                <span class="section-label inline-block">Strategic Trust & Career Credentials</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-[var(--color-ink)] tracking-tight leading-tight mt-3 uppercase">
+                    Credibility in <span class="text-[var(--color-ink)]/30 italic font-light">High-Impact Environments</span>
+                </h2>
+                <p class="text-[var(--color-ink)]/50 mt-4 max-w-xl mx-auto text-sm">
+                    Demonstrated leadership and verified execution across Swiss telecommunications, aviation safety, and global systems.
+                </p>
+            </div>
+
+            <!-- Corporate Brand Logos Grid -->
+            <div class="glass p-8 md:p-12 rounded-[32px] border border-[var(--color-ink)]/5">
+                <div class="text-center mb-10">
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--color-ink)]/30 font-mono font-bold">Landmark Organizations & Credentials</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-center justify-items-center">
+                    <!-- Sunrise -->
+                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
+                        <span class="font-sans font-bold text-base text-[var(--color-ink)] tracking-tight">Sunrise GmbH</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">Switzerland</span>
+                    </div>
+
+                    <!-- Lufthansa Systems -->
+                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
+                        <span class="font-sans font-bold text-base text-[var(--color-ink)] tracking-tight">Lufthansa Systems</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">LSY AG</span>
+                    </div>
+
+                    <!-- Airports Authority of India -->
+                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
+                        <span class="font-sans font-bold text-base text-[var(--color-ink)] tracking-tight">AAI</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">Airports Authority of India</span>
+                    </div>
+
+                    <!-- MIT Professional -->
+                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
+                        <span class="font-serif font-bold text-base italic text-[var(--color-ink)] tracking-tight">MIT Professional</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">Digital Transformation</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Competencies Bento -->
+        <section class="max-w-6xl mx-auto pb-32">
+            <span class="section-label mb-12 block">Core Competencies</span>
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="glass p-10 rounded-[32px] hover:bg-[var(--color-ink)]/[0.05] transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                        <i data-lucide="briefcase" class="w-6 h-6 text-[var(--color-accent)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-6">Leadership & Stakeholders</h3>
+                    <ul class="space-y-4 text-sm text-[var(--color-ink)]/50">
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>People Leadership</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>C-Level Engagement</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Product Transformation</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Vendor Relations</li>
+                    </ul>
+                </div>
+                <!-- Card 2 -->
+                <div class="glass p-10 rounded-[32px] hover:bg-[var(--color-ink)]/[0.05] transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                        <i data-lucide="cpu" class="w-6 h-6 text-[var(--color-accent)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-6">Product Management</h3>
+                    <ul class="space-y-4 text-sm text-[var(--color-ink)]/50">
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Vision & Roadmapping</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Customer Discovery</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>AI Tech Stack Deployment</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>GTM Strategy</li>
+                    </ul>
+                </div>
+                <!-- Card 3 -->
+                <div class="glass p-10 rounded-[32px] hover:bg-[var(--color-ink)]/[0.05] transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                        <i data-lucide="users" class="w-6 h-6 text-[var(--color-accent)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-6">Delivery & Execution</h3>
+                    <ul class="space-y-4 text-sm text-[var(--color-ink)]/50">
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>End-to-End Delivery</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>RAID & Risk Management</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>KPI & OKR Tracking</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Operational Efficiency</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expert Toolkit Gallery -->
+        <section class="max-w-6xl mx-auto pb-32">
+            <span class="section-label mb-12 block">Management Toolkit</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">JIRA</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">CONFLUENCE</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">MIRO</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">FIGJAM</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">TRELLO</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">MURAL</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">ALM OCTANE</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">SURVEYMONKEY</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">MENTIMETER</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">MS OFFICE</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">POWERBI</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">AZURE DEVOPS</div>
+            </div>
+        </section>
+
+        <!-- Projects Grid -->
+        <section id="projects" class="max-w-6xl mx-auto pb-32">
+            <span class="section-label mb-6 block">Featured Projects & Designs</span>
+            
+            <!-- Category Filter Buttons -->
+            <div class="flex flex-wrap gap-2.5 mt-6 mb-10" id="project-filters">
+                <button onclick="filterProjects('All')" class="filter-btn px-4 py-2 rounded-full text-[11px] font-mono uppercase tracking-widest transition-all border bg-[var(--color-ink)] text-[var(--color-surface)] border-[var(--color-ink)] shadow-md">All</button>
+                <button onclick="filterProjects('Telecom AI')" class="filter-btn px-4 py-2 rounded-full text-[11px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Telecom AI</button>
+                <button onclick="filterProjects('Aviation Software')" class="filter-btn px-4 py-2 rounded-full text-[11px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Aviation Software</button>
+                <button onclick="filterProjects('Digital Transformation')" class="filter-btn px-4 py-2 rounded-full text-[11px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Digital Transformation</button>
+            </div>
+
+            <!-- Project cards rendered dynamically from /api/projects -->
+            <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Skeleton loaders shown while fetching -->
+                <div class="project-skeleton h-[450px] rounded-[32px] glass border border-[var(--color-ink)]/5 animate-pulse"></div>
+                <div class="project-skeleton h-[450px] rounded-[32px] glass border border-[var(--color-ink)]/5 animate-pulse"></div>
+                <div class="project-skeleton h-[450px] rounded-[32px] glass border border-[var(--color-ink)]/5 animate-pulse"></div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="max-w-6xl mx-auto pb-32">
+            <span class="section-label mb-16 block text-center">Selected Career Path</span>
+            <!-- Experience cards rendered dynamically from /api/experiences -->
+            <div id="experience-list" class="space-y-6">
+                <!-- Skeleton loaders shown while fetching -->
+                <div class="experience-skeleton glass p-8 rounded-[32px] animate-pulse h-48"></div>
+                <div class="experience-skeleton glass p-8 rounded-[32px] animate-pulse h-48"></div>
+                <div class="experience-skeleton glass p-8 rounded-[32px] animate-pulse h-48"></div>
+            </div>
+        </section>
+
+        <!-- Expertise Section -->
+        <section id="expertise" class="max-w-6xl mx-auto pb-32">
+            <div class="grid md:grid-cols-2 gap-20">
+                <div>
+                    <span class="section-label mb-12 block">Core Competencies</span>
+                    <h2 class="text-4xl font-bold mb-12 tracking-tight leading-none text-[var(--color-ink)]">
+                        Innovation at the <br>
+                        <span class="text-[var(--color-ink)]/40 italic font-light">Intersection of IT & Business.</span>
+                    </h2>
+                    <div class="space-y-12">
+                        <div>
+                            <h4 class="text-sm font-semibold uppercase tracking-widest mb-6 text-[var(--color-ink)]/40">Leadership & Strategy</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="pill-tag text-[var(--color-ink)]/60 border-[var(--color-ink)]/10 hover:border-[var(--color-ink)]/30 hover:text-[var(--color-ink)]">People Leadership</span>
+                                <span class="pill-tag text-[var(--color-ink)]/60 border-[var(--color-ink)]/10 hover:border-[var(--color-ink)]/30 hover:text-[var(--color-ink)]">C-Level Engagement</span>
+                                <span class="pill-tag text-[var(--color-ink)]/60 border-[var(--color-ink)]/10 hover:border-[var(--color-ink)]/30 hover:text-[var(--color-ink)]">Product Roadmapping</span>
+                                <span class="pill-tag text-[var(--color-ink)]/60 border-[var(--color-ink)]/10 hover:border-[var(--color-ink)]/30 hover:text-[var(--color-ink)]">Change Management</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold uppercase tracking-widest mb-6 text-[var(--color-ink)]/40">Delivery & Agile</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="pill-tag text-[var(--color-ink)]/60 border-[var(--color-ink)]/10 hover:border-[var(--color-ink)]/30 hover:text-[var(--color-ink)]">End-to-End Delivery</span>
+                                <span class="pill-tag text-[var(--color-ink)]/60 border-[var(--color-ink)]/10 hover:border-[var(--color-ink)]/30 hover:text-[var(--color-ink)]">SAFe 6 (Agile at Scale)</span>
+                                <span class="pill-tag text-[var(--color-ink)]/60 border-[var(--color-ink)]/10 hover:border-[var(--color-ink)]/30 hover:text-[var(--color-ink)]">Stakeholder Management</span>
+                                <span class="pill-tag text-[var(--color-ink)]/60 border-[var(--color-ink)]/10 hover:border-[var(--color-ink)]/30 hover:text-[var(--color-ink)]">Operational Efficiency</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass p-12 rounded-[40px]">
+                    <i data-lucide="cpu" class="w-12 h-12 text-[var(--color-accent)]/40 mb-8"></i>
+                    <h3 class="text-3xl font-bold mb-6 italic font-display text-[var(--color-ink)]">GenAI Strategy</h3>
+                    <p class="text-[var(--color-ink)]/50 leading-relaxed mb-8">
+                        Actively leading GenAI-powered transformations, from defining MVP use cases 
+                        to full-scale deployment of LLM systems.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 border-b border-[var(--color-ink)]/5 pb-4">
+                            <span class="text-2xl font-display font-light text-[var(--color-ink)] opacity-20 italic">01</span>
+                            <span class="text-sm text-[var(--color-ink)]">Customer Assistant Platforms</span>
+                        </div>
+                        <div class="flex items-center gap-4 border-b border-[var(--color-ink)]/5 pb-4">
+                            <span class="text-2xl font-display font-light text-[var(--color-ink)] opacity-20 italic">02</span>
+                            <span class="text-sm text-[var(--color-ink)]">AI Deployment Strategy</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-2xl font-display font-light text-[var(--color-ink)] opacity-20 italic">03</span>
+                            <span class="text-sm text-[var(--color-ink)]">Data-Driven UX Optimization</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Credentials -->
+        <section id="credentials" class="max-w-6xl mx-auto pb-32">
+            <div class="flex flex-col md:flex-row gap-12">
+                <div class="flex-1">
+                    <span class="section-label mb-8 block">Education</span>
+                    <div class="space-y-8">
+                        <div class="border-l border-[var(--color-ink)]/10 pl-8">
+                            <h4 class="text-xl font-bold mb-1">MIT Professional Education</h4>
+                            <p class="text-[var(--color-ink)]/40 text-sm mb-1">Professional Certificate in Digital Transformation</p>
+                            <div class="text-[11px] font-mono text-[var(--color-ink)]/40 space-y-1 mt-2 mb-2">
+                                <p>Grade: <span class="text-[var(--color-accent)] font-bold">10/10</span></p>
+                                <p class="text-[10px] leading-relaxed">Focus: Strategy & Leadership, Generative & Agentic AI, Blockchain, IoT, Cloud, Cybersecurity, and Product Family Design.</p>
+                            </div>
+                            <p class="text-[11px] font-mono text-[var(--color-ink)]/20">2023 – 2024</p>
+                        </div>
+                        <div class="border-l border-[var(--color-ink)]/10 pl-8">
+                            <h4 class="text-xl font-bold mb-1">IMT India</h4>
+                            <p class="text-[var(--color-ink)]/40 text-sm mb-1">PGDM (IT & Marketing)</p>
+                            <p class="text-[11px] font-mono text-[var(--color-ink)]/20">2011 – 2014</p>
+                        </div>
+                        <div class="border-l border-[var(--color-ink)]/10 pl-8 opacity-60">
+                            <h4 class="text-xl font-bold mb-1">Dr. APJ Kalam University</h4>
+                            <p class="text-[var(--color-ink)]/40 text-sm mb-1">B.Tech (Electronics & Communication)</p>
+                            <p class="text-[11px] font-mono text-[var(--color-ink)]/20">2001 – 2005</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <span class="section-label mb-8 block">Certifications</span>
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- Google Cloud GenAI Leader -->
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.02] hover:border-[var(--color-ink)]/10 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug">Generative AI Leader Certification</span>
+                                <span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">Google Cloud</span>
+                            </div>
+                        </div>
+
+                        <!-- MIT Digital Transformation -->
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.02] hover:border-[var(--color-ink)]/10 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug">Professional Certificate in Digital Transformation</span>
+                                <span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">Massachusetts Institute of Technology (MIT)</span>
+                            </div>
+                        </div>
+
+                        <!-- SAFe 6 POPM -->
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.02] hover:border-[var(--color-ink)]/10 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug">Certified SAFe® 6 Product Owner/Product Manager</span>
+                                <span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">SAFe by Scaled Agile, Inc.</span>
+                            </div>
+                        </div>
+
+                        <!-- SAFe 5 POPM -->
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.02] hover:border-[var(--color-ink)]/10 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug">Certified SAFe® 5 Product Owner/Product Manager</span>
+                                <span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">SAFe by Scaled Agile, Inc.</span>
+                            </div>
+                        </div>
+
+                        <!-- CSPO -->
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.02] hover:border-[var(--color-ink)]/10 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug">Certified Scrum Product Owner (CSPO)</span>
+                                <span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">Scrum Alliance</span>
+                            </div>
+                        </div>
+
+                        <!-- CSM -->
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.02] hover:border-[var(--color-ink)]/10 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug">Certified ScrumMaster (CSM)</span>
+                                <span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">Scrum Alliance</span>
+                            </div>
+                        </div>
+
+                        <!-- telc Deutsch B1 -->
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.02] hover:border-[var(--color-ink)]/10 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug">Zertifikat Deutsch / telc Deutsch B1</span>
+                                <span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">telc GmbH - The European Language Certificates</span>
+                            </div>
+                        </div>
+
+                        <!-- PRINCE2 -->
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.02] hover:border-[var(--color-ink)]/10 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug">PRINCE2® Practitioner & Foundation in Project Management</span>
+                                <span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">AXELOS Global Best Practice</span>
+                            </div>
+                        </div>
+
+                        <!-- PANS OPS -->
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.02] hover:border-[var(--color-ink)]/10 transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug">PANS OPS Procedure Design</span>
+                                <span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">airsight GmbH</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="max-w-6xl mx-auto pb-32">
+            <div class="glass p-8 md:p-20 rounded-[48px] overflow-hidden relative bg-[var(--color-glass)]">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-[var(--color-accent)]/10 blur-[120px] -mr-48 -mt-48 rounded-full"></div>
+                
+                <!-- Header: Full Width -->
+                <div class="mb-16 relative z-10">
+                    <span class="section-label mb-8 block">Get in touch</span>
+                    <h2 class="text-5xl font-bold mb-8 tracking-tighter leading-none uppercase text-[var(--color-ink)]">
+                        Let's discuss <br> your project.
+                    </h2>
+                    <p class="text-[var(--color-ink)]/40 max-w-2xl text-lg">
+                        Have a project in mind? Let's discuss how we can work together to build something exceptional. Open for leadership roles and advisory on digital products and AI strategy.
+                    </p>
+                </div>
+
+                <!-- Content Split: 2 Columns -->
+                <div class="grid md:grid-cols-2 gap-16 relative z-10">
+                    <div class="flex flex-col gap-6">
+                        <div class="flex flex-col gap-4">
+                            <button id="email-reveal-btn" class="flex items-center text-left gap-4 group p-3 rounded-2xl transition-all focus:outline-none cursor-pointer hover:bg-[var(--color-ink)]/[0.02] w-full min-w-0">
+                                <div class="w-12 h-12 rounded-full border border-[var(--color-ink)]/10 flex-shrink-0 flex items-center justify-center group-hover:border-[var(--color-accent)]/30 transition-all group-hover:shadow-[0_0_15px_rgba(78,204,163,0.2)]">
+                                    <i data-lucide="mail" id="email-icon" class="w-5 h-5 text-[var(--color-ink)]/40"></i>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-ink)]/30 truncate">Email (Personal)</div>
+                                    <div id="email-display" class="font-medium text-[var(--color-ink)] transition-all duration-500 font-mono text-xs sm:text-sm md:text-base break-all">•••••••@vinamrakumar.com</div>
+                                    <div id="email-hint" class="text-[9px] text-[var(--color-accent)] opacity-60 font-mono truncate">Verify via Form to Access</div>
+                                </div>
+                            </button>
+
+                            <a href="https://www.linkedin.com/in/vinamrakumar" target="_blank" class="flex items-center gap-4 group p-3 rounded-2xl transition-all hover:bg-[var(--color-ink)]/[0.02] w-full min-w-0">
+                                <div class="w-12 h-12 rounded-full border border-[var(--color-ink)]/10 flex-shrink-0 flex items-center justify-center group-hover:border-[var(--color-accent)]/30 transition-all group-hover:shadow-[0_0_15px_rgba(78,204,163,0.2)]">
+                                    <i data-lucide="linkedin" class="w-5 h-5 text-[var(--color-ink-faint)] group-hover:text-[var(--color-accent)] transition-colors"></i>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-ink-faint)] truncate">LinkedIn</div>
+                                    <div class="font-medium text-[var(--color-ink)] group-hover:text-[var(--color-accent)] transition-colors text-xs sm:text-sm md:text-base truncate">vinamrakumar</div>
+                                    <div class="text-[9px] text-[var(--color-ink-faint)] opacity-40 font-mono tracking-tighter truncate">Connect professionally</div>
+                                </div>
+                            </a>
+
+                            <!-- Availability & Response Time Card -->
+                            <div class="flex flex-col gap-3 p-6 border border-[var(--color-border)] rounded-3xl bg-[var(--color-ink)]/[0.01] mt-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-[var(--color-accent)] animate-pulse"></div>
+                                    <span class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]">Status & Availability</span>
+                                </div>
+                                <p class="text-xs text-[var(--color-ink-faint)] leading-normal font-light">
+                                    Available for consulting roles, advisory mandates, and board consultations.
+                                </p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-[var(--color-accent)]"></i>
+                                    <span class="text-[10px] font-mono text-[var(--color-accent)] uppercase tracking-wider">Response time: &lt; 24 Hours</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="contact-form-container" class="relative">
+                        <form id="contact-form" class="space-y-6">
+                            <!-- Area of Interest Selection Pills -->
+                            <div class="space-y-2">
+                                <label class="text-[10px] uppercase tracking-widest text-[var(--color-ink)]/30 ml-2">Area of Interest</label>
+                                <div class="flex flex-wrap gap-2" id="interest-pills-container">
+                                    <button type="button" onclick="selectInterest(this, 'Advisory')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-[var(--color-ink)] text-[var(--color-surface)] border-[var(--color-ink)] font-bold shadow-md">Advisory</button>
+                                    <button type="button" onclick="selectInterest(this, 'Product Roles')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Product Roles</button>
+                                    <button type="button" onclick="selectInterest(this, 'Speaking')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Speaking</button>
+                                    <button type="button" onclick="selectInterest(this, 'General')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">General</button>
+                                </div>
+                                <input type="hidden" name="interest" id="selected-interest-input" value="Advisory">
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label class="text-[10px] uppercase tracking-widest text-[var(--color-ink)]/30 ml-2">Name</label>
+                                    <input required name="name" type="text" placeholder="Full Name" class="w-full bg-[var(--color-ink)]/5 border border-[var(--color-ink)]/10 rounded-2xl px-5 py-4 text-sm focus:outline-none focus:border-[var(--color-accent)]/30 transition-all text-[var(--color-ink)] font-mono">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] uppercase tracking-widest text-[var(--color-ink)]/30 ml-2">Email</label>
+                                    <input required name="email" type="email" placeholder="Email Address" class="w-full bg-[var(--color-ink)]/5 border border-[var(--color-ink)]/10 rounded-2xl px-5 py-4 text-sm focus:outline-none focus:border-[var(--color-accent)]/30 transition-all text-[var(--color-ink)] font-mono">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] uppercase tracking-widest text-[var(--color-ink)]/30 ml-2">Message (Required for Verification)</label>
+                                <textarea required name="message" id="message-textarea" maxlength="1000" oninput="updateMessageLength(this)" placeholder="Purpose of contact..." class="w-full bg-[var(--color-ink)]/5 border border-[var(--color-ink)]/10 rounded-2xl px-5 py-4 text-sm focus:outline-none focus:border-[var(--color-accent)]/30 transition-all text-[var(--color-ink)] font-mono h-24 resize-none"></textarea>
+                                <div class="flex justify-between text-[9px] font-mono text-[var(--color-ink)]/30 px-2">
+                                    <span>Limit: 1000 characters</span>
+                                    <span id="char-counter">0 / 1000</span>
+                                </div>
+                            </div>
+                            <div id="submit-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-500 rounded-2xl px-5 py-4 text-xs font-mono"></div>
+                            
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <button type="submit" class="flex-1 py-4 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-[20px] font-bold uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 font-mono shadow-md">
+                                    Send Message
+                                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <a href="https://calendar.app.google/y12ALrf78egXxniC9" target="_blank" class="flex-1 py-4 border border-[var(--color-border)] text-[var(--color-ink)] hover:bg-[var(--color-ink)]/5 rounded-[20px] font-bold uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 font-mono">
+                                    Schedule on Meet
+                                    <i data-lucide="video" class="w-3.5 h-3.5 text-[var(--color-accent)]"></i>
+                                </a>
+                            </div>
+
+                            <!-- GDPR Security Badge -->
+                            <div class="flex items-center justify-center gap-2 text-[9px] font-mono text-[var(--color-ink)]/30 tracking-tight pt-2">
+                                <i data-lucide="lock" class="w-3 h-3 text-[var(--color-accent)]/50"></i>
+                                <span>Stored locally on private Synology NAS (Switzerland) • GDPR Compliant</span>
+                            </div>
+                        </form>
+                        <div id="success-msg" class="hidden h-full flex flex-col items-center justify-center text-center p-8 bg-[var(--color-accent)]/5 border border-[var(--color-accent)]/20 rounded-[32px]">
+                            <div class="w-16 h-16 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                                <i data-lucide="check-circle-2" class="w-8 h-8 text-[var(--color-accent)]"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2">Verification Successful</h3>
+                            <p class="text-[var(--color-ink)]/40 text-sm">Thank you. The personal email has been successfully revealed.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="max-w-6xl mx-auto px-6 py-12 border-t border-[var(--color-border)] flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex flex-col gap-2">
+            <div class="text-[10px] font-mono tracking-widest text-[var(--color-ink)] opacity-40 uppercase">© <span id="copyright-year">2026</span> VINAMRA KUMAR. ALL RIGHTS RESERVED.</div>
+            <div id="db-status-container" class="hidden items-center gap-2 group cursor-help">
+                <div id="db-status-dot" class="w-1.5 h-1.5 rounded-full animate-pulse bg-red-500"></div>
+                <span id="db-status-text" class="text-[9px] font-mono uppercase tracking-tighter text-[var(--color-ink)] opacity-30">
+                    DB Offline
+                </span>
+            </div>
+        </div>
+        <div class="flex items-center gap-8 opacity-40">
+            <a href="javascript:void(0)" onclick="openPrivacy()" class="text-[10px] uppercase tracking-widest hover:text-[var(--color-ink)] transition-colors">Privacy</a>
+            <a href="#" class="text-[10px] uppercase tracking-widest hover:text-[var(--color-ink)] transition-colors text-[var(--color-ink)]">Swiss Professional</a>
+        </div>
+    </footer>
+
+    <!-- Case Study Modal -->
+    <div id="case-study-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-[32px] border border-[var(--color-border)] p-6 md:p-12 relative text-[var(--color-ink)] bg-[var(--color-surface)]">
+            <button onclick="closeCaseStudy()" class="absolute top-6 right-6 p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/10 transition-all cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div id="modal-content" class="space-y-8">
+                <!-- Dynamic Content Loaded via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-[32px] border border-[var(--color-border)] p-6 md:p-12 relative text-[var(--color-ink)] bg-[var(--color-surface)] bg-opacity-95">
+            <button onclick="closePrivacy()" class="absolute top-6 right-6 p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/10 transition-all cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="space-y-6 mb-12">
+                <span class="text-[9px] font-mono border border-[var(--color-border)] px-3 py-1 rounded-full uppercase tracking-widest text-[var(--color-accent)] font-bold">Legal & Compliance</span>
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tighter text-[var(--color-ink)] uppercase leading-none">Privacy Policy & <br/><span class="text-[var(--color-ink)]/30 italic font-light">Terms of Use</span></h2>
+                <p class="text-md text-[var(--color-ink-faint)] font-light leading-relaxed max-w-2xl">This policy outlines how data is handled on this site, GDPR compliance details, and the intellectual property protection (copyright and design) governing the contents.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6 p-6 border border-[var(--color-border)] rounded-2xl bg-[var(--color-ink)]/[0.01] mb-12">
+                <div class="flex flex-col gap-2">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-[var(--color-accent)]"></i>
+                    <h4 class="font-bold text-sm mt-1">Self-Hosted Security</h4>
+                    <p class="text-[10px] text-[var(--color-ink-faint)] leading-normal font-light">All data is stored locally on a secure private Synology NAS in Switzerland, with no third-party cloud hosting.</p>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <i data-lucide="eye-off" class="w-5 h-5 text-indigo-500/80"></i>
+                    <h4 class="font-bold text-sm mt-1">Zero Tracking Cookies</h4>
+                    <p class="text-[10px] text-[var(--color-ink-faint)] leading-normal font-light">This site does not use third-party analytics cookies. Link clicks are tracked locally and anonymously.</p>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <i data-lucide="lock" class="w-5 h-5 text-emerald-500/80"></i>
+                    <h4 class="font-bold text-sm mt-1">Strict Data Privacy</h4>
+                    <p class="text-[10px] text-[var(--color-ink-faint)] leading-normal font-light">Contact information is used solely to verify identity and communicate with you. It is never sold or shared.</p>
+                </div>
+            </div>
+
+            <div class="space-y-8 text-[var(--color-ink)]/80 font-light leading-relaxed text-sm">
+                <div class="space-y-2">
+                    <h3 class="font-bold text-base text-[var(--color-ink)]">1. Data Collection & Usage</h3>
+                    <p class="pl-4">We collect minimal personal data to ensure communication security and operational integrity:</p>
+                    <ul class="list-disc pl-8 space-y-1 text-xs">
+                        <li><strong>Contact Information:</strong> Collected name, email address, and message. Used solely to enable professional communication.</li>
+                        <li><strong>Usage Analytics:</strong> Anonymous tracking of interactive events (link clicks) stored locally.</li>
+                    </ul>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-bold text-base text-[var(--color-ink)]">2. GDPR & Swiss FADP Compliance</h3>
+                    <p class="pl-4">Aligned with Swiss Federal Act on Data Protection (FADP) and GDPR. You have the right to access and request erasure of your data at any time.</p>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-bold text-base text-[var(--color-ink)]">3. Intellectual Property & Copy Protection</h3>
+                    <p class="pl-4">All content is the exclusive intellectual property of <strong>Vinamra Kumar</strong>. Scrape protection measures are applied. Reproduction is strictly prohibited.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // ─── Case study detail data (rich content not stored in DB) ───────────────
+        // Keyed by project title for lookup after fetching projects from the API.
+        const CASE_STUDY_DETAILS = {
+            "NEXUS: AI Troubleshooting": {
+                challenge: "Support agents were overwhelmed with repetitive Wi-Fi and network diagnostics calls. Traditional diagnostic tools were fragmented, resulting in high average handling times and low customer satisfaction.",
+                solution: "Designed and launched 'NEXUS', a proactive, automated diagnostics portal. NEXUS interfaces directly with device telemetry APIs, runs automated line checks, and uses rule-based and predictive models to guide customers through self-resolution steps.",
+                results: [
+                    "Secured 2.4M CHF in annual operational savings.",
+                    "Achieved a 20% year-on-year improvement in digital self-care resolution.",
+                    "Optimized authentication and connection flow, boosting customer NPS from 70% to 90%."
+                ],
+                techStack: ["React", "TypeScript", "Node.js", "GraphQL", "Telemetry APIs", "Kubernetes", "Splunk"],
+                role: "Lead Product Owner (Digital Support Automation)",
+                timeline: "18 Months (2022 - 2024)",
+                impactMetric: "2.4M CHF Saved"
+            },
+            "GenAI Strategy & MVP": {
+                challenge: "Traditional IVRs and chatbots had rigid decision trees, leading to poor customer experiences. Implementing LLMs required solving issues related to hallucinations, GDPR compliance, and complex integration with legacy billing platforms.",
+                solution: "Devised a comprehensive GenAI roadmap, aligning C-level executives. Launched safe MVP trials utilizing Retrieval-Augmented Generation (RAG) and custom LLM gateway guardrails for privacy and safety.",
+                results: [
+                    "Delivered 8M+ CHF in annual efficiency savings through automated process execution.",
+                    "Successfully automated 6 high-volume, multi-turn customer care journeys.",
+                    "Maintained a near-zero hallucination rate using strict contextual embeddings and deterministic fallbacks."
+                ],
+                techStack: ["OpenAI API", "LangChain", "Vector Databases", "Python", "React", "GDPR Guardrails", "Azure Cloud"],
+                role: "Manager - Digital Transformation Strategy",
+                timeline: "Ongoing (Launched 2024)",
+                impactMetric: "8M+ CHF Value"
+            },
+            "Lido Aviation DMS": {
+                challenge: "Safety-critical flight navigation databases were produced using monolithic legacy applications. The cycle time to process and package worldwide aeronautical updates was 5 days, leaving no room for operational flexibility.",
+                solution: "Led a cross-border agile team of 15+ engineers to rebuild the data pipeline. Transitioned the monolith to cloud-native microservices, automated GIS verification layers, and created a unified navigation console.",
+                results: [
+                    "Reduced navigation database turnaround cycle from 5 days to 2 days (60% efficiency gain).",
+                    "Achieved zero data incidents across critical global airline update releases.",
+                    "Exceeded annual cost-saving targets by 40% through infrastructure modernization."
+                ],
+                techStack: ["Java / Spring Boot", "Docker", "Kafka", "PostgreSQL", "GIS Engine", "React Admin Portal"],
+                role: "Product Owner (Navigation Services)",
+                timeline: "4 Years (2018 - 2022)",
+                impactMetric: "60% Turnaround Gain"
+            }
+        };
+
+        // ─── Project & Experience rendering ──────────────────────────────────────
+
+        // Projects fetched from API, stored for filter/modal access
+        let projectsData = [];
+
+        function renderProjectCard(project, index) {
+            return `
+                <div data-category="${project.tag}" class="project-card group relative h-[450px] overflow-hidden rounded-[32px] glass border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all">
+                    <img src="${project.image}" alt="${project.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-20" referrerpolicy="no-referrer">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-[9px] font-mono border border-[var(--color-ink)]/20 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full uppercase tracking-widest text-[var(--color-accent)] font-bold">${project.tag}</span>
+                            <span class="text-[9px] font-mono bg-[var(--color-ink)] text-[var(--color-surface)] px-3 py-1 rounded-full uppercase tracking-widest font-bold">${project.stats}</span>
+                        </div>
+                        <h3 class="text-2xl font-display font-medium mb-4">${project.title}</h3>
+                        <p class="text-[var(--color-ink)]/60 text-[11px] leading-relaxed max-w-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            ${project.description}
+                        </p>
+                        <button onclick="openCaseStudy('${project.title.replace(/'/g, "\\'")}')" class="inline-flex items-center gap-1 text-[var(--color-accent)] text-xs font-mono uppercase tracking-widest cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:underline">
+                            View Case Study →
+                        </button>
+                    </div>
+                </div>`;
+        }
+
+        function renderExperienceCard(exp) {
+            const achievements = Array.isArray(exp.achievements) ? exp.achievements : JSON.parse(exp.achievements || '[]');
+            const achievementRows = achievements.map(a => `
+                <div class="flex gap-3 text-sm text-[var(--color-ink)]/50 leading-snug">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[var(--color-accent)]/40 shrink-0 mt-0.5"></i>
+                    <span>${a}</span>
+                </div>`).join('');
+
+            return `
+                <div class="glass p-8 rounded-[32px] hover:bg-[var(--color-ink)]/[0.08] transition-all">
+                    <div class="mb-6 md:mb-0">
+                        <span class="text-[11px] font-mono text-[var(--color-ink)]/30 block mb-2">${exp.period}</span>
+                        <div class="flex items-center gap-2 text-[var(--color-ink)]/40 text-sm">
+                            <i data-lucide="map-pin" class="w-3 h-3"></i>
+                            <span>${exp.location}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-display font-semibold mb-1">${exp.role}</h3>
+                        <p class="text-[var(--color-ink)]/40 font-medium mb-4">${exp.company}</p>
+                        <p class="text-[var(--color-ink)]/60 leading-relaxed max-w-3xl mb-8">${exp.description}</p>
+                        <div class="grid sm:grid-cols-2 gap-4">${achievementRows}</div>
+                    </div>
+                </div>`;
+        }
+
+        async function loadProjects() {
+            const grid = document.getElementById('projects-grid');
+            const filters = document.getElementById('project-filters');
+            try {
+                const res = await fetch('/api/projects');
+                if (!res.ok) throw new Error('API error');
+                projectsData = await res.json();
+
+                // Build dynamic filter buttons from unique tags
+                const tags = ['All', ...new Set(projectsData.map(p => p.tag))];
+                filters.innerHTML = tags.map((tag, i) =>
+                    `<button onclick="filterProjects('${tag}')" class="filter-btn px-4 py-2 rounded-full text-[11px] font-mono uppercase tracking-widest transition-all border ${i === 0 ? 'bg-[var(--color-ink)] text-[var(--color-surface)] border-[var(--color-ink)] shadow-md' : 'bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]'}">${tag}</button>`
+                ).join('');
+
+                grid.innerHTML = projectsData.map((p, i) => renderProjectCard(p, i)).join('');
+                if (window.lucide) lucide.createIcons();
+            } catch {
+                grid.innerHTML = '<p class="text-[var(--color-ink)]/30 text-sm font-mono col-span-3 text-center py-12">Projects unavailable. Please try again later.</p>';
+            }
+        }
+
+        async function loadExperiences() {
+            const list = document.getElementById('experience-list');
+            try {
+                const res = await fetch('/api/experiences');
+                if (!res.ok) throw new Error('API error');
+                const experiences = await res.json();
+                list.innerHTML = experiences.map(renderExperienceCard).join('');
+                if (window.lucide) lucide.createIcons();
+            } catch {
+                list.innerHTML = '<p class="text-[var(--color-ink)]/30 text-sm font-mono text-center py-12">Experience data unavailable. Please try again later.</p>';
+            }
+        }
+
+        window.openCaseStudy = (title) => {
+            const project = projectsData.find(p => p.title === title);
+            if (!project) return;
+            const details = CASE_STUDY_DETAILS[title] || {};
+            const data = { ...project, ...details };
+
+            const modal = document.getElementById('case-study-modal');
+            const content = document.getElementById('modal-content');
+            if (!modal || !content) return;
+
+            content.innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[9px] font-mono border border-[var(--color-border)] px-3 py-1 rounded-full uppercase tracking-widest text-[var(--color-accent)] font-bold">${data.tag}</span>
+                        <span class="text-[9px] font-mono bg-[var(--color-ink)] text-[var(--color-surface)] px-3 py-1 rounded-full uppercase tracking-widest font-bold">${data.stats}</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold tracking-tighter text-[var(--color-ink)] uppercase leading-none">${data.title}</h2>
+                    <p class="text-lg text-[var(--color-ink-faint)] font-light leading-relaxed">${data.description}</p>
+                </div>
+
+                <div class="h-[300px] rounded-2xl overflow-hidden relative">
+                    <img src="${data.image}" alt="${data.title}" class="w-full h-full object-cover opacity-60">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-surface)] to-transparent"></div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 p-6 border border-[var(--color-border)] rounded-2xl bg-[var(--color-ink)]/[0.01]">
+                    <div>
+                        <span class="text-[9px] font-mono uppercase tracking-wider text-[var(--color-ink-faint)]">Role Played</span>
+                        <p class="text-xs font-semibold mt-1">${data.role}</p>
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-mono uppercase tracking-wider text-[var(--color-ink-faint)]">Timeline</span>
+                        <p class="text-xs font-semibold mt-1">${data.timeline}</p>
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-mono uppercase tracking-wider text-[var(--color-ink-faint)]">Business Impact</span>
+                        <p class="text-xs font-semibold text-[var(--color-accent)] mt-1">${data.impactMetric}</p>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="space-y-3">
+                        <h3 class="text-xl font-bold flex items-center gap-2">
+                            <i data-lucide="shield-alert" class="w-5 h-5 text-red-500/70"></i>
+                            The Challenge
+                        </h3>
+                        <p class="text-sm text-[var(--color-ink)]/70 font-light leading-relaxed pl-7">${data.challenge}</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-xl font-bold flex items-center gap-2">
+                            <i data-lucide="cpu" class="w-5 h-5 text-[var(--color-accent)]"></i>
+                            The Strategy & Solution
+                        </h3>
+                        <p class="text-sm text-[var(--color-ink)]/70 font-light leading-relaxed pl-7">${data.solution}</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-xl font-bold flex items-center gap-2">
+                            <i data-lucide="trending-up" class="w-5 h-5 text-emerald-500/70"></i>
+                            Key Deliverables & Outcomes
+                        </h3>
+                        <div class="pl-7 space-y-3">
+                            ${data.results.map(r => `
+                                <div class="flex gap-3 items-start bg-[var(--color-ink)]/[0.01] p-3 rounded-xl border border-[var(--color-border)]">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
+                                    <span class="text-xs text-[var(--color-ink)]/80">${r}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-xl font-bold flex items-center gap-2">
+                            <i data-lucide="server" class="w-5 h-5 text-blue-500/70"></i>
+                            Technical Stack & Tools
+                        </h3>
+                        <div class="pl-7 flex flex-wrap gap-2">
+                            ${data.techStack.map(t => `<span class="px-3 py-1.5 bg-[var(--color-ink)]/[0.04] text-[var(--color-ink)] rounded-lg text-[10px] font-mono border border-[var(--color-border)]">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            if (window.lucide) lucide.createIcons();
+        };
+
+        window.closeCaseStudy = () => {
+            const modal = document.getElementById('case-study-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        };
+
+        // Project Filtering JavaScript Logic
+        window.filterProjects = (category) => {
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if (category === 'All' || cardCat === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Update button UI
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                const btnText = btn.textContent.trim();
+                if (btnText === category) {
+                    btn.className = "filter-btn px-4 py-2 rounded-full text-[11px] font-mono uppercase tracking-widest transition-all border bg-[var(--color-ink)] text-[var(--color-surface)] border-[var(--color-ink)] shadow-md";
+                } else {
+                    btn.className = "filter-btn px-4 py-2 rounded-full text-[11px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]";
+                }
+            });
+        };
+
+        // Initialize Lucide Icons
+        if (window.lucide) lucide.createIcons();
+
+        // Theme Management for HTML
+        window.toggleMode = () => {
+            const current = document.documentElement.getAttribute('data-mode') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-mode', next);
+            localStorage.setItem('theme-mode', next);
+            updateThemeUI();
+        };
+
+        function updateThemeUI() {
+            const mode = localStorage.getItem('theme-mode') || 'dark';
+            document.documentElement.setAttribute('data-mode', mode);
+            document.documentElement.setAttribute('data-theme', 'studio');
+            
+            // Update mode icon
+            const icon = document.getElementById('mode-icon');
+            if (icon) {
+                icon.setAttribute('data-lucide', mode === 'dark' ? 'sun' : 'moon');
+                if (window.lucide) lucide.createIcons();
+            }
+
+            // Update mode label if present
+            const label = document.getElementById('mode-label');
+            if (label) {
+                label.textContent = mode === 'dark' ? 'Light' : 'Dark';
+            }
+        }
+        updateThemeUI();
+
+        // Safe tracking helper
+        const trackEvent = (event, details = {}) => {
+            console.log("Event:", event, details);
+            fetch("/api/analytics", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ event, details, timestamp: new Date().toISOString() })
+            }).catch(err => console.warn("Analytics unavailable"));
+        };
+
+        // Smooth Scroll Logic (Avoids Hash in URL)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    history.replaceState(null, '', window.location.pathname);
+                } else {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                        history.replaceState(null, '', window.location.pathname);
+                    }
+                }
+            });
+        });
+
+        // Load dynamic data from API
+        loadProjects();
+        loadExperiences();
+
+        // Track page view
+        trackEvent("page_view_portfolio");
+
+        // DB Status Check
+        async function updateDbStatus() {
+            try {
+                const res = await fetch('/api/db-status');
+                const data = await res.json();
+                const container = document.getElementById('db-status-container');
+                const dot = document.getElementById('db-status-dot');
+                const text = document.getElementById('db-status-text');
+                
+                if (container && dot && text) {
+                    container.classList.remove('hidden');
+                    container.classList.add('flex');
+                    if (data.status === 'active') {
+                        dot.classList.add('bg-[#4ECC9F]');
+                        dot.classList.remove('bg-red-500');
+                        text.textContent = `${data.type} Persistent`;
+                        container.title = `Storage: ${data.persistence}`;
+                    } else {
+                        dot.classList.add('bg-red-500');
+                        dot.classList.remove('bg-[#4ECC9F]');
+                        text.textContent = 'Storage Offline';
+                    }
+                }
+            } catch (err) {
+                console.warn("DB status check failed");
+            }
+        }
+        updateDbStatus();
+
+        // Reveal Email logic
+        let isEmailRevealed = false;
+        let revealedEmailAddress = "contact@vinamrakumar.com";
+
+        function showRevealedEmail(emailStr) {
+            revealedEmailAddress = emailStr;
+            isEmailRevealed = true;
+            const display = document.getElementById('email-display');
+            const hint = document.getElementById('email-hint');
+            const emailIcon = document.getElementById('email-icon');
+            if (display) {
+                display.textContent = emailStr;
+                display.classList.add('text-[var(--color-accent)]');
+                if (hint) hint.textContent = "Verified & Accessible";
+                if (emailIcon) {
+                    emailIcon.classList.add('text-[var(--color-accent)]');
+                    emailIcon.classList.remove('text-[var(--color-ink)]/40');
+                }
+            }
+        }
+
+        const emailRevealBtn = document.getElementById('email-reveal-btn');
+        if (emailRevealBtn) {
+            emailRevealBtn.addEventListener('click', () => {
+                if (isEmailRevealed) {
+                    window.location.href = `mailto:${revealedEmailAddress}`;
+                } else {
+                    document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+
+        // Clean URL on load
+        if (window.location.hash) {
+            history.replaceState(null, '', window.location.pathname);
+        }
+
+        // Contact Form Logic
+        const form = document.getElementById('contact-form');
+        const successMsg = document.getElementById('success-msg');
+        const errorDiv = document.getElementById('submit-error');
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = form.querySelector('button[type="submit"]');
+                const originalHtml = btn.innerHTML;
+                
+                if (errorDiv) errorDiv.classList.add('hidden');
+                btn.innerHTML = '<span class="flex items-center gap-2"><svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sending...</span>';
+                btn.disabled = true;
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+
+                // Prepend interest area to message
+                const selectedInterest = document.getElementById('selected-interest-input')?.value || 'General';
+                data.message = `[Interest: ${selectedInterest}] ${data.message}`;
+
+                try {
+                    const response = await fetch('/api/contact', {
+                         method: 'POST',
+                         headers: { 'Content-Type': 'application/json' },
+                         body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        form.classList.add('hidden');
+                        successMsg.classList.remove('hidden');
+                        trackEvent("contact_form_success", { name: data.name });
+                        if (result.email) showRevealedEmail(result.email);
+                    } else { throw new Error(result.error || result.message || "Failed to send"); }
+                } catch (err) {
+                    console.error("Form error:", err);
+                    if (errorDiv) {
+                        errorDiv.textContent = `Submission failed: ${err.message}. Please try again.`;
+                        errorDiv.classList.remove('hidden');
+                    }
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                    if (window.lucide) lucide.createIcons();
+                }
+            });
+        }
+
+        // Track clicks
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                trackEvent("link_click", { 
+                    label: link.innerText.trim() || link.getAttribute('href'), 
+                    url: link.getAttribute('href') 
+                });
+            });
+        });
+
+        window.openPrivacy = () => {
+            const modal = document.getElementById('privacy-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                if (window.lucide) lucide.createIcons();
+            }
+        };
+
+        window.closePrivacy = () => {
+            const modal = document.getElementById('privacy-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        };
+
+        window.selectInterest = (button, val) => {
+            document.querySelectorAll('.interest-pill').forEach(btn => {
+                btn.className = "interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]";
+            });
+            button.className = "interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-[var(--color-ink)] text-[var(--color-surface)] border-[var(--color-ink)] font-bold shadow-md";
+            document.getElementById('selected-interest-input').value = val;
+        };
+
+        window.updateMessageLength = (textarea) => {
+            const counter = document.getElementById('char-counter');
+            if (counter) {
+                const len = textarea.value.length;
+                counter.textContent = `${len} / 1000`;
+                if (len > 900) {
+                    counter.className = "text-red-500 font-bold";
+                } else {
+                    counter.className = "";
+                }
+            }
+        };
+
+        // Toggle Mobile Menu Overlay
+        window.toggleMenu = () => {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('hamburger-icon');
+            const btn = document.getElementById('hamburger-btn');
+            if (menu) {
+                if (menu.classList.contains('hidden')) {
+                    menu.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                    if (btn) btn.setAttribute('aria-expanded', 'true');
+                    if (icon) {
+                        icon.setAttribute('data-lucide', 'x');
+                        if (window.lucide) lucide.createIcons();
+                    }
+                } else {
+                    menu.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    if (btn) btn.setAttribute('aria-expanded', 'false');
+                    if (icon) {
+                        icon.setAttribute('data-lucide', 'menu');
+                        if (window.lucide) lucide.createIcons();
+                    }
+                }
+            }
+        };
+
+        // Initialize Lucide Icons on load with a fallback
+        function initIcons() {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+            const yearSpan = document.getElementById('copyright-year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initIcons);
+        window.addEventListener('load', initIcons);
+        // Immediate call as well
+        initIcons();
+    </script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          

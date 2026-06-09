@@ -405,4 +405,47 @@ async function startServer() {
   // Admin: analytics summary + raw events
   app.get("/api/admin/analytics", requireAdmin, async (req, res) => {
     try {
-      const events = await prisma.analytics.findMany({ order
+      const events = await prisma.analytics.findMany({ orderBy: { createdAt: "desc" }, take: 500 });
+      const summary: Record<string, number> = {};
+      const pageViews: Record<string, number> = {};
+      for (const e of events) {
+        summary[e.event] = (summary[e.event] || 0) + 1;
+        if (e.event === "page_view") {
+          try { const d = JSON.parse(e.details); const p = d.path || "unknown"; pageViews[p] = (pageViews[p] || 0) + 1; } catch {}
+        }
+      }
+      res.json({ summary, pageViews, events });
+    } catch (error: any) { res.status(500).json({ error: error.message }); }
+  });
+
+  // Admin: delete a message
+  app.delete("/api/admin/messages/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      await prisma.message.delete({ where: { id } });
+      res.json({ success: true });
+    } catch (error: any) { res.status(500).json({ error: error.message }); }
+  });
+
+  // Multi-page routing
+  const pagesDir = path.join(process.cwd(), "pages");
+
+  app.get("/admin", (req, res) => res.sendFile(path.join(pagesDir, "admin.html")));
+  app.get("/", (req, res) => res.sendFile(path.join(pagesDir, "index.html")));
+  app.get("/services", (req, res) => res.sendFile(path.join(pagesDir, "services.html")));
+  app.get("/projects", (req, res) => res.sendFile(path.join(pagesDir, "projects.html")));
+  app.get("/experience", (req, res) => res.sendFile(path.join(pagesDir, "experience.html")));
+  app.get("/contact", (req, res) => res.sendFile(path.join(pagesDir, "contact.html")));
+
+  const legacyPath = path.join(process.cwd(), "portfolio.html");
+  app.get("/legacy", (req, res) => res.sendFile(legacyPath));
+
+  // Catch-all: redirect unknown routes to home
+  app.get("*", (req, res) => res.redirect("/"));
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+startServer();

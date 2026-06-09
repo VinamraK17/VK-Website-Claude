@@ -68,8 +68,15 @@
             <p class="text-xs mt-1" style="color:var(--ink-faint)">VK Portfolio · Internal Dashboard</p>
         </div>
         <div class="space-y-4">
-            <input type="password" id="pwd-input" placeholder="Enter admin password" class="w-full" autocomplete="current-password">
-            <p id="login-error" class="text-xs hidden" style="color:var(--danger)">Incorrect password.</p>
+            <div class="relative">
+                <input type="password" id="pwd-input" placeholder="Enter admin password" class="w-full pr-10" autocomplete="current-password">
+                <button type="button" onclick="toggleReveal()" id="reveal-btn" class="absolute right-3 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-80 transition-opacity" title="Show/hide password">
+                    <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg id="eye-off-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
+            <p id="login-error" class="text-xs hidden" style="color:var(--danger)">Incorrect password. Check your ADMIN_PASSWORD in the env file.</p>
+            <p id="login-warn" class="text-xs hidden" style="color:#f0a500">Admin password not configured on server (ADMIN_PASSWORD env var missing).</p>
             <button onclick="doLogin()" class="w-full py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all" style="background:var(--accent);color:#050505">Unlock Dashboard</button>
         </div>
     </div>
@@ -156,11 +163,25 @@ let TOKEN = '';
 let allMessages = [];
 let allEvents = [];
 
+function toggleReveal() {
+    const input = document.getElementById('pwd-input');
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    document.getElementById('eye-icon').classList.toggle('hidden', isPassword);
+    document.getElementById('eye-off-icon').classList.toggle('hidden', !isPassword);
+}
+
 async function doLogin() {
     const pwd = document.getElementById('pwd-input').value.trim();
     if (!pwd) return;
+    document.getElementById('login-error').classList.add('hidden');
+    document.getElementById('login-warn').classList.add('hidden');
     const res = await fetch('/api/admin/messages', { headers: { Authorization: 'Bearer ' + pwd } });
-    if (res.status === 401 || res.status === 503) {
+    if (res.status === 503) {
+        document.getElementById('login-warn').classList.remove('hidden');
+        return;
+    }
+    if (res.status === 401) {
         document.getElementById('login-error').classList.remove('hidden');
         return;
     }
@@ -184,6 +205,7 @@ function doLogout() {
 document.getElementById('pwd-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') doLogin();
     document.getElementById('login-error').classList.add('hidden');
+    document.getElementById('login-warn').classList.add('hidden');
 });
 
 window.addEventListener('DOMContentLoaded', () => {

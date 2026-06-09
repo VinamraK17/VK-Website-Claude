@@ -386,7 +386,7 @@ async function startServer() {
 
   // ── Admin middleware ──────────────────────────────────────────────────────
   function requireAdmin(req: any, res: any, next: any) {
-    const adminPassword = process.env.ADMIN_PASSWORD;
+    const adminPassword = process.env.ADMIN_PASSWORD?.trim();
     if (!adminPassword) return res.status(503).json({ error: "Admin access not configured." });
     const auth = req.headers.authorization || "";
     const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Vinamra Kumar</title>
+
+    <meta name="description" content="Key projects by Vinamra Kumar — NEXUS AI Troubleshooting (5M+ users), GenAI Strategy (8M+ CHF saved), Lido Aviation DMS (60% efficiency gain)." />
+    <meta name="author" content="Vinamra Kumar" />
+    <link rel="canonical" href="https://vinamrakumar.com/projects" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vinamrakumar.com/projects" />
+    <meta property="og:title" content="Projects | Vinamra Kumar" />
+    <meta property="og:description" content="Key projects: NEXUS AI Troubleshooting, GenAI Strategy, Lido Aviation DMS." />
+    <meta property="og:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://vinamrakumar.com/projects" />
+    <meta property="twitter:title" content="Projects | Vinamra Kumar" />
+    <meta property="twitter:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#050505">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Space Grotesk', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: { accent: '#4ecca3', surface: '#050505' }
+          }
+        }
+      }
+    </script>
+    <script src="https://unpkg.com/lucide@0.424.0/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="/shared.css">
+</head>
+<body class="font-sans">
+
+    <!-- Navigation -->
+    <nav class="glass-nav px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <a href="/" class="font-display font-bold text-xl tracking-tighter text-[var(--color-ink)] hover:text-[var(--color-accent)] transition-colors">VK</a>
+                <div class="flex items-center border border-[var(--color-border)] rounded-full p-1 bg-[var(--color-ink)]/5 backdrop-blur-md shadow-xl shadow-black/20">
+                    <button onclick="toggleMode()" class="p-1.5 rounded-full text-[var(--color-ink)]/40 hover:text-[var(--color-ink)] transition-all flex items-center gap-2 px-3" title="Toggle Mode">
+                        <i data-lucide="sun" id="mode-icon" class="w-3.5 h-3.5"></i>
+                        <span id="mode-label" class="text-[10px] font-mono font-bold uppercase tracking-widest">Light</span>
+                    </button>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="/" data-nav-path="/" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Home</a>
+                    <a href="/services" data-nav-path="/services" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Services</a>
+                    <a href="/projects" data-nav-path="/projects" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Projects</a>
+                    <a href="/experience" data-nav-path="/experience" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Experience</a>
+                    <a href="/contact" data-nav-path="/contact" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Contact</a>
+                </div>
+                <a href="/contact" class="hidden md:inline-block px-5 py-2 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-full text-[11px] font-bold uppercase tracking-wider hover:bg-[var(--color-ink)]/90 transition-all font-mono">Get in touch</a>
+                <button id="hamburger-btn" onclick="toggleMenu()" class="md:hidden p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/5 transition-all text-[var(--color-ink)] focus:outline-none cursor-pointer flex items-center justify-center" aria-label="Toggle menu" aria-expanded="false">
+                    <i data-lucide="menu" id="hamburger-icon" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[var(--color-surface)]/95 backdrop-blur-xl border-b border-[var(--color-border)] md:hidden z-40 p-8 flex flex-col gap-6 shadow-2xl">
+            <div class="flex flex-col gap-2">
+                <a href="/" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Home</a>
+                <a href="/services" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Services</a>
+                <a href="/projects" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Projects</a>
+                <a href="/experience" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Experience</a>
+                <a href="/contact" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Contact</a>
+            </div>
+            <a href="/contact" onclick="toggleMenu()" class="w-full text-center py-4 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-2xl text-[11px] font-bold uppercase tracking-wider hover:opacity-90 transition-all font-mono">Get in touch</a>
+        </div>
+    </nav>
+
+    <main class="px-6 relative z-10 copy-protected">
+
+        <!-- Page header -->
+        <section class="max-w-6xl mx-auto pt-24 pb-16">
+            <span class="section-label block mb-4">Featured Work</span>
+            <h1 class="text-6xl md:text-8xl font-bold tracking-tighter uppercase display-gradient leading-[0.85] mb-6">
+                Projects & <br><span class="text-[var(--color-ink)]/30 italic font-light">Case Studies.</span>
+            </h1>
+            <p class="text-[var(--color-ink)]/50 max-w-2xl text-lg font-light leading-relaxed">
+                A selection of high-impact digital products I have led from concept to production — across AI, aviation, and telecom.
+            </p>
+        </section>
+
+        <!-- Projects Grid -->
+        <section class="max-w-6xl mx-auto pb-32">
+            <div class="flex flex-wrap gap-2.5 mb-10" id="project-filters">
+                <div class="project-skeleton h-10 w-16 rounded-full glass border border-[var(--color-ink)]/5 animate-pulse"></div>
+            </div>
+            <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="project-skeleton h-[450px] rounded-[32px] glass border border-[var(--color-ink)]/5 animate-pulse"></div>
+                <div class="project-skeleton h-[450px] rounded-[32px] glass border border-[var(--color-ink)]/5 animate-pulse"></div>
+                <div class="project-skeleton h-[450px] rounded-[32px] glass border border-[var(--color-ink)]/5 animate-pulse"></div>
+            </div>
+        </section>
+
+        <!-- Core Competencies Bento -->
+        <section class="max-w-6xl mx-auto pb-32 fade-up">
+            <span class="section-label mb-12 block">Core Competencies</span>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass p-10 rounded-[32px] hover:bg-[var(--color-ink)]/[0.05] transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                        <i data-lucide="briefcase" class="w-6 h-6 text-[var(--color-accent)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-6">Leadership & Stakeholders</h3>
+                    <ul class="space-y-4 text-sm text-[var(--color-ink)]/50">
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>People Leadership</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>C-Level Engagement</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Product Transformation</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Vendor Relations</li>
+                    </ul>
+                </div>
+                <div class="glass p-10 rounded-[32px] hover:bg-[var(--color-ink)]/[0.05] transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                        <i data-lucide="cpu" class="w-6 h-6 text-[var(--color-accent)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-6">Product Management</h3>
+                    <ul class="space-y-4 text-sm text-[var(--color-ink)]/50">
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Vision & Roadmapping</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Customer Discovery</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>AI Tech Stack Deployment</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>GTM Strategy</li>
+                    </ul>
+                </div>
+                <div class="glass p-10 rounded-[32px] hover:bg-[var(--color-ink)]/[0.05] transition-all">
+                    <div class="w-12 h-12 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                        <i data-lucide="users" class="w-6 h-6 text-[var(--color-accent)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-6">Delivery & Execution</h3>
+                    <ul class="space-y-4 text-sm text-[var(--color-ink)]/50">
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>End-to-End Delivery</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>RAID & Risk Management</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>KPI & OKR Tracking</li>
+                        <li class="flex items-center gap-3"><div class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]/40"></div>Operational Efficiency</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Management Toolkit -->
+        <section class="max-w-6xl mx-auto pb-32 fade-up">
+            <span class="section-label mb-12 block">Management Toolkit</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">JIRA</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">CONFLUENCE</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">MIRO</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">FIGJAM</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">TRELLO</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">MURAL</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">ALM OCTANE</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">SURVEYMONKEY</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">MENTIMETER</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">MS OFFICE</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">POWERBI</div>
+                <div class="glass p-4 text-center rounded-xl border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all font-mono text-[10px] text-[var(--color-ink)]/60 tracking-widest font-bold uppercase">AZURE DEVOPS</div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-[var(--color-border)]">
+        <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col gap-2">
+                <span class="font-display font-bold text-lg tracking-tighter text-[var(--color-ink)]/60">VK</span>
+                <div class="text-[9px] font-mono tracking-widest text-[var(--color-ink)]/30 uppercase">© <span id="copyright-year">2026</span> Vinamra Kumar · Swiss Professional</div>
+                <div id="db-status-container" class="hidden items-center gap-2">
+                    <div id="db-status-dot" class="w-1.5 h-1.5 rounded-full animate-pulse bg-red-500"></div>
+                    <span id="db-status-text" class="text-[9px] font-mono uppercase tracking-tighter text-[var(--color-ink)]/30">DB Offline</span>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-6">
+                <a href="/services" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Services</a>
+                <a href="/projects" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Projects</a>
+                <a href="/experience" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Experience</a>
+                <a href="/contact" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Contact</a>
+                <a href="javascript:void(0)" onclick="openPrivacy()" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://www.linkedin.com/in/vinamrakumar" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--color-border)] text-[var(--color-ink)]/40 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)]/40 transition-all text-[10px] font-mono uppercase tracking-widest">
+                    <i data-lucide="linkedin" class="w-3 h-3"></i> LinkedIn
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Case Study Modal -->
+    <div id="case-study-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-[32px] border border-[var(--color-border)] p-6 md:p-12 relative text-[var(--color-ink)] bg-[var(--color-surface)]">
+            <button onclick="closeCaseStudy()" class="absolute top-6 right-6 p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/10 transition-all cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div id="modal-content" class="space-y-8"></div>
+        </div>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-[32px] border border-[var(--color-border)] p-6 md:p-12 relative text-[var(--color-ink)] bg-[var(--color-surface)] bg-opacity-95">
+            <button onclick="closePrivacy()" class="absolute top-6 right-6 p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/10 transition-all cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h2 class="text-3xl font-bold tracking-tighter text-[var(--color-ink)] uppercase mt-2 mb-6">Privacy Policy</h2>
+            <p class="text-[var(--color-ink)]/70 font-light leading-relaxed text-sm">All content is the exclusive intellectual property of Vinamra Kumar. Data is stored on a private Synology NAS in Switzerland (GDPR & Swiss FADP compliant). No third-party cookies. Contact data is never sold or shared.</p>
+        </div>
+    </div>
+
+    <!-- Shared JS -->
+    <script src="/shared.js"></script>
+
+    <!-- Page-specific JS: Projects -->
+    <script type="module">
+        const CASE_STUDY_DETAILS = {
+            "NEXUS: AI Troubleshooting": {
+                challenge: "Support agents were overwhelmed with repetitive Wi-Fi and network diagnostics calls. Traditional diagnostic tools were fragmented, resulting in high average handling times and low customer satisfaction.",
+                solution: "Designed and launched 'NEXUS', a proactive, automated diagnostics portal. NEXUS interfaces directly with device telemetry APIs, runs automated line checks, and uses rule-based and predictive models to guide customers through self-resolution steps.",
+                results: ["Secured 2.4M CHF in annual operational savings.", "Achieved a 20% year-on-year improvement in digital self-care resolution.", "Optimised authentication and connection flow, boosting customer NPS from 70% to 90%."],
+                techStack: ["React", "TypeScript", "Node.js", "GraphQL", "Telemetry APIs", "Kubernetes", "Splunk"],
+                role: "Lead Product Owner (Digital Support Automation)", timeline: "18 Months (2022 – 2024)", impactMetric: "2.4M CHF Saved"
+            },
+            "GenAI Strategy & MVP": {
+                challenge: "Traditional IVRs and chatbots had rigid decision trees, leading to poor customer experiences. Implementing LLMs required solving issues related to hallucinations, GDPR compliance, and complex integration with legacy billing platforms.",
+                solution: "Devised a comprehensive GenAI roadmap, aligning C-level executives. Launched safe MVP trials utilising Retrieval-Augmented Generation (RAG) and custom LLM gateway guardrails for privacy and safety.",
+                results: ["Delivered 8M+ CHF in annual efficiency savings through automated process execution.", "Successfully automated 6 high-volume, multi-turn customer care journeys.", "Maintained a near-zero hallucination rate using strict contextual embeddings and deterministic fallbacks."],
+                techStack: ["OpenAI API", "LangChain", "Vector Databases", "Python", "React", "GDPR Guardrails", "Azure Cloud"],
+                role: "Manager – Digital Transformation Strategy", timeline: "Ongoing (Launched 2024)", impactMetric: "8M+ CHF Value"
+            },
+            "Lido Aviation DMS": {
+                challenge: "Safety-critical flight navigation databases were produced using monolithic legacy applications. The cycle time to process and package worldwide aeronautical updates was 5 days, leaving no room for operational flexibility.",
+                solution: "Led a cross-border agile team of 15+ engineers to rebuild the data pipeline. Transitioned the monolith to cloud-native microservices, automated GIS verification layers, and created a unified navigation console.",
+                results: ["Reduced navigation database turnaround cycle from 5 days to 2 days (60% efficiency gain).", "Achieved zero data incidents across critical global airline update releases.", "Exceeded annual cost-saving targets by 40% through infrastructure modernisation."],
+                techStack: ["Java / Spring Boot", "Docker", "Kafka", "PostgreSQL", "GIS Engine", "React Admin Portal"],
+                role: "Product Owner (Navigation Services)", timeline: "4 Years (2018 – 2022)", impactMetric: "60% Turnaround Gain"
+            }
+        };
+
+        const FALLBACK_PROJECTS = [
+            { title: "NEXUS: AI Troubleshooting", tag: "Telecom AI", stats: "5M+ Users", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800", description: "Spearheaded the first AI-driven troubleshooting engine for technical support at Sunrise GmbH, significantly reducing support volume.", order: 0 },
+            { title: "GenAI Strategy & MVP", tag: "Digital Transformation", stats: "8M+ CHF Saved", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800", description: "Orchestrating the GenAI roadmap to automate high-volume customer journeys, defining the convergence of LLMs and business strategy.", order: 1 },
+            { title: "Lido Aviation DMS", tag: "Aviation Software", stats: "60% Efficiency", image: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?auto=format&fit=crop&q=80&w=800", description: "Led the transformation of legacy flight navigation data management systems into high-efficiency microservices for Lufthansa Systems.", order: 2 }
+        ];
+
+        let projectsData = [];
+
+        function renderProjectCard(project) {
+            return `<div data-category="${project.tag}" class="project-card group relative h-[450px] overflow-hidden rounded-[32px] glass border border-[var(--color-ink)]/5 hover:border-[var(--color-ink)]/20 transition-all">
+                <img src="${project.image}" alt="${project.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-20" referrerpolicy="no-referrer">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-[9px] font-mono border border-[var(--color-ink)]/20 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full uppercase tracking-widest text-[var(--color-accent)] font-bold">${project.tag}</span>
+                        <span class="text-[9px] font-mono bg-[var(--color-ink)] text-[var(--color-surface)] px-3 py-1 rounded-full uppercase tracking-widest font-bold">${project.stats}</span>
+                    </div>
+                    <h3 class="text-2xl font-display font-medium mb-4">${project.title}</h3>
+                    <p class="text-[var(--color-ink)]/60 text-[11px] leading-relaxed max-w-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity">${project.description}</p>
+                    <button onclick="openCaseStudy('${project.title.replace(/'/g, "\\'")}')" class="inline-flex items-center gap-1 text-[var(--color-accent)] text-xs font-mono uppercase tracking-widest cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:underline">
+                        View Case Study →
+                    </button>
+                </div>
+            </div>`;
+        }
+
+        function renderProjects(data) {
+            const filters = document.getElementById('project-filters');
+            const tags = ['All', ...new Set(data.map(p => p.tag))];
+            filters.innerHTML = tags.map((tag, i) =>
+                `<button onclick="filterProjects('${tag}')" class="filter-btn px-4 py-2 rounded-full text-[11px] font-mono uppercase tracking-widest transition-all border ${i === 0 ? 'bg-[var(--color-ink)] text-[var(--color-surface)] border-[var(--color-ink)] shadow-md' : 'bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]'}">${tag}</button>`
+            ).join('');
+            document.getElementById('projects-grid').innerHTML = data.map(renderProjectCard).join('');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        async function loadProjects() {
+            try {
+                const res = await fetch('/api/projects');
+                if (!res.ok) throw new Error('API error');
+                const data = await res.json();
+                projectsData = data.length > 0 ? data : FALLBACK_PROJECTS;
+            } catch { projectsData = FALLBACK_PROJECTS; }
+            renderProjects(projectsData);
+        }
+
+        window.filterProjects = (category) => {
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.style.display = (category === 'All' || card.dataset.category === category) ? 'block' : 'none';
+            });
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                const active = btn.textContent.trim() === category;
+                btn.className = `filter-btn px-4 py-2 rounded-full text-[11px] font-mono uppercase tracking-widest transition-all border ${active ? 'bg-[var(--color-ink)] text-[var(--color-surface)] border-[var(--color-ink)] shadow-md' : 'bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]'}`;
+            });
+        };
+
+        window.openCaseStudy = (title) => {
+            const project = projectsData.find(p => p.title === title);
+            if (!project) return;
+            const details = CASE_STUDY_DETAILS[title] || {};
+            const data = { ...project, ...details };
+            const modal = document.getElementById('case-study-modal');
+            const content = document.getElementById('modal-content');
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[9px] font-mono border border-[var(--color-border)] px-3 py-1 rounded-full uppercase tracking-widest text-[var(--color-accent)] font-bold">${data.tag}</span>
+                        <span class="text-[9px] font-mono bg-[var(--color-ink)] text-[var(--color-surface)] px-3 py-1 rounded-full uppercase tracking-widest font-bold">${data.stats}</span>
+                    </div>
+                    <h2 class="text-4xl font-bold tracking-tighter text-[var(--color-ink)] uppercase leading-none">${data.title}</h2>
+                    <p class="text-lg text-[var(--color-ink-faint)] font-light leading-relaxed">${data.description}</p>
+                </div>
+                <div class="h-[300px] rounded-2xl overflow-hidden relative">
+                    <img src="${data.image}" alt="${data.title}" class="w-full h-full object-cover opacity-60">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-surface)] to-transparent"></div>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6 p-6 border border-[var(--color-border)] rounded-2xl bg-[var(--color-ink)]/[0.01]">
+                    <div><span class="text-[9px] font-mono uppercase tracking-wider text-[var(--color-ink-faint)]">Role Played</span><p class="text-xs font-semibold mt-1">${data.role || '—'}</p></div>
+                    <div><span class="text-[9px] font-mono uppercase tracking-wider text-[var(--color-ink-faint)]">Timeline</span><p class="text-xs font-semibold mt-1">${data.timeline || '—'}</p></div>
+                    <div><span class="text-[9px] font-mono uppercase tracking-wider text-[var(--color-ink-faint)]">Business Impact</span><p class="text-xs font-semibold text-[var(--color-accent)] mt-1">${data.impactMetric || data.stats}</p></div>
+                </div>
+                ${data.challenge ? `<div class="space-y-3"><h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="shield-alert" class="w-5 h-5 text-red-500/70"></i>The Challenge</h3><p class="text-sm text-[var(--color-ink)]/70 font-light leading-relaxed pl-7">${data.challenge}</p></div>` : ''}
+                ${data.solution ? `<div class="space-y-3"><h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="cpu" class="w-5 h-5 text-[var(--color-accent)]"></i>The Strategy & Solution</h3><p class="text-sm text-[var(--color-ink)]/70 font-light leading-relaxed pl-7">${data.solution}</p></div>` : ''}
+                ${data.results ? `<div class="space-y-3"><h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="trending-up" class="w-5 h-5 text-emerald-500/70"></i>Key Outcomes</h3><div class="pl-7 space-y-3">${data.results.map(r => `<div class="flex gap-3 items-start bg-[var(--color-ink)]/[0.01] p-3 rounded-xl border border-[var(--color-border)]"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i><span class="text-xs text-[var(--color-ink)]/80">${r}</span></div>`).join('')}</div></div>` : ''}
+                ${data.techStack ? `<div class="space-y-3"><h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="server" class="w-5 h-5 text-blue-500/70"></i>Technical Stack</h3><div class="pl-7 flex flex-wrap gap-2">${data.techStack.map(t => `<span class="px-3 py-1.5 bg-[var(--color-ink)]/[0.04] text-[var(--color-ink)] rounded-lg text-[10px] font-mono border border-[var(--color-border)]">${t}</span>`).join('')}</div></div>` : ''}
+            `;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            if (window.lucide) lucide.createIcons();
+        };
+
+        window.closeCaseStudy = () => {
+            const modal = document.getElementById('case-study-modal');
+            if (modal) { modal.classList.add('hidden'); document.body.style.overflow = ''; }
+        };
+
+        loadProjects();
+    </script>
+</body>
+</html>

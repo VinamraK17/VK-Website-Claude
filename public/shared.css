@@ -1,0 +1,170 @@
+/* ── Shared styles for VK Portfolio (all pages) ─────────────────────────── */
+
+:root {
+    --color-surface: #050505;
+    --color-ink: #ffffff;
+    --color-ink-faint: rgba(255, 255, 255, 0.4);
+    --color-accent: #4ecca3;
+    --color-border: rgba(255, 255, 255, 0.1);
+    --color-glass: rgba(255, 255, 255, 0.05);
+    --bg-gradient: radial-gradient(circle at 0% 0%, #1a1a2e 0%, #050505 50%), radial-gradient(circle at 100% 100%, #16213e 0%, #050505 50%);
+    color-scheme: dark;
+}
+
+[data-mode="light"] {
+    --color-surface: #f8f9fa;
+    --color-ink: #1a1a1a;
+    --color-ink-faint: #6c757d;
+    --color-border: rgba(0, 0, 0, 0.1);
+    --color-glass: rgba(255, 255, 255, 0.8);
+    --bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color-scheme: light;
+}
+
+[data-theme="luxury"] { --color-accent: #d4af37; }
+[data-theme="luxury"][data-mode="dark"] { --bg-gradient: radial-gradient(circle at 0% 0%, #1a1600 0%, #050505 50%), radial-gradient(circle at 100% 100%, #1a1600 0%, #050505 50%); }
+[data-theme="cyber"] { --color-accent: #ff00ff; }
+[data-theme="cyber"][data-mode="dark"] { --bg-gradient: radial-gradient(circle at 0% 0%, #1a001a 0%, #050505 50%), radial-gradient(circle at 100% 100%, #001a1a 0%, #050505 50%); }
+
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.3s, color 0.3s;
+    padding-top: 76px;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb { background: #252525; border-radius: 10px; }
+
+/* ── Glass surface ─────────────────────────────────────────────────────── */
+.glass {
+    background: var(--color-glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--color-border);
+}
+
+.glass-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    width: 100%;
+    z-index: 50;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Typography ────────────────────────────────────────────────────────── */
+.display-gradient {
+    background: linear-gradient(to right, var(--color-ink), var(--color-ink-faint));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--color-ink);
+}
+[data-mode="light"] .display-gradient {
+    background: none;
+    -webkit-text-fill-color: initial;
+    color: var(--color-ink);
+}
+
+.section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+}
+
+.pill-tag {
+    padding: 4px 12px;
+    font-size: 11px;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    color: var(--color-ink-faint);
+    transition: all 0.3s;
+}
+.pill-tag:hover { color: var(--color-ink); border-color: var(--color-ink); }
+
+/* ── Form inputs ───────────────────────────────────────────────────────── */
+input, textarea {
+    color: var(--color-ink) !important;
+    background-color: var(--color-glass) !important;
+}
+input::placeholder, textarea::placeholder {
+    color: var(--color-ink-faint) !important;
+    opacity: 0.5;
+}
+input, textarea {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
+/* ── Copy protection ───────────────────────────────────────────────────── */
+.copy-protected {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* ── Scroll-reveal animations ─────────────────────────────────────────── */
+.fade-up {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.fade-up.d1 { transition-delay: 0.08s; }
+.fade-up.d2 { transition-delay: 0.16s; }
+.fade-up.d3 { transition-delay: 0.24s; }
+.fade-up.d4 { transition-delay: 0.32s; }
+.fade-up.d5 { transition-delay: 0.40s; }
+
+/* ── Availability badge ────────────────────────────────────────────────── */
+.available-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    border: 1px solid var(--color-accent);
+    background: rgba(78, 204, 163, 0.08);
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-accent);
+}
+.available-dot {
+    width: 6px; height: 6px; min-width: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(78,204,163,0.4); }
+    50% { opacity: 0.7; transform: scale(1.4); box-shadow: 0 0 0 4px rgba(78,204,163,0); }
+}
+
+/* ── Services CTA banner ───────────────────────────────────────────────── */
+.cta-banner {
+    background: linear-gradient(135deg, rgba(78,204,163,0.07) 0%, rgba(78,204,163,0.02) 100%);
+    border: 1px solid rgba(78,204,163,0.18);
+}
+
+/* ── Active nav link ───────────────────────────────────────────────────── */
+.nav-link-active {
+    color: var(--color-ink) !important;
+    border-bottom: 1px solid var(--color-accent);
+    padding-bottom: 2px;
+}

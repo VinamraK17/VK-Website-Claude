@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience | Vinamra Kumar</title>
+
+    <meta name="description" content="20+ years of product leadership across Sunrise GmbH, Lufthansa Systems, and Airports Authority of India. MIT certified. SAFe 6, CSPO, PRINCE2." />
+    <meta name="author" content="Vinamra Kumar" />
+    <link rel="canonical" href="https://vinamrakumar.com/experience" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vinamrakumar.com/experience" />
+    <meta property="og:title" content="Experience | Vinamra Kumar" />
+    <meta property="og:description" content="20+ years across telecom, aviation, and ATC. MIT · SAFe 6 · CSPO · PRINCE2." />
+    <meta property="og:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://vinamrakumar.com/experience" />
+    <meta property="twitter:title" content="Experience | Vinamra Kumar" />
+    <meta property="twitter:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#050505">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Space Grotesk', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: { accent: '#4ecca3', surface: '#050505' }
+          }
+        }
+      }
+    </script>
+    <script src="https://unpkg.com/lucide@0.424.0/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="/shared.css">
+</head>
+<body class="font-sans">
+
+    <!-- Navigation -->
+    <nav class="glass-nav px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <a href="/" class="font-display font-bold text-xl tracking-tighter text-[var(--color-ink)] hover:text-[var(--color-accent)] transition-colors">VK</a>
+                <div class="flex items-center border border-[var(--color-border)] rounded-full p-1 bg-[var(--color-ink)]/5 backdrop-blur-md shadow-xl shadow-black/20">
+                    <button onclick="toggleMode()" class="p-1.5 rounded-full text-[var(--color-ink)]/40 hover:text-[var(--color-ink)] transition-all flex items-center gap-2 px-3" title="Toggle Mode">
+                        <i data-lucide="sun" id="mode-icon" class="w-3.5 h-3.5"></i>
+                        <span id="mode-label" class="text-[10px] font-mono font-bold uppercase tracking-widest">Light</span>
+                    </button>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="/" data-nav-path="/" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Home</a>
+                    <a href="/services" data-nav-path="/services" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Services</a>
+                    <a href="/projects" data-nav-path="/projects" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Projects</a>
+                    <a href="/experience" data-nav-path="/experience" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Experience</a>
+                    <a href="/contact" data-nav-path="/contact" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Contact</a>
+                </div>
+                <a href="/contact" class="hidden md:inline-block px-5 py-2 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-full text-[11px] font-bold uppercase tracking-wider hover:bg-[var(--color-ink)]/90 transition-all font-mono">Get in touch</a>
+                <button id="hamburger-btn" onclick="toggleMenu()" class="md:hidden p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/5 transition-all text-[var(--color-ink)] focus:outline-none cursor-pointer flex items-center justify-center" aria-label="Toggle menu" aria-expanded="false">
+                    <i data-lucide="menu" id="hamburger-icon" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[var(--color-surface)]/95 backdrop-blur-xl border-b border-[var(--color-border)] md:hidden z-40 p-8 flex flex-col gap-6 shadow-2xl">
+            <div class="flex flex-col gap-2">
+                <a href="/" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Home</a>
+                <a href="/services" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Services</a>
+                <a href="/projects" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Projects</a>
+                <a href="/experience" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Experience</a>
+                <a href="/contact" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Contact</a>
+            </div>
+            <a href="/contact" onclick="toggleMenu()" class="w-full text-center py-4 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-2xl text-[11px] font-bold uppercase tracking-wider hover:opacity-90 transition-all font-mono">Get in touch</a>
+        </div>
+    </nav>
+
+    <main class="px-6 relative z-10 copy-protected">
+
+        <!-- Page header -->
+        <section class="max-w-6xl mx-auto pt-24 pb-16">
+            <span class="section-label block mb-4">Career Path</span>
+            <h1 class="text-6xl md:text-8xl font-bold tracking-tighter uppercase display-gradient leading-[0.85] mb-6">
+                20+ Years of <br><span class="text-[var(--color-ink)]/30 italic font-light">Impact.</span>
+            </h1>
+            <p class="text-[var(--color-ink)]/50 max-w-2xl text-lg font-light leading-relaxed">
+                From controlling airspace at IGI Airport to directing multi-million franc digital transformations at Switzerland's largest telecom.
+            </p>
+        </section>
+
+        <!-- Experience Timeline -->
+        <section class="max-w-6xl mx-auto pb-32">
+            <span class="section-label mb-16 block text-center">Selected Career Path</span>
+            <div id="experience-list" class="space-y-6">
+                <div class="experience-skeleton glass p-8 rounded-[32px] animate-pulse h-48"></div>
+                <div class="experience-skeleton glass p-8 rounded-[32px] animate-pulse h-48"></div>
+                <div class="experience-skeleton glass p-8 rounded-[32px] animate-pulse h-48"></div>
+            </div>
+        </section>
+
+        <!-- Expertise -->
+        <section class="max-w-6xl mx-auto pb-32 fade-up">
+            <div class="grid md:grid-cols-2 gap-20">
+                <div>
+                    <span class="section-label mb-12 block">Core Competencies</span>
+                    <h2 class="text-4xl font-bold mb-12 tracking-tight leading-none text-[var(--color-ink)]">
+                        Innovation at the <br>
+                        <span class="text-[var(--color-ink)]/40 italic font-light">Intersection of IT & Business.</span>
+                    </h2>
+                    <div class="space-y-12">
+                        <div>
+                            <h4 class="text-sm font-semibold uppercase tracking-widest mb-6 text-[var(--color-ink)]/40">Leadership & Strategy</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="pill-tag">People Leadership</span>
+                                <span class="pill-tag">C-Level Engagement</span>
+                                <span class="pill-tag">Product Roadmapping</span>
+                                <span class="pill-tag">Change Management</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold uppercase tracking-widest mb-6 text-[var(--color-ink)]/40">Delivery & Agile</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="pill-tag">End-to-End Delivery</span>
+                                <span class="pill-tag">SAFe 6 (Agile at Scale)</span>
+                                <span class="pill-tag">Stakeholder Management</span>
+                                <span class="pill-tag">Operational Efficiency</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass p-12 rounded-[40px]">
+                    <i data-lucide="cpu" class="w-12 h-12 text-[var(--color-accent)]/40 mb-8"></i>
+                    <h3 class="text-3xl font-bold mb-6 italic font-display text-[var(--color-ink)]">GenAI Strategy</h3>
+                    <p class="text-[var(--color-ink)]/50 leading-relaxed mb-8">
+                        Actively leading GenAI-powered transformations, from defining MVP use cases to full-scale deployment of LLM systems.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 border-b border-[var(--color-ink)]/5 pb-4">
+                            <span class="text-2xl font-display font-light text-[var(--color-ink)] opacity-20 italic">01</span>
+                            <span class="text-sm text-[var(--color-ink)]">Customer Assistant Platforms</span>
+                        </div>
+                        <div class="flex items-center gap-4 border-b border-[var(--color-ink)]/5 pb-4">
+                            <span class="text-2xl font-display font-light text-[var(--color-ink)] opacity-20 italic">02</span>
+                            <span class="text-sm text-[var(--color-ink)]">AI Deployment Strategy</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-2xl font-display font-light text-[var(--color-ink)] opacity-20 italic">03</span>
+                            <span class="text-sm text-[var(--color-ink)]">Data-Driven UX Optimisation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Credentials -->
+        <section class="max-w-6xl mx-auto pb-32 fade-up">
+            <div class="flex flex-col md:flex-row gap-12">
+                <div class="flex-1">
+                    <span class="section-label mb-8 block">Education</span>
+                    <div class="space-y-8">
+                        <div class="border-l border-[var(--color-ink)]/10 pl-8">
+                            <h4 class="text-xl font-bold mb-1">MIT Professional Education</h4>
+                            <p class="text-[var(--color-ink)]/40 text-sm mb-1">Professional Certificate in Digital Transformation</p>
+                            <div class="text-[11px] font-mono text-[var(--color-ink)]/40 space-y-1 mt-2 mb-2">
+                                <p>Grade: <span class="text-[var(--color-accent)] font-bold">10/10</span></p>
+                                <p class="text-[10px] leading-relaxed">Focus: Strategy & Leadership, Generative & Agentic AI, Blockchain, IoT, Cloud, Cybersecurity, and Product Family Design.</p>
+                            </div>
+                            <p class="text-[11px] font-mono text-[var(--color-ink)]/20">2023 – 2024</p>
+                        </div>
+                        <div class="border-l border-[var(--color-ink)]/10 pl-8">
+                            <h4 class="text-xl font-bold mb-1">IMT India</h4>
+                            <p class="text-[var(--color-ink)]/40 text-sm mb-1">PGDM (IT & Marketing)</p>
+                            <p class="text-[11px] font-mono text-[var(--color-ink)]/20">2011 – 2014</p>
+                        </div>
+                        <div class="border-l border-[var(--color-ink)]/10 pl-8 opacity-60">
+                            <h4 class="text-xl font-bold mb-1">Dr. APJ Kalam University</h4>
+                            <p class="text-[var(--color-ink)]/40 text-sm mb-1">B.Tech (Electronics & Communication)</p>
+                            <p class="text-[11px] font-mono text-[var(--color-ink)]/20">2001 – 2005</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <span class="section-label mb-8 block">Certifications</span>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 hover:bg-[var(--color-ink)]/[0.02] transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div><span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug block">Generative AI Leader Certification</span><span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">Google Cloud</span></div>
+                        </div>
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 hover:bg-[var(--color-ink)]/[0.02] transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div><span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug block">Professional Certificate in Digital Transformation</span><span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">Massachusetts Institute of Technology (MIT)</span></div>
+                        </div>
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 hover:bg-[var(--color-ink)]/[0.02] transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div><span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug block">Certified SAFe® 6 Product Owner/Product Manager</span><span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">SAFe by Scaled Agile, Inc.</span></div>
+                        </div>
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 hover:bg-[var(--color-ink)]/[0.02] transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div><span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug block">Certified SAFe® 5 Product Owner/Product Manager</span><span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">SAFe by Scaled Agile, Inc.</span></div>
+                        </div>
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 hover:bg-[var(--color-ink)]/[0.02] transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div><span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug block">Certified Scrum Product Owner (CSPO)</span><span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">Scrum Alliance</span></div>
+                        </div>
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 hover:bg-[var(--color-ink)]/[0.02] transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div><span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug block">Certified ScrumMaster (CSM)</span><span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">Scrum Alliance</span></div>
+                        </div>
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 hover:bg-[var(--color-ink)]/[0.02] transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div><span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug block">PRINCE2® Practitioner & Foundation</span><span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">AXELOS Global Best Practice</span></div>
+                        </div>
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 hover:bg-[var(--color-ink)]/[0.02] transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div><span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug block">Zertifikat Deutsch / telc Deutsch B1</span><span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">telc GmbH – The European Language Certificates</span></div>
+                        </div>
+                        <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-[var(--color-ink)]/5 hover:bg-[var(--color-ink)]/[0.02] transition-all">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--color-ink)]/[0.02] border border-[var(--color-ink)]/5 flex items-center justify-center shrink-0">
+                                <i data-lucide="award" class="w-5 h-5 text-[var(--color-accent)] opacity-80"></i>
+                            </div>
+                            <div><span class="text-sm font-bold text-[var(--color-ink)]/80 leading-snug block">PANS OPS Procedure Design</span><span class="text-[11px] text-[var(--color-ink)]/40 mt-0.5">airsight GmbH</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-[var(--color-border)]">
+        <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col gap-2">
+                <span class="font-display font-bold text-lg tracking-tighter text-[var(--color-ink)]/60">VK</span>
+                <div class="text-[9px] font-mono tracking-widest text-[var(--color-ink)]/30 uppercase">© <span id="copyright-year">2026</span> Vinamra Kumar · Swiss Professional</div>
+                <div id="db-status-container" class="hidden items-center gap-2">
+                    <div id="db-status-dot" class="w-1.5 h-1.5 rounded-full animate-pulse bg-red-500"></div>
+                    <span id="db-status-text" class="text-[9px] font-mono uppercase tracking-tighter text-[var(--color-ink)]/30">DB Offline</span>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-6">
+                <a href="/services" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Services</a>
+                <a href="/projects" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Projects</a>
+                <a href="/experience" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Experience</a>
+                <a href="/contact" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Contact</a>
+                <a href="javascript:void(0)" onclick="openPrivacy()" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://www.linkedin.com/in/vinamrakumar" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--color-border)] text-[var(--color-ink)]/40 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)]/40 transition-all text-[10px] font-mono uppercase tracking-widest">
+                    <i data-lucide="linkedin" class="w-3 h-3"></i> LinkedIn
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-[32px] border border-[var(--color-border)] p-6 md:p-12 relative text-[var(--color-ink)] bg-[var(--color-surface)] bg-opacity-95">
+            <button onclick="closePrivacy()" class="absolute top-6 right-6 p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/10 transition-all cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h2 class="text-3xl font-bold tracking-tighter text-[var(--color-ink)] uppercase mt-2 mb-6">Privacy Policy</h2>
+            <p class="text-[var(--color-ink)]/70 font-light leading-relaxed text-sm">All content is the exclusive intellectual property of Vinamra Kumar. Data is stored on a private Synology NAS in Switzerland (GDPR & Swiss FADP compliant). No third-party cookies. Contact data is never sold or shared.</p>
+        </div>
+    </div>
+
+    <!-- Shared JS -->
+    <script src="/shared.js"></script>
+
+    <!-- Page-specific JS: Experience -->
+    <script type="module">
+        const FALLBACK_EXPERIENCES = [
+            { company: "Sunrise GmbH", role: "Manager Digital Transformation", period: "Feb 2024 – Present", location: "Zurich, Switzerland", description: "Owning the digital product strategy for a CHF 1B+ telco, aligning 5+ cross-functional teams around a unified transformation roadmap that accelerated time-to-market across the entire portfolio.", achievements: ["Digital Leadership: Managed a multi-million franc digital product portfolio, embedding OKR and KPI frameworks that connected product delivery directly to business revenue targets.", "Strategic Alignment: Built and governed an ecosystem of external partners and vendors, ensuring delivery quality, cost discipline, and strategic alignment across the full product development lifecycle.", "Market Competitive Positioning: Led ongoing market and trend analysis, enabling the business to identify and act on digital opportunities ahead of competitors.", "Financial Performance: Secured 8M+ CHF in annual efficiency savings through strategic GenAI integrations and process automation."] },
+            { company: "Sunrise GmbH", role: "Product Owner Digital Transformation", period: "Sep 2022 – Feb 2024", location: "Zürich Metropolitan Area", description: "Architected and shipped NEXUS — an LLM-powered AI troubleshooting platform serving 5M+ customers — leading a cross-functional team of 9 from zero to full production, reducing inbound tech support call volumes.", achievements: ["NEXUS Platform Architecture: Designed the end-to-end system architecture, making core infrastructure decisions on AI model integration, scalability, and platform resilience for millions of concurrent users.", "Cost Optimisation: Exceeded departmental cost targets by 20% in 2023 by redesigning team operating models around the customer journey.", "Agile Delivery: Surpassed all departmental KPIs by 20% by owning product delivery end-to-end — from vision and business case through to launch and iteration.", "Team Development: Led People Development for a core agile team of 15+ engineers and designers."] },
+            { company: "Lufthansa Systems", role: "Product Owner", period: "Mar 2018 – Aug 2022", location: "Zurich, Switzerland (Hybrid)", description: "Modernised a mission-critical internal application portfolio of 77 tools — leading a cross-functional team of 8 and driving a 60% increase in operational efficiency across international operations.", achievements: ["Operational Savings: Delivered 40%+ savings against budget by replacing legacy workflows with agile, automation-first practices.", "Risk & Compliance Management: Ensured zero critical compliance gaps across all 77 aviation applications by building and maintaining a live risk register.", "Global Team Alignment: Unified stakeholder alignment across two international locations, eliminating release delays through structured backlog management."] },
+            { company: "Lufthansa Systems", role: "Production Manager — Data Driven Maps Program", period: "Feb 2016 – Feb 2018", location: "Zurich, Switzerland", description: "Launched a first-of-its-kind production process for the Data Driven Maps Program from zero to full implementation — defining quality standards, securing regulatory certifications, and scaling operations on time.", achievements: ["Procurement Cost Optimisation: Reduced procurement costs by conducting rigorous make-or-buy analyses.", "Skill Development & Capacity Building: Future-proofed the team by identifying critical skill gaps and building targeted training plans.", "Risk Mitigation: Mitigated programme delivery risk by designing a robust transition plan."] },
+            { company: "Lufthansa Systems", role: "Manager Production Lido/Navigation", period: "May 2012 – Mar 2016", location: "Zurich, Switzerland", description: "Led a multicultural production team of 19 FTE, managing the full AIRAC cycle — ensuring on-time, compliant delivery of aeronautical products to airline customers across international markets.", achievements: ["People Development: Drove team performance and retention by owning hiring, compensation decisions, and onboarding.", "Process Optimisation: Improved cross-site coordination between Zurich and Gdansk by restructuring communication and process workflows, eliminating delays."] },
+            { company: "Lufthansa Systems", role: "Quality Assurance / Aeronautical Chart Specialist", period: "May 2009 – May 2012", location: "Zurich, Switzerland", description: "Maintained zero-defect delivery of aeronautical charts to airline customers by ensuring full compliance with international safety and quality standards across every AIRAC cycle.", achievements: ["Mentorship: Accelerated team capability by mentoring and training new hires, reducing onboarding time.", "Quality Controls: Led the testing and evaluation of new tools before production integration, protecting operational continuity."] },
+            { company: "Airports Authority of India (AAI)", role: "Air Traffic Controller", period: "Apr 2006 – May 2009", location: "Greater Delhi Area, India", description: "Ensured the safe and efficient movement of hundreds of aircraft and thousands of passengers daily at IGI Airport New Delhi — operating ATC (Non-Radar) services across Delhi FIR with zero margin for error.", achievements: ["Capacity Expansion: Contributed directly to airport capacity expansion by participating in the commissioning of Runway 11/29 and developing new ATC procedures.", "Controller Training: Developed training notes, presentations, and simulator exercises for the Area Control Centre, raising performance standards."] }
+        ];
+
+        function renderExperienceCard(exp) {
+            const achievements = Array.isArray(exp.achievements) ? exp.achievements : JSON.parse(exp.achievements || '[]');
+            const rows = achievements.map(a => `
+                <div class="flex gap-3 text-sm text-[var(--color-ink)]/50 leading-snug">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[var(--color-accent)]/40 shrink-0 mt-0.5"></i>
+                    <span>${a}</span>
+                </div>`).join('');
+            return `<div class="glass p-8 rounded-[32px] hover:bg-[var(--color-ink)]/[0.08] transition-all">
+                <div class="mb-4">
+                    <span class="text-[11px] font-mono text-[var(--color-ink)]/30 block mb-2">${exp.period}</span>
+                    <div class="flex items-center gap-2 text-[var(--color-ink)]/40 text-sm">
+                        <i data-lucide="map-pin" class="w-3 h-3"></i><span>${exp.location}</span>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-display font-semibold mb-1">${exp.role}</h3>
+                <p class="text-[var(--color-ink)]/40 font-medium mb-4">${exp.company}</p>
+                <p class="text-[var(--color-ink)]/60 leading-relaxed max-w-3xl mb-8">${exp.description}</p>
+                <div class="grid sm:grid-cols-2 gap-4">${rows}</div>
+            </div>`;
+        }
+
+        async function loadExperiences() {
+            const list = document.getElementById('experience-list');
+            let experiences = [];
+            try {
+                const res = await fetch('/api/experiences');
+                if (!res.ok) throw new Error('API error');
+                const data = await res.json();
+                experiences = data.length > 0 ? data : FALLBACK_EXPERIENCES;
+            } catch { experiences = FALLBACK_EXPERIENCES; }
+            list.innerHTML = experiences.map(renderExperienceCard).join('');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        loadExperiences();
+    </script>
+</body>
+</html>

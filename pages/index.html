@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinamra Kumar | Product Leadership & AI Strategy</title>
+
+    <!-- SEO -->
+    <meta name="description" content="MIT-certified Product Leader with 20+ years directing digital transformation, GenAI strategy, and product roadmap execution across telecom and aviation." />
+    <meta name="keywords" content="Vinamra Kumar, Product Leadership, Digital Transformation, AI Strategy, GenAI, MIT, Sunrise, Lufthansa Systems" />
+    <meta name="author" content="Vinamra Kumar" />
+    <link rel="canonical" href="https://vinamrakumar.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vinamrakumar.com/" />
+    <meta property="og:title" content="Vinamra Kumar | Product Leadership & AI Strategy" />
+    <meta property="og:description" content="MIT-certified Product Leader. 20+ years. CHF 10M+ impact. Fractional leadership, GenAI advisory, coaching." />
+    <meta property="og:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://vinamrakumar.com/" />
+    <meta property="twitter:title" content="Vinamra Kumar | Product Leadership & AI Strategy" />
+    <meta property="twitter:description" content="MIT-certified Product Leader. 20+ years. CHF 10M+ impact. Fractional leadership, GenAI advisory, coaching." />
+    <meta property="twitter:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#050505">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Vinamra Kumar",
+      "jobTitle": "Manager – Digital Transformation",
+      "worksFor": { "@type": "Organization", "name": "Sunrise GmbH" },
+      "alumniOf": { "@type": "EducationalOrganization", "name": "Massachusetts Institute of Technology (MIT)" },
+      "url": "https://vinamrakumar.com/",
+      "sameAs": ["https://www.linkedin.com/in/vinamrakumar"],
+      "description": "MIT-certified Product Leader with 20+ years of experience leading complex, high-impact digital products and AI strategies."
+    }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Space Grotesk', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: { accent: '#4ecca3', surface: '#050505' }
+          }
+        }
+      }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@0.424.0/dist/umd/lucide.min.js"></script>
+
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="/shared.css">
+</head>
+<body class="font-sans">
+
+    <!-- Navigation -->
+    <nav class="glass-nav px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <a href="/" class="font-display font-bold text-xl tracking-tighter text-[var(--color-ink)] hover:text-[var(--color-accent)] transition-colors">VK</a>
+                <div class="flex items-center border border-[var(--color-border)] rounded-full p-1 bg-[var(--color-ink)]/5 backdrop-blur-md shadow-xl shadow-black/20">
+                    <button onclick="toggleMode()" class="p-1.5 rounded-full text-[var(--color-ink)]/40 hover:text-[var(--color-ink)] transition-all flex items-center gap-2 px-3" title="Toggle Mode">
+                        <i data-lucide="sun" id="mode-icon" class="w-3.5 h-3.5"></i>
+                        <span id="mode-label" class="text-[10px] font-mono font-bold uppercase tracking-widest">Light</span>
+                    </button>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="/" data-nav-path="/" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Home</a>
+                    <a href="/services" data-nav-path="/services" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Services</a>
+                    <a href="/projects" data-nav-path="/projects" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Projects</a>
+                    <a href="/experience" data-nav-path="/experience" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Experience</a>
+                    <a href="/contact" data-nav-path="/contact" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Contact</a>
+                </div>
+                <a href="/contact" class="hidden md:inline-block px-5 py-2 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-full text-[11px] font-bold uppercase tracking-wider hover:bg-[var(--color-ink)]/90 transition-all font-mono">Get in touch</a>
+                <button id="hamburger-btn" onclick="toggleMenu()" class="md:hidden p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/5 transition-all text-[var(--color-ink)] focus:outline-none cursor-pointer flex items-center justify-center" aria-label="Toggle menu" aria-expanded="false">
+                    <i data-lucide="menu" id="hamburger-icon" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[var(--color-surface)]/95 backdrop-blur-xl border-b border-[var(--color-border)] md:hidden z-40 p-8 flex flex-col gap-6 shadow-2xl">
+            <div class="flex flex-col gap-2">
+                <a href="/" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Home</a>
+                <a href="/services" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Services</a>
+                <a href="/projects" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Projects</a>
+                <a href="/experience" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Experience</a>
+                <a href="/contact" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Contact</a>
+            </div>
+            <a href="/contact" onclick="toggleMenu()" class="w-full text-center py-4 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-2xl text-[11px] font-bold uppercase tracking-wider hover:opacity-90 transition-all font-mono">Get in touch</a>
+        </div>
+    </nav>
+
+    <main class="px-6 relative z-10 copy-protected">
+
+        <!-- Hero -->
+        <section class="max-w-6xl mx-auto pt-24 pb-32">
+            <div class="grid lg:grid-cols-[1fr_400px] gap-20 items-center">
+                <div>
+                    <div class="mb-6">
+                        <span class="available-badge">
+                            <span class="available-dot"></span>
+                            Available for engagements
+                        </span>
+                    </div>
+                    <span class="section-label mb-8 block">From Controlling Airspace to Controlling Roadmaps</span>
+                    <h1 class="text-7xl md:text-9xl font-bold mb-8 leading-[0.85] tracking-tighter uppercase display-gradient">
+                        Vinamra <br> Kumar
+                    </h1>
+                    <p class="max-w-2xl text-xl text-[var(--color-ink)]/50 font-light leading-relaxed mb-8">
+                        MIT-certified Product Leader with 20+ years of experience bridging business strategy with technical execution to unlock multi-million dollar value. Built NEXUS, an AI troubleshooting platform serving millions of customers at Sunrise GmbH, following a distinguished tenure at Lufthansa Systems and early career foundations in Air Traffic Control.
+                    </p>
+                    <p class="max-w-xl text-sm text-[var(--color-ink)]/30 font-light leading-relaxed mb-12 italic border-l-2 border-[var(--color-accent)]/20 pl-6">
+                        Available for advisory engagements, fractional leadership, coaching, and speaking. Open to VP / Head of Digital Product &amp; Transformation roles in Europe. Swiss-based. Globally experienced.
+                    </p>
+                    <div class="flex flex-wrap gap-4 items-center">
+                        <a href="/contact" class="flex items-center gap-2 group border border-[var(--color-ink)]/10 px-6 py-3 rounded-2xl hover:bg-[var(--color-ink)]/5 transition-all">
+                            <i data-lucide="mail" class="w-4 h-4 text-[var(--color-ink)]/40 group-hover:text-[var(--color-ink)] transition-colors"></i>
+                            <span class="text-sm font-medium text-[var(--color-ink)]">Contact Me</span>
+                        </a>
+                        <a href="https://www.linkedin.com/in/vinamrakumar" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 group border border-[var(--color-ink)]/10 px-6 py-3 rounded-2xl hover:bg-[var(--color-ink)]/5 transition-all">
+                            <i data-lucide="linkedin" class="w-4 h-4 text-[var(--color-ink-faint)] group-hover:text-[var(--color-ink)] transition-colors"></i>
+                            <span class="text-sm font-medium text-[var(--color-ink)]">LinkedIn</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="relative aspect-square">
+                    <div class="absolute inset-0 rounded-full border-2 border-[var(--color-ink)]/5 animate-[spin_30s_linear_infinite]"></div>
+                    <div class="absolute inset-4 rounded-full border border-[var(--color-ink)]/10"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-[85%] h-[85%] rounded-full glass overflow-hidden border-2 border-[var(--color-ink)]/20">
+                            <img src="/hero_hq.jpg" alt="Vinamra Kumar" class="w-full h-full object-cover object-top" loading="eager">
+                        </div>
+                    </div>
+                    <div class="absolute top-10 right-0 w-16 h-16 glass rounded-2xl flex items-center justify-center border border-[var(--color-ink)]/20">
+                        <i data-lucide="award" class="w-8 h-8 text-[var(--color-accent)]"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="max-w-6xl mx-auto pb-32" id="stats-section">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="border-l border-[var(--color-ink)]/10 pl-6 fade-up d1">
+                    <div class="text-3xl md:text-5xl font-display font-medium mb-1 tracking-tighter">
+                        CHF <span class="stat-number" data-target="10" data-suffix="M">10M</span>
+                    </div>
+                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-accent)] mb-1">Financial Impact</div>
+                    <div class="text-[11px] text-[var(--color-ink)]/40 leading-tight">
+                        <div class="flex flex-col gap-1"><span>10M USD</span><span>100Cr INR</span></div>
+                    </div>
+                </div>
+                <div class="border-l border-[var(--color-ink)]/10 pl-6 fade-up d2">
+                    <div class="text-3xl md:text-5xl font-display font-medium mb-1 tracking-tighter">
+                        <span class="stat-number" data-target="20" data-suffix="%+">20%+</span>
+                    </div>
+                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-accent)] mb-1">Cost Reduction</div>
+                    <div class="text-[11px] text-[var(--color-ink)]/20 italic">CAPEX &amp; OPEX</div>
+                </div>
+                <div class="border-l border-[var(--color-ink)]/10 pl-6 fade-up d3">
+                    <div class="text-3xl md:text-5xl font-display font-medium mb-1 tracking-tighter">
+                        <span class="stat-number" data-target="20" data-suffix="+ Yrs">20+ Yrs</span>
+                    </div>
+                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-accent)] mb-1">Leadership</div>
+                    <div class="text-[11px] text-[var(--color-ink)]/20 italic">Industry Experience</div>
+                </div>
+                <div class="border-l border-[var(--color-ink)]/10 pl-6 fade-up d4">
+                    <div class="text-3xl md:text-5xl font-display font-medium mb-1 tracking-tighter">
+                        <span class="stat-number" data-target="5" data-suffix="M+">5M+</span>
+                    </div>
+                    <div class="text-[10px] uppercase tracking-widest text-[var(--color-accent)] mb-1">Users</div>
+                    <div class="text-[11px] text-[var(--color-ink)]/20 italic">Impacted daily</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section class="max-w-6xl mx-auto pb-32 fade-up">
+            <div class="grid md:grid-cols-[1fr_2fr] gap-16 items-start">
+                <div>
+                    <span class="section-label">Professional Bio</span>
+                    <h2 class="text-4xl font-bold text-[var(--color-ink)] tracking-tight leading-tight uppercase mt-3">
+                        20+ Years of <br>
+                        <span class="text-[var(--color-ink)]/30 italic font-light">Product Leadership.</span>
+                    </h2>
+                </div>
+                <div class="text-lg text-[var(--color-ink)]/60 font-light leading-relaxed space-y-6">
+                    <p>Product Manager with a proven track record of owning product vision, driving cross-functional execution, and delivering measurable outcomes in ambiguous and evolving contexts. I specialise in AI-driven product development, including GenAI-powered customer assistance platforms.</p>
+                    <p>My experience spans highly regulated, large-scale environments — telecom (Sunrise GmbH) and aviation (Lufthansa Systems) — where I lead teams across IT, engineering, and business to design and validate MVPs from concept to rollout.</p>
+                    <div class="p-8 border border-[var(--color-border)] rounded-3xl bg-[var(--color-glass)] backdrop-blur-md relative overflow-hidden mt-8">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-[var(--color-accent)]/5 blur-[80px] -mr-32 -mt-32 rounded-full"></div>
+                        <span class="text-[10px] font-mono text-[var(--color-accent)] uppercase tracking-wider mb-4 block font-bold">Leadership Philosophy</span>
+                        <p class="text-md text-[var(--color-ink)]/80 leading-relaxed font-light italic pl-4 border-l border-[var(--color-accent)]/30">
+                            "Most digital transformations fail — not because of the technology, but because the person leading it has never felt the cost of a system breaking down at 2AM with thousands of people depending on it. I have."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services preview (3 cards) -->
+        <section class="max-w-6xl mx-auto pb-20 fade-up">
+            <div class="text-center mb-12">
+                <span class="section-label inline-block">Professional Services</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-[var(--color-ink)] tracking-tight leading-tight mt-3 uppercase">
+                    How We Work <span class="text-[var(--color-ink)]/30 italic font-light">Together.</span>
+                </h2>
+                <p class="text-[var(--color-ink)]/50 mt-4 max-w-2xl mx-auto text-sm">Twenty years of operational discipline, AI delivery at scale, and product leadership — available as a service.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- GenAI Advisory -->
+                <div class="glass p-8 rounded-[32px] border border-[var(--color-ink)]/5 hover:border-[var(--color-accent)]/20 hover:bg-[var(--color-ink)]/[0.03] transition-all flex flex-col">
+                    <div class="w-12 h-12 rounded-2xl bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                        <i data-lucide="cpu" class="w-6 h-6 text-[var(--color-accent)]"></i>
+                    </div>
+                    <span class="text-[9px] font-mono text-[var(--color-accent)] uppercase tracking-widest font-bold mb-3">4–8 Week Engagement</span>
+                    <h3 class="text-xl font-bold mb-3 text-[var(--color-ink)]">GenAI Transformation Advisory</h3>
+                    <p class="text-sm text-[var(--color-ink)]/50 leading-relaxed flex-1">From AI experimentation to production deployment in regulated industries. Use cases, stack selection, governance, and LLM delivery.</p>
+                    <a href="/services" class="mt-6 flex items-center gap-2 text-[var(--color-accent)] text-xs font-mono uppercase tracking-widest hover:underline">Learn more <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                </div>
+                <!-- Fractional HoP -->
+                <div class="glass p-8 rounded-[32px] border border-[var(--color-ink)]/5 hover:border-[var(--color-accent)]/20 hover:bg-[var(--color-ink)]/[0.03] transition-all flex flex-col">
+                    <div class="w-12 h-12 rounded-2xl bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                        <i data-lucide="layers" class="w-6 h-6 text-[var(--color-accent)]"></i>
+                    </div>
+                    <span class="text-[9px] font-mono text-[var(--color-accent)] uppercase tracking-widest font-bold mb-3">2 Days/Week · 3–12 Months</span>
+                    <h3 class="text-xl font-bold mb-3 text-[var(--color-ink)]">Fractional Head of Product</h3>
+                    <p class="text-sm text-[var(--color-ink)]/50 leading-relaxed flex-1">Senior product leadership without the full-time cost. Strategy, roadmap, team structure — then a clean handoff.</p>
+                    <a href="/services" class="mt-6 flex items-center gap-2 text-[var(--color-accent)] text-xs font-mono uppercase tracking-widest hover:underline">Learn more <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                </div>
+                <!-- Coaching -->
+                <div class="glass p-8 rounded-[32px] border border-[var(--color-ink)]/5 hover:border-[var(--color-accent)]/20 hover:bg-[var(--color-ink)]/[0.03] transition-all flex flex-col">
+                    <div class="w-12 h-12 rounded-2xl bg-[var(--color-accent)]/10 flex items-center justify-center mb-6">
+                        <i data-lucide="trending-up" class="w-6 h-6 text-[var(--color-accent)]"></i>
+                    </div>
+                    <span class="text-[9px] font-mono text-[var(--color-accent)] uppercase tracking-widest font-bold mb-3">Monthly Retainer · Bi-Weekly 1:1</span>
+                    <h3 class="text-xl font-bold mb-3 text-[var(--color-ink)]">Product Leadership Coaching</h3>
+                    <p class="text-sm text-[var(--color-ink)]/50 leading-relaxed flex-1">Senior PMs targeting the Director or VP transition. Real work as the material — no generic playbooks.</p>
+                    <a href="/services" class="mt-6 flex items-center gap-2 text-[var(--color-accent)] text-xs font-mono uppercase tracking-widest hover:underline">Learn more <i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                </div>
+            </div>
+            <div class="mt-10 text-center">
+                <a href="/services" class="inline-flex items-center gap-3 px-8 py-4 border border-[var(--color-accent)]/30 text-[var(--color-accent)] rounded-2xl text-[11px] font-bold uppercase tracking-wider hover:bg-[var(--color-accent)]/5 transition-all font-mono">
+                    View All Services <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- CTA Banner -->
+        <section class="max-w-6xl mx-auto pb-32 fade-up">
+            <div class="cta-banner rounded-[32px] p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="max-w-2xl">
+                    <p class="text-[10px] font-mono text-[var(--color-accent)] uppercase tracking-widest mb-3">Why it matters</p>
+                    <p class="text-2xl md:text-3xl font-bold text-[var(--color-ink)] tracking-tight leading-snug">Most AI transformations fail — not because of the technology, but because nobody with real delivery experience is in the room.</p>
+                </div>
+                <a href="/contact" class="shrink-0 flex items-center gap-3 px-8 py-4 bg-[var(--color-accent)] text-[var(--color-surface)] rounded-2xl text-[11px] font-bold uppercase tracking-wider hover:opacity-90 transition-all font-mono">
+                    Work With Me <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Credibility logos -->
+        <section class="max-w-6xl mx-auto pb-32 fade-up">
+            <div class="text-center mb-12">
+                <span class="section-label inline-block">Strategic Trust & Career Credentials</span>
+                <h2 class="text-4xl font-bold text-[var(--color-ink)] tracking-tight leading-tight mt-3 uppercase">
+                    Credibility in <span class="text-[var(--color-ink)]/30 italic font-light">High-Impact Environments</span>
+                </h2>
+            </div>
+            <div class="glass p-8 md:p-12 rounded-[32px] border border-[var(--color-ink)]/5">
+                <div class="text-center mb-10">
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--color-ink)]/30 font-mono font-bold">Landmark Organizations & Credentials</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-center justify-items-center">
+                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
+                        <span class="font-sans font-bold text-base text-[var(--color-ink)] tracking-tight">Sunrise GmbH</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">Switzerland</span>
+                    </div>
+                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
+                        <span class="font-sans font-bold text-base text-[var(--color-ink)] tracking-tight">Lufthansa Systems</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">LSY AG</span>
+                    </div>
+                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
+                        <span class="font-sans font-bold text-base text-[var(--color-ink)] tracking-tight">AAI</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">Airports Authority of India</span>
+                    </div>
+                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
+                        <span class="font-serif font-bold text-base italic text-[var(--color-ink)] tracking-tight">MIT Professional</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">Digital Transformation</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-[var(--color-border)]">
+        <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col gap-2">
+                <span class="font-display font-bold text-lg tracking-tighter text-[var(--color-ink)]/60">VK</span>
+                <div class="text-[9px] font-mono tracking-widest text-[var(--color-ink)]/30 uppercase">© <span id="copyright-year">2026</span> Vinamra Kumar · Swiss Professional</div>
+                <div id="db-status-container" class="hidden items-center gap-2">
+                    <div id="db-status-dot" class="w-1.5 h-1.5 rounded-full animate-pulse bg-red-500"></div>
+                    <span id="db-status-text" class="text-[9px] font-mono uppercase tracking-tighter text-[var(--color-ink)]/30">DB Offline</span>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-6">
+                <a href="/services" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Services</a>
+                <a href="/projects" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Projects</a>
+                <a href="/experience" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Experience</a>
+                <a href="/contact" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Contact</a>
+                <a href="javascript:void(0)" onclick="openPrivacy()" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://www.linkedin.com/in/vinamrakumar" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--color-border)] text-[var(--color-ink)]/40 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)]/40 transition-all text-[10px] font-mono uppercase tracking-widest">
+                    <i data-lucide="linkedin" class="w-3 h-3"></i> LinkedIn
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-[32px] border border-[var(--color-border)] p-6 md:p-12 relative text-[var(--color-ink)] bg-[var(--color-surface)] bg-opacity-95">
+            <button onclick="closePrivacy()" class="absolute top-6 right-6 p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/10 transition-all cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="space-y-6 mb-12">
+                <span class="text-[9px] font-mono border border-[var(--color-border)] px-3 py-1 rounded-full uppercase tracking-widest text-[var(--color-accent)] font-bold">Legal & Compliance</span>
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tighter text-[var(--color-ink)] uppercase leading-none">Privacy Policy & <br/><span class="text-[var(--color-ink)]/30 italic font-light">Terms of Use</span></h2>
+                <p class="text-md text-[var(--color-ink-faint)] font-light leading-relaxed max-w-2xl">This policy outlines how data is handled on this site, GDPR compliance details, and the intellectual property protection governing the contents.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6 p-6 border border-[var(--color-border)] rounded-2xl bg-[var(--color-ink)]/[0.01] mb-12">
+                <div class="flex flex-col gap-2">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-[var(--color-accent)]"></i>
+                    <h4 class="font-bold text-sm mt-1">Self-Hosted Security</h4>
+                    <p class="text-[10px] text-[var(--color-ink-faint)] leading-normal font-light">All data is stored locally on a secure private Synology NAS in Switzerland, with no third-party cloud hosting.</p>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <i data-lucide="eye-off" class="w-5 h-5 text-indigo-500/80"></i>
+                    <h4 class="font-bold text-sm mt-1">Zero Tracking Cookies</h4>
+                    <p class="text-[10px] text-[var(--color-ink-faint)] leading-normal font-light">This site does not use third-party analytics cookies. Link clicks are tracked locally and anonymously.</p>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <i data-lucide="lock" class="w-5 h-5 text-emerald-500/80"></i>
+                    <h4 class="font-bold text-sm mt-1">Strict Data Privacy</h4>
+                    <p class="text-[10px] text-[var(--color-ink-faint)] leading-normal font-light">Contact information is used solely to verify identity and communicate. It is never sold or shared.</p>
+                </div>
+            </div>
+            <div class="space-y-8 text-[var(--color-ink)]/80 font-light leading-relaxed text-sm">
+                <div class="space-y-2">
+                    <h3 class="font-bold text-base text-[var(--color-ink)]">1. Data Collection & Usage</h3>
+                    <p class="pl-4">Minimal personal data is collected: name, email, and message (contact form). Used solely to enable professional communication. Anonymous link-click analytics stored locally.</p>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-bold text-base text-[var(--color-ink)]">2. GDPR & Swiss FADP Compliance</h3>
+                    <p class="pl-4">Aligned with Swiss Federal Act on Data Protection (FADP) and GDPR. You have the right to access and request erasure of your data at any time.</p>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-bold text-base text-[var(--color-ink)]">3. Intellectual Property & Copy Protection</h3>
+                    <p class="pl-4">All content is the exclusive intellectual property of <strong>Vinamra Kumar</strong>. Scrape protection measures are applied. Reproduction is strictly prohibited.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shared JS -->
+    <script src="/shared.js"></script>
+</body>
+</html>

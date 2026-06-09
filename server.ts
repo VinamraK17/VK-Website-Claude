@@ -384,11 +384,21 @@ async function startServer() {
     }
   });
 
-  // Serve portfolio.html as the main page for all non-API routes
-  const portfolioPath = path.join(process.cwd(), "portfolio.html");
-  app.get("*", (req, res) => {
-    res.sendFile(portfolioPath);
-  });
+  // ── Multi-page routing ────────────────────────────────────────────────────
+  const pagesDir = path.join(process.cwd(), "pages");
+
+  app.get("/", (req, res) => res.sendFile(path.join(pagesDir, "index.html")));
+  app.get("/services", (req, res) => res.sendFile(path.join(pagesDir, "services.html")));
+  app.get("/projects", (req, res) => res.sendFile(path.join(pagesDir, "projects.html")));
+  app.get("/experience", (req, res) => res.sendFile(path.join(pagesDir, "experience.html")));
+  app.get("/contact", (req, res) => res.sendFile(path.join(pagesDir, "contact.html")));
+
+  // Legacy single-page fallback (accessible at /legacy during transition)
+  const legacyPath = path.join(process.cwd(), "portfolio.html");
+  app.get("/legacy", (req, res) => res.sendFile(legacyPath));
+
+  // Catch-all: redirect unknown routes to home
+  app.get("*", (req, res) => res.redirect("/"));
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);

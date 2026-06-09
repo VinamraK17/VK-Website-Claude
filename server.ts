@@ -386,7 +386,8 @@ async function startServer() {
 
   // ── Admin middleware ──────────────────────────────────────────────────────
   function requireAdmin(req: any, res: any, next: any) {
-    const adminPassword = process.env.ADMIN_PASSWORD;
+    // Falls back to MARIADB_PASSWORD if ADMIN_PASSWORD is not set
+    const adminPassword = process.env.ADMIN_PASSWORD || process.env.MARIADB_PASSWORD;
     if (!adminPassword) return res.status(503).json({ error: "Admin access not configured." });
     const auth = req.headers.authorization || "";
     const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
@@ -403,6 +404,4 @@ async function startServer() {
   });
 
   // Admin: analytics summary + raw events
-  app.get("/api/admin/analytics", requireAdmin, async (req, res) => {
-    try {
-      const events = await prisma.analytics.findMany({ order
+  app.get("/api/admin/analytics", requireA

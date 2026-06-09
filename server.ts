@@ -267,6 +267,9 @@ async function startServer() {
 
   app.use(express.json());
 
+  // Serve static assets (images, robots.txt, sitemap, etc.) from /public
+  app.use(express.static(path.join(process.cwd(), 'public')));
+
   // Try to seed data (ignore if fails during build/env issues)
   seedData().catch(err => console.warn("Seed failed (ignorable if DB not ready):", err.message));
 

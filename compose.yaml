@@ -1,25 +1,42 @@
+# Docker Compose for VK Portfolio — Synology NAS / Docker deployment
+# ─────────────────────────────────────────────────────────────────────────────
+# Prerequisites:
+#   1. Copy .env.example to .env and fill in your real values.
+#   2. Run: docker compose up -d --build
+#
+# Credentials are loaded from the .env file (never committed to git).
+# ─────────────────────────────────────────────────────────────────────────────
+
 services:
-  # 1. MariaDB Database (Mapped to portfolio-db)
+
+  # ── 1. MariaDB Database ────────────────────────────────────────────────────
   portfolio-db:
     image: mariadb:lts
     environment:
-      MARIADB_ROOT_PASSWORD: Sairam@1983
-      MARIADB_DATABASE: portfolio
-      MARIADB_USER: portfolio_user
-      MARIADB_PASSWORD: Sairam@1983
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     volumes:
       - portfolio-db-data:/var/lib/mysql
     networks:
       - portfolio-network
     restart: always
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      start_period: 20s
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # 2. Portfolio Web Server (Exposed directly from GitHub)
+  # ── 2. Portfolio Web Server ────────────────────────────────────────────────
   portfolio-web:
     build: .
     depends_on:
-      - portfolio-db
+      portfolio-db:
+        condition: service_healthy
     environment:
-      - DATABASE_URL=mysql://portfolio_user:Sairam%401983@portfolio-db:3306/portfolio
+      - DATABASE_URL=${DATABASE_URL}
       - NODE_ENV=production
     ports:
       - "3000:3000"
@@ -27,15 +44,16 @@ services:
       - portfolio-network
     restart: always
 
-  # 3. Database Dashboard (phpMyAdmin)
+  # ── 3. phpMyAdmin (DB dashboard) ──────────────────────────────────────────
   db-dashboard:
     image: phpmyadmin:latest
     depends_on:
-      - portfolio-db
+      portfolio-db:
+        condition: service_healthy
     environment:
       PMA_HOST: portfolio-db
-      PMA_USER: portfolio_user
-      PMA_PASSWORD: Sairam@1983
+      PMA_USER: ${MARIADB_USER}
+      PMA_PASSWORD: ${MARIADB_PASSWORD}
     ports:
       - "8085:80"
     networks:

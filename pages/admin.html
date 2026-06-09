@@ -181,9 +181,17 @@ async function doLogin() {
 
     let res;
     try {
-        res = await fetch('/api/admin/messages', { headers: { Authorization: 'Bearer ' + pwd } });
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 8000);
+        res = await fetch('/api/admin/messages', {
+            headers: { Authorization: 'Bearer ' + pwd },
+            signal: controller.signal
+        });
+        clearTimeout(timer);
     } catch (err) {
-        errEl.textContent = 'Network error: ' + err.message;
+        errEl.textContent = err.name === 'AbortError'
+            ? 'Request timed out — server may still be starting. Try again in 10s.'
+            : 'Network error: ' + err.message;
         errEl.classList.remove('hidden');
         return;
     }
@@ -200,6 +208,7 @@ async function doLogin() {
         return;
     }
 
+    console.log('Login success, status:', res.status);
     TOKEN = pwd;
     sessionStorage.setItem('vk_admin_token', TOKEN);
     document.getElementById('login-screen').classList.add('hidden');

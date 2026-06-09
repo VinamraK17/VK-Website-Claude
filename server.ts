@@ -384,25 +384,25 @@ async function startServer() {
     }
   });
 
-  // ── Multi-page routing ────────────────────────────────────────────────────
-  const pagesDir = path.join(process.cwd(), "pages");
+  // ── Admin middleware ──────────────────────────────────────────────────────
+  function requireAdmin(req: any, res: any, next: any) {
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminPassword) return res.status(503).json({ error: "Admin access not configured." });
+    const auth = req.headers.authorization || "";
+    const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
+    if (token !== adminPassword) return res.status(401).json({ error: "Unauthorised." });
+    next();
+  }
 
-  app.get("/", (req, res) => res.sendFile(path.join(pagesDir, "index.html")));
-  app.get("/services", (req, res) => res.sendFile(path.join(pagesDir, "services.html")));
-  app.get("/projects", (req, res) => res.sendFile(path.join(pagesDir, "projects.html")));
-  app.get("/experience", (req, res) => res.sendFile(path.join(pagesDir, "experience.html")));
-  app.get("/contact", (req, res) => res.sendFile(path.join(pagesDir, "contact.html")));
-
-  // Legacy single-page fallback (accessible at /legacy during transition)
-  const legacyPath = path.join(process.cwd(), "portfolio.html");
-  app.get("/legacy", (req, res) => res.sendFile(legacyPath));
-
-  // Catch-all: redirect unknown routes to home
-  app.get("*", (req, res) => res.redirect("/"));
-
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  // Admin: all messages
+  app.get("/api/admin/messages", requireAdmin, async (req, res) => {
+    try {
+      const messages = await prisma.message.findMany({ orderBy: { createdAt: "desc" } });
+      res.json(messages);
+    } catch (error: any) { res.status(500).json({ error: error.message }); }
   });
-}
 
-startServer();
+  // Admin: analytics summary + raw events
+  app.get("/api/admin/analytics", requireAdmin, async (req, res) => {
+    try {
+      const events = await prisma.analytics.findMany({ order

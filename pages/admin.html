@@ -174,26 +174,46 @@ function toggleReveal() {
 async function doLogin() {
     const pwd = document.getElementById('pwd-input').value.trim();
     if (!pwd) return;
-    document.getElementById('login-error').classList.add('hidden');
-    document.getElementById('login-warn').classList.add('hidden');
-    const res = await fetch('/api/admin/messages', { headers: { Authorization: 'Bearer ' + pwd } });
-    if (res.status === 503) {
-        document.getElementById('login-warn').classList.remove('hidden');
+    const errEl = document.getElementById('login-error');
+    const warnEl = document.getElementById('login-warn');
+    errEl.classList.add('hidden');
+    warnEl.classList.add('hidden');
+
+    let res;
+    try {
+        res = await fetch('/api/admin/messages', { headers: { Authorization: 'Bearer ' + pwd } });
+    } catch (err) {
+        errEl.textContent = 'Network error: ' + err.message;
+        errEl.classList.remove('hidden');
         return;
     }
+
+    if (res.status === 503) { warnEl.classList.remove('hidden'); return; }
     if (res.status === 401) {
-        document.getElementById('login-error').classList.remove('hidden');
+        errEl.textContent = 'Incorrect password.';
+        errEl.classList.remove('hidden');
         return;
     }
+    if (!res.ok) {
+        errEl.textContent = 'Server error (' + res.status + '). Check container logs.';
+        errEl.classList.remove('hidden');
+        return;
+    }
+
     TOKEN = pwd;
     sessionStorage.setItem('vk_admin_token', TOKEN);
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
-    const data = await res.json();
-    allMessages = data;
-    renderMessages(allMessages);
-    updateStatStrip();
-    loadAnalytics();
+
+    try {
+        const data = await res.json();
+        allMessages = Array.isArray(data) ? data : [];
+        renderMessages(allMessages);
+        updateStatStrip();
+        loadAnalytics();
+    } catch (err) {
+        console.error('Dashboard load error:', err);
+    }
 }
 
 function doLogout() {

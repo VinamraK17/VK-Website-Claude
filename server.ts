@@ -384,9 +384,75 @@ async function startServer() {
     }
   });
 
+  // ── Admin middleware ──────────────────────────────────────────────────────
+  function requireAdmin(req: any, res: any, next: any) {
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminPassword) return res.status(503).json({ error: "Admin access not configured." });
+    const auth = req.headers.authorization || "";
+    const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
+    if (token !== adminPassword) return res.status(401).json({ error: "Unauthorised." });
+    next();
+  }
+
+  // Admin: all messages
+  app.get("/api/admin/messages", requireAdmin, async (req, res) => {
+    try {
+      const messages = await prisma.message.findMany({
+        orderBy: { createdAt: "desc" }
+      });
+      res.json(messages);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Admin: analytics summary + raw events
+  app.get("/api/admin/analytics", requireAdmin, async (req, res) => {
+    try {
+      const events = await prisma.analytics.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 500
+      });
+
+      // Summarise by event type
+      const summary: Record<string, number> = {};
+      for (const e of events) {
+        summary[e.event] = (summary[e.event] || 0) + 1;
+      }
+
+      // Page views per path
+      const pageViews: Record<string, number> = {};
+      for (const e of events) {
+        if (e.event === "page_view") {
+          try {
+            const d = JSON.parse(e.details);
+            const p = d.path || "unknown";
+            pageViews[p] = (pageViews[p] || 0) + 1;
+          } catch {}
+        }
+      }
+
+      res.json({ summary, pageViews, events });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Admin: delete a single message
+  app.delete("/api/admin/messages/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      await prisma.message.delete({ where: { id } });
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // ── Multi-page routing ────────────────────────────────────────────────────
   const pagesDir = path.join(process.cwd(), "pages");
 
+  app.get("/admin", (req, res) => res.sendFile(path.join(pagesDir, "admin.html")));
   app.get("/", (req, res) => res.sendFile(path.join(pagesDir, "index.html")));
   app.get("/services", (req, res) => res.sendFile(path.join(pagesDir, "services.html")));
   app.get("/projects", (req, res) => res.sendFile(path.join(pagesDir, "projects.html")));

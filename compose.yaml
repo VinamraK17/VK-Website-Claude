@@ -1,7 +1,5 @@
 # Docker Compose for VK Portfolio - Synology NAS / Docker deployment
-# Credentials are loaded from a persistent env file outside the git repo:
-#   /volume1/docker/dockhand/vk-web-claude.env
-# Copy .env.example there and fill in your real values.
+# Set environment variables in Dockhand's stack "Environment" tab - they persist across redeployments.
 # Docker image is built automatically via GitHub Actions on every push to main.
 
 services:
@@ -9,8 +7,11 @@ services:
   # 1. MariaDB Database
   portfolio-db:
     image: mariadb:lts
-    env_file:
-      - /volume1/docker/dockhand/vk-web-claude.env
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     volumes:
       - portfolio-db-data:/var/lib/mysql
     networks:
@@ -23,31 +24,33 @@ services:
       timeout: 5s
       retries: 5
 
-  # 2. Portfolio Web Server (pre-built image from GitHub Container Registry)
+  # 2. Portfolio Web Server
   portfolio-web:
     image: ghcr.io/vinamrak17/vk-website-claude:latest
     pull_policy: always
     depends_on:
       portfolio-db:
         condition: service_healthy
-    env_file:
-      - /volume1/docker/dockhand/vk-web-claude.env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - NODE_ENV=production
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
     ports:
       - "3000:3000"
     networks:
       - portfolio-network
     restart: always
 
-  # 3. phpMyAdmin (DB dashboard)
+  # 3. phpMyAdmin
   db-dashboard:
     image: phpmyadmin:latest
     depends_on:
       portfolio-db:
         condition: service_healthy
-    env_file:
-      - /volume1/docker/dockhand/vk-web-claude.env
     environment:
       PMA_HOST: portfolio-db
+      PMA_USER: ${MARIADB_USER}
+      PMA_PASSWORD: ${MARIADB_PASSWORD}
     ports:
       - "8085:80"
     networks:

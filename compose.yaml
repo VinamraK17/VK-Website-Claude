@@ -37,7 +37,7 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - NODE_ENV=production
-      - ADMIN_PASSWORD=${MARIADB_PASSWORD}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
     ports:
       - "3000:3000"
     networks:

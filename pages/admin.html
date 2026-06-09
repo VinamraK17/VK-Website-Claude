@@ -211,8 +211,8 @@ async function doLogin() {
     console.log('Login success, status:', res.status);
     TOKEN = pwd;
     sessionStorage.setItem('vk_admin_token', TOKEN);
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
 
     try {
         const data = await res.json();

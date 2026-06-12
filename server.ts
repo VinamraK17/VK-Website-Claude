@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { google } from "googleapis";
 import nodemailer from "nodemailer";
+import { UAParser } from "ua-parser-js";
 
 dotenv.config();
 
@@ -368,15 +369,39 @@ async function startServer() {
   // Analytics Endpoint
   app.post("/api/analytics", async (req, res) => {
     try {
-      const { event, details } = req.body;
-      
+      const { event, details, sessionId } = req.body;
+
+      // Country: Cloudflare sets this header automatically for proxied requests.
+      // Falls back to other common proxy headers if not behind Cloudflare.
+      const country =
+        (req.headers["cf-ipcountry"] as string) ||
+        (req.headers["x-vercel-ip-country"] as string) ||
+        null;
+
+      // Device / browser / OS from User-Agent (no extra PII beyond what's
+      // already sent with every request).
+      const ua = new UAParser(req.headers["user-agent"] || "").getResult();
+      const deviceType = ua.device.type || "desktop"; // mobile | tablet | desktop
+      const deviceVendor = ua.device.vendor || null; // e.g. Apple, Samsung
+      const browser = ua.browser.name || null;
+      const os = ua.os.name || null;
+
+      const referrer = (details && details.referrer) || null;
+
       await prisma.analytics.create({
         data: {
           event,
-          details: JSON.stringify(details || {})
+          details: JSON.stringify(details || {}),
+          sessionId: sessionId || null,
+          country,
+          deviceType,
+          deviceVendor,
+          browser,
+          os,
+          referrer
         }
       });
-      
+
       res.json({ success: true });
     } catch (error) {
       console.error("Error saving analytics:", error);
@@ -405,16 +430,165 @@ async function startServer() {
   // Admin: analytics summary + raw events
   app.get("/api/admin/analytics", requireAdmin, async (req, res) => {
     try {
-      const events = await prisma.analytics.findMany({ orderBy: { createdAt: "desc" }, take: 500 });
+      const events = await prisma.analytics.findMany({ orderBy: { createdAt: "desc" }, take: 1000 });
+
       const summary: Record<string, number> = {};
       const pageViews: Record<string, number> = {};
+      const countries: Record<string, number> = {};
+      const devices: Record<string, number> = {};
+      const deviceVendors: Record<string, number> = {};
+      const browsers: Record<string, number> = {};
+      const operatingSystems: Record<string, number> = {};
+      const referrers: Record<string, number> = {};
+
+      type SessionAcc = {
+        pageViews: { path: string; at: Date }[];
+        firstSeen: Date;
+        lastSeen: Date;
+        newVisitor: boolean | null;
+        durations: { path: string; duration: number }[];
+        scrollDepths: { path: string; depth: number }[];
+      };
+      const sessions: Record<string, SessionAcc> = {};
+
       for (const e of events) {
         summary[e.event] = (summary[e.event] || 0) + 1;
+
+        if (e.country) countries[e.country] = (countries[e.country] || 0) + 1;
+        if (e.deviceType) devices[e.deviceType] = (devices[e.deviceType] || 0) + 1;
+        if (e.deviceVendor) deviceVendors[e.deviceVendor] = (deviceVendors[e.deviceVendor] || 0) + 1;
+        if (e.browser) browsers[e.browser] = (browsers[e.browser] || 0) + 1;
+        if (e.os) operatingSystems[e.os] = (operatingSystems[e.os] || 0) + 1;
+
+        let d: any = {};
+        try { d = JSON.parse(e.details); } catch {}
+
         if (e.event === "page_view") {
-          try { const d = JSON.parse(e.details); const p = d.path || "unknown"; pageViews[p] = (pageViews[p] || 0) + 1; } catch {}
+          const p = d.path || "unknown";
+          pageViews[p] = (pageViews[p] || 0) + 1;
+
+          const ref = e.referrer || d.referrer || "";
+          if (!ref) {
+            referrers["Direct / None"] = (referrers["Direct / None"] || 0) + 1;
+          } else {
+            try {
+              const host = new URL(ref).hostname.replace(/^www\./, "");
+              if (!host.includes("vinamrakumar.com")) {
+                referrers[host] = (referrers[host] || 0) + 1;
+              }
+            } catch {
+              referrers[ref] = (referrers[ref] || 0) + 1;
+            }
+          }
+        }
+
+        // Session bucketing (sessionId comes from the client; falls back to
+        // a per-event pseudo-session so older/anonymous events don't crash this).
+        const sid = e.sessionId || `anon-${e.id}`;
+        if (!sessions[sid]) {
+          sessions[sid] = {
+            pageViews: [],
+            firstSeen: e.createdAt,
+            lastSeen: e.createdAt,
+            newVisitor: null,
+            durations: [],
+            scrollDepths: []
+          };
+        }
+        const s = sessions[sid];
+        if (e.createdAt < s.firstSeen) s.firstSeen = e.createdAt;
+        if (e.createdAt > s.lastSeen) s.lastSeen = e.createdAt;
+        if (e.event === "page_view") s.pageViews.push({ path: d.path || "unknown", at: e.createdAt });
+        if (e.event === "page_exit") {
+          if (typeof d.duration === "number") s.durations.push({ path: d.path || "unknown", duration: d.duration });
+          if (typeof d.scrollDepth === "number") s.scrollDepths.push({ path: d.path || "unknown", depth: d.scrollDepth });
+        }
+        if (typeof d.newVisitor === "boolean") s.newVisitor = d.newVisitor;
+      }
+
+      // ── Session-derived metrics ──────────────────────────────────────────
+      const entryPages: Record<string, number> = {};
+      const exitPages: Record<string, number> = {};
+      const timeOnPageAcc: Record<string, { total: number; count: number }> = {};
+      const scrollDepthAcc: Record<string, { total: number; count: number }> = {};
+
+      let totalSessions = 0;
+      let bouncedSessions = 0;
+      let newVisitors = 0;
+      let returningVisitors = 0;
+      let sessionDurationTotal = 0;
+      let sessionDurationCount = 0;
+
+      for (const sid of Object.keys(sessions)) {
+        const s = sessions[sid];
+        if (s.pageViews.length === 0) continue;
+
+        totalSessions++;
+        s.pageViews.sort((a, b) => a.at.getTime() - b.at.getTime());
+        const entry = s.pageViews[0].path;
+        const exit = s.pageViews[s.pageViews.length - 1].path;
+        entryPages[entry] = (entryPages[entry] || 0) + 1;
+        exitPages[exit] = (exitPages[exit] || 0) + 1;
+
+        if (s.pageViews.length === 1) bouncedSessions++;
+
+        if (s.newVisitor === true) newVisitors++;
+        else if (s.newVisitor === false) returningVisitors++;
+
+        const durationMs = s.lastSeen.getTime() - s.firstSeen.getTime();
+        if (durationMs > 0) {
+          sessionDurationTotal += durationMs;
+          sessionDurationCount++;
+        }
+
+        for (const t of s.durations) {
+          if (!timeOnPageAcc[t.path]) timeOnPageAcc[t.path] = { total: 0, count: 0 };
+          timeOnPageAcc[t.path].total += t.duration;
+          timeOnPageAcc[t.path].count++;
+        }
+        for (const sd of s.scrollDepths) {
+          if (!scrollDepthAcc[sd.path]) scrollDepthAcc[sd.path] = { total: 0, count: 0 };
+          scrollDepthAcc[sd.path].total += sd.depth;
+          scrollDepthAcc[sd.path].count++;
         }
       }
-      res.json({ summary, pageViews, events });
+
+      const avgTimeOnPage: Record<string, number> = {};
+      for (const p of Object.keys(timeOnPageAcc)) {
+        avgTimeOnPage[p] = Math.round(timeOnPageAcc[p].total / timeOnPageAcc[p].count);
+      }
+      const avgScrollDepth: Record<string, number> = {};
+      for (const p of Object.keys(scrollDepthAcc)) {
+        avgScrollDepth[p] = Math.round(scrollDepthAcc[p].total / scrollDepthAcc[p].count);
+      }
+
+      const sessionStats = {
+        totalSessions,
+        bouncedSessions,
+        bounceRate: totalSessions ? Math.round((bouncedSessions / totalSessions) * 1000) / 10 : 0,
+        newVisitors,
+        returningVisitors,
+        avgSessionDurationSec: sessionDurationCount
+          ? Math.round(sessionDurationTotal / sessionDurationCount / 1000)
+          : 0,
+        entryPages,
+        exitPages,
+        avgTimeOnPage,
+        avgScrollDepth
+      };
+
+      res.json({
+        summary,
+        pageViews,
+        countries,
+        devices,
+        deviceVendors,
+        browsers,
+        operatingSystems,
+        referrers,
+        sessionStats,
+        events
+      });
     } catch (error: any) { res.status(500).json({ error: error.message }); }
   });
 

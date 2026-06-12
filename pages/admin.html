@@ -136,6 +136,59 @@
                 <div id="page-views-chart" class="space-y-3"></div>
             </div>
 
+            <!-- Location & Device -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="card p-6">
+                    <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Visitors by Country</h3>
+                    <div id="countries-chart" class="space-y-3"></div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Device Types</h3>
+                    <div id="devices-chart" class="space-y-3"></div>
+                    <h4 class="text-[10px] font-mono uppercase tracking-widest mt-5 mb-3 pt-4 border-t" style="color:rgba(255,255,255,0.3);border-color:var(--border)">By Make (Mobile/Tablet)</h4>
+                    <div id="device-vendors-chart" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Browser/OS & Referrers -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="card p-6">
+                    <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Browsers</h3>
+                    <div id="browsers-chart" class="space-y-3"></div>
+                    <h4 class="text-[10px] font-mono uppercase tracking-widest mt-5 mb-3 pt-4 border-t" style="color:rgba(255,255,255,0.3);border-color:var(--border)">Operating Systems</h4>
+                    <div id="os-chart" class="space-y-3"></div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Top Referrers</h3>
+                    <div id="referrers-chart" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Session funnel: entry vs exit -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="card p-6">
+                    <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Entry Pages</h3>
+                    <div id="entry-pages-chart" class="space-y-3"></div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Exit Pages · Where Visitors Lose Interest</h3>
+                    <div id="exit-pages-chart" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Engagement -->
+            <div class="card overflow-hidden mb-6">
+                <div class="px-5 py-4 border-b" style="border-color:var(--border)">
+                    <h3 class="text-xs font-mono uppercase tracking-widest" style="color:var(--accent)">Page Engagement</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead><tr><th>Page</th><th class="text-right">Views</th><th class="text-right">Avg. Time on Page</th><th class="text-right">Avg. Scroll Depth</th></tr></thead>
+                        <tbody id="engagement-tbody"><tr><td colspan="4" class="text-center py-10" style="color:var(--ink-faint)">Loading…</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="card p-6 mb-6">
                 <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Event Summary</h3>
                 <div id="event-summary" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
@@ -143,7 +196,7 @@
 
             <div class="card overflow-hidden">
                 <div class="px-5 py-4 border-b flex items-center justify-between" style="border-color:var(--border)">
-                    <h3 class="text-xs font-mono uppercase tracking-widest" style="color:var(--accent)">Recent Events (last 500)</h3>
+                    <h3 class="text-xs font-mono uppercase tracking-widest" style="color:var(--accent)">Recent Events (last 1000)</h3>
                     <input type="text" id="evt-search" placeholder="Filter events…" oninput="filterEvents()" style="width:180px;font-size:12px;padding:6px 12px">
                 </div>
                 <div class="overflow-x-auto">
@@ -162,6 +215,7 @@
 let TOKEN = '';
 let allMessages = [];
 let allEvents = [];
+let sessionStats = {};
 
 function toggleReveal() {
     const input = document.getElementById('pwd-input');
@@ -247,27 +301,88 @@ async function loadAnalytics() {
         const res = await fetch('/api/admin/analytics', { headers: { Authorization: 'Bearer ' + TOKEN } });
         const data = await res.json();
         allEvents = data.events || [];
+        sessionStats = data.sessionStats || {};
         renderPageViews(data.pageViews || {});
+        renderBarList('countries-chart', data.countries, '#60a5fa');
+        renderBarList('devices-chart', data.devices, '#4ecca3');
+        renderBarList('device-vendors-chart', data.deviceVendors, '#a78bfa');
+        renderBarList('browsers-chart', data.browsers, '#f59e0b');
+        renderBarList('os-chart', data.operatingSystems, '#60a5fa');
+        renderBarList('referrers-chart', data.referrers, '#a78bfa');
+        renderBarList('entry-pages-chart', sessionStats.entryPages, '#4ecca3');
+        renderBarList('exit-pages-chart', sessionStats.exitPages, '#ff4d4d');
+        renderEngagement(data.pageViews || {}, sessionStats.avgTimeOnPage || {}, sessionStats.avgScrollDepth || {});
         renderEventSummary(data.summary || {});
         renderEvents(allEvents);
         updateStatStrip();
     } catch(e) {}
 }
 
+function formatDuration(sec) {
+    sec = sec || 0;
+    if (sec < 60) return sec + 's';
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m + 'm ' + s + 's';
+}
+
 function updateStatStrip() {
     const pageViews  = allEvents.filter(e => e.event === 'page_view').length;
     const linkClicks = allEvents.filter(e => e.event === 'link_click').length;
+    const ss = sessionStats || {};
     const stats = [
         { label: 'Total Messages', value: allMessages.length, color: '#4ecca3' },
         { label: 'Page Views',     value: pageViews,          color: '#60a5fa' },
         { label: 'Link Clicks',    value: linkClicks,         color: '#a78bfa' },
         { label: 'Events Logged',  value: allEvents.length,   color: '#f59e0b' },
+        { label: 'Sessions',          value: ss.totalSessions ?? 0, color: '#38bdf8' },
+        { label: 'Bounce Rate',        value: (ss.bounceRate ?? 0) + '%', color: '#fb7185' },
+        { label: 'Avg Session Time',   value: formatDuration(ss.avgSessionDurationSec ?? 0), color: '#34d399' },
+        { label: 'New vs Returning',   value: (ss.newVisitors ?? 0) + ' / ' + (ss.returningVisitors ?? 0), color: '#fbbf24' },
     ];
     document.getElementById('stat-strip').innerHTML = stats.map(s => `
         <div class="stat-card">
             <div class="text-2xl font-bold tracking-tight" style="color:${s.color}">${s.value}</div>
             <div class="text-xs mt-1 font-mono uppercase tracking-widest" style="color:rgba(255,255,255,0.35)">${s.label}</div>
         </div>`).join('');
+}
+
+// Generic horizontal bar list used for countries / devices / browsers / referrers / entry & exit pages
+function renderBarList(containerId, dataObj, color) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const entries = Object.entries(dataObj || {}).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    const max = entries[0]?.[1] || 1;
+    el.innerHTML = entries.length
+        ? entries.map(([label, count]) => `
+            <div class="flex items-center gap-3">
+                <div class="font-mono text-xs w-36 shrink-0 truncate" style="color:rgba(255,255,255,0.5)" title="${esc(label)}">${esc(label)}</div>
+                <div class="flex-1 h-2 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06)">
+                    <div class="h-full rounded-full" style="width:${(count/max*100).toFixed(1)}%;background:${color}"></div>
+                </div>
+                <div class="font-mono text-xs w-10 text-right" style="color:${color}">${count}</div>
+            </div>`).join('')
+        : '<p class="text-xs font-mono" style="color:rgba(255,255,255,0.3)">No data yet.</p>';
+}
+
+function renderEngagement(pageViews, avgTimeOnPage, avgScrollDepth) {
+    const paths = new Set([...Object.keys(pageViews||{}), ...Object.keys(avgTimeOnPage||{}), ...Object.keys(avgScrollDepth||{})]);
+    const rows = [...paths].map(p => ({
+        path: p,
+        views: pageViews?.[p] || 0,
+        time: avgTimeOnPage?.[p],
+        scroll: avgScrollDepth?.[p]
+    })).sort((a, b) => b.views - a.views);
+    const tbody = document.getElementById('engagement-tbody');
+    tbody.innerHTML = rows.length
+        ? rows.map(r => `
+            <tr>
+                <td class="font-mono text-xs" style="color:rgba(255,255,255,0.6)">${esc(r.path)}</td>
+                <td class="font-mono text-xs text-right" style="color:rgba(255,255,255,0.6)">${r.views}</td>
+                <td class="font-mono text-xs text-right" style="color:${r.time != null ? '#4ecca3' : 'rgba(255,255,255,0.2)'}">${r.time != null ? formatDuration(r.time) : '—'}</td>
+                <td class="font-mono text-xs text-right" style="color:${r.scroll != null ? '#60a5fa' : 'rgba(255,255,255,0.2)'}">${r.scroll != null ? r.scroll + '%' : '—'}</td>
+            </tr>`).join('')
+        : '<tr><td colspan="4" class="text-center py-10" style="color:rgba(255,255,255,0.3)">No engagement data yet.</td></tr>';
 }
 
 function renderMessages(msgs) {

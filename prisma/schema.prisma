@@ -19,10 +19,20 @@ model Message {
 }
 
 model Analytics {
-  id        Int      @id @default(autoincrement())
-  event     String
-  details   String   @db.Text
-  createdAt DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  event        String
+  details      String   @db.Text
+  sessionId    String?
+  country      String?
+  deviceType   String?
+  deviceVendor String?
+  browser      String?
+  os           String?
+  referrer     String?  @db.Text
+  createdAt    DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([event])
 }
 
 model Project {

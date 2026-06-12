@@ -46,13 +46,93 @@ function initIcons() {
 }
 
 // ── Analytics (fire-and-forget) ──────────────────────────────────────────────
+
+// One ID per browser tab session (cleared when the tab/window is closed).
+function getSessionId() {
+    let id = sessionStorage.getItem('vk_session_id');
+    if (!id) {
+        id = (window.crypto && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : 'sess-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+        sessionStorage.setItem('vk_session_id', id);
+    }
+    return id;
+}
+
+// New vs returning visitor — persisted per-browser, no cookies/PII.
+// Decided once per session so every page_view in the session agrees.
+function isNewVisitor() {
+    const cached = sessionStorage.getItem('vk_new_visitor');
+    if (cached !== null) return cached === '1';
+    const isNew = !localStorage.getItem('vk_returning_visitor');
+    localStorage.setItem('vk_returning_visitor', '1');
+    sessionStorage.setItem('vk_new_visitor', isNew ? '1' : '0');
+    return isNew;
+}
+
 window.trackEvent = (event, details = {}) => {
+    const payload = JSON.stringify({
+        event,
+        details,
+        sessionId: getSessionId(),
+        timestamp: new Date().toISOString()
+    });
     fetch('/api/analytics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ event, details, timestamp: new Date().toISOString() })
+        body: payload
     }).catch(() => {});
 };
+
+// Fire-and-forget beacon for events sent as the page is being unloaded.
+window.trackEventBeacon = (event, details = {}) => {
+    const payload = JSON.stringify({
+        event,
+        details,
+        sessionId: getSessionId(),
+        timestamp: new Date().toISOString()
+    });
+    if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/analytics', new Blob([payload], { type: 'application/json' }));
+    } else {
+        fetch('/api/analytics', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload, keepalive: true }).catch(() => {});
+    }
+};
+
+// ── Time on page & scroll depth ──────────────────────────────────────────────
+function initEngagementTracking() {
+    const pageStart = performance.now();
+    let maxScroll = 0;
+    let sent = false;
+
+    function currentScrollDepth() {
+        const doc = document.documentElement;
+        const scrollable = doc.scrollHeight - doc.clientHeight;
+        if (scrollable <= 0) return 100;
+        const pct = ((window.scrollY || doc.scrollTop) / scrollable) * 100;
+        return Math.min(100, Math.max(0, Math.round(pct)));
+    }
+
+    window.addEventListener('scroll', () => {
+        maxScroll = Math.max(maxScroll, currentScrollDepth());
+    }, { passive: true });
+
+    function sendExit() {
+        if (sent) return;
+        sent = true;
+        const duration = Math.round((performance.now() - pageStart) / 1000);
+        trackEventBeacon('page_exit', {
+            path: window.location.pathname,
+            duration,
+            scrollDepth: maxScroll
+        });
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') sendExit();
+    });
+    window.addEventListener('pagehide', sendExit);
+}
 
 // ── Privacy modal ────────────────────────────────────────────────────────────
 window.openPrivacy = () => {
@@ -154,7 +234,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initLinkTracking();
     highlightActiveNav();
     updateDbStatus();
-    trackEvent('page_view', { path: window.location.pathname });
+    initEngagementTracking();
+    trackEvent('page_view', {
+        path: window.location.pathname,
+        referrer: document.referrer || null,
+        newVisitor: isNewVisitor()
+    });
 });
 
 window.addEventListener('load', initIcons);

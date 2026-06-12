@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import crypto from "crypto";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { google } from "googleapis";
@@ -266,7 +267,41 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // Trust the Cloudflare tunnel / reverse proxy in front of this container so
+  // req.ip and req.secure reflect the real client (used for rate limiting & logging).
+  app.set("trust proxy", 1);
+
   app.use(express.json());
+
+  // ── Security headers (applied to every response) ────────────────────────
+  app.use((req, res, next) => {
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
+    res.setHeader("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+    res.setHeader(
+      "Content-Security-Policy",
+      [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com",
+        "font-src 'self' https://fonts.gstatic.com data:",
+        "img-src 'self' data: https:",
+        "connect-src 'self'",
+        "frame-ancestors 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "object-src 'none'",
+      ].join("; ")
+    );
+    // Keep the admin dashboard out of search engines/caches.
+    if (req.path.startsWith("/admin") || req.path.startsWith("/api/admin")) {
+      res.setHeader("X-Robots-Tag", "noindex, nofollow");
+      res.setHeader("Cache-Control", "no-store");
+    }
+    next();
+  });
 
   // Serve static assets (images, robots.txt, sitemap, etc.) from /public
   app.use(express.static(path.join(process.cwd(), 'public')));
@@ -410,12 +445,63 @@ async function startServer() {
   });
 
   // ── Admin middleware ──────────────────────────────────────────────────────
+
+  // Constant-time string comparison (mitigates timing attacks on the admin password).
+  function safeCompare(a: string, b: string): boolean {
+    const ha = crypto.createHash("sha256").update(a).digest();
+    const hb = crypto.createHash("sha256").update(b).digest();
+    return crypto.timingSafeEqual(ha, hb);
+  }
+
+  // Brute-force protection: lock out an IP after too many failed admin logins.
+  const ADMIN_MAX_ATTEMPTS = 5;
+  const ADMIN_ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+  const ADMIN_LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes
+  const adminAttempts = new Map<string, { count: number; firstAttempt: number; lockedUntil: number }>();
+
+  // Periodically forget old/expired entries so the map doesn't grow forever.
+  setInterval(() => {
+    const now = Date.now();
+    for (const [ip, entry] of adminAttempts) {
+      if (now > entry.lockedUntil && now - entry.firstAttempt > ADMIN_ATTEMPT_WINDOW_MS) {
+        adminAttempts.delete(ip);
+      }
+    }
+  }, 60 * 60 * 1000);
+
   function requireAdmin(req: any, res: any, next: any) {
     const adminPassword = process.env.ADMIN_PASSWORD?.trim();
     if (!adminPassword) return res.status(503).json({ error: "Admin access not configured." });
+
+    const ip = req.ip || req.socket?.remoteAddress || "unknown";
+    const now = Date.now();
+    const entry = adminAttempts.get(ip);
+
+    if (entry && now < entry.lockedUntil) {
+      const retryAfterSec = Math.ceil((entry.lockedUntil - now) / 1000);
+      res.setHeader("Retry-After", String(retryAfterSec));
+      return res.status(429).json({ error: "Too many failed login attempts. Try again later." });
+    }
+
     const auth = req.headers.authorization || "";
     const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-    if (token !== adminPassword) return res.status(401).json({ error: "Unauthorised." });
+
+    if (!token || !safeCompare(token, adminPassword)) {
+      const current = entry && now - entry.firstAttempt <= ADMIN_ATTEMPT_WINDOW_MS
+        ? entry
+        : { count: 0, firstAttempt: now, lockedUntil: 0 };
+      current.count += 1;
+      if (current.count >= ADMIN_MAX_ATTEMPTS) {
+        current.lockedUntil = now + ADMIN_LOCKOUT_MS;
+        console.warn(`[ADMIN] Locked out ${ip} for ${ADMIN_LOCKOUT_MS / 60000}min after ${current.count} failed login attempts.`);
+      }
+      adminAttempts.set(ip, current);
+      console.warn(`[ADMIN] Failed login attempt from ${ip} at ${new Date(now).toISOString()} (path: ${req.path})`);
+      return res.status(401).json({ error: "Unauthorised." });
+    }
+
+    // Successful auth — clear any record of prior failed attempts for this IP.
+    adminAttempts.delete(ip);
     next();
   }
 

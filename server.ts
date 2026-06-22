@@ -289,7 +289,6 @@ async function startServer() {
         "font-src 'self' https://fonts.gstatic.com data:",
         "img-src 'self' data: https:",
         "connect-src 'self'",
-        "frame-src https://www.linkedin.com",
         "frame-ancestors 'none'",
         "base-uri 'self'",
         "form-action 'self'",

@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vinamra Kumar | Projects</title>
 
-    <meta name="description" content="Key projects by Vinamra Kumar — NEXUS AI Troubleshooting (5M+ users), GenAI Strategy (8M+ CHF saved), Lido Aviation DMS (60% efficiency gain)." />
+    <meta name="description" content="Key projects by Vinamra Kumar — NEXUS AI Troubleshooting (5M+ users), GenAI Strategy (8M+ CHF saved), Aviation IT Portfolio Modernisation, Data-Driven Aviation Maps, and 15+ years of cross-industry leadership." />
     <meta name="author" content="Vinamra Kumar" />
     <link rel="canonical" href="https://vinamrakumar.com/projects" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://vinamrakumar.com/projects" />
     <meta property="og:title" content="Projects | Vinamra Kumar" />
-    <meta property="og:description" content="Key projects: NEXUS AI Troubleshooting, GenAI Strategy, Lido Aviation DMS." />
+    <meta property="og:description" content="Key projects: NEXUS AI Troubleshooting, GenAI Strategy, Aviation IT Portfolio Modernisation, Data-Driven Aviation Maps, Leadership Across Aviation & Telecoms." />
     <meta property="og:image" content="https://vinamrakumar.com/hero_hq.jpg" />
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://vinamrakumar.com/projects" />
@@ -226,32 +226,85 @@
     <script type="module">
         const CASE_STUDY_DETAILS = {
             "NEXUS: AI Troubleshooting": {
-                challenge: "Support agents were overwhelmed with repetitive Wi-Fi and network diagnostics calls. Traditional diagnostic tools were fragmented, resulting in high average handling times and low customer satisfaction.",
-                solution: "Designed and launched 'NEXUS', a proactive, automated diagnostics portal. NEXUS interfaces directly with device telemetry APIs, runs automated line checks, and uses rule-based and predictive models to guide customers through self-resolution steps.",
-                results: ["Secured 2.4M CHF in annual operational savings.", "Achieved a 20% year-on-year improvement in digital self-care resolution.", "Optimised authentication and connection flow, boosting customer NPS from 70% to 90%."],
-                techStack: ["React", "TypeScript", "Node.js", "GraphQL", "Telemetry APIs", "Kubernetes", "Splunk"],
-                role: "Lead Product Owner (Digital Support Automation)", timeline: "18 Months (2022 – 2024)", impactMetric: "2.4M CHF Saved"
+                challenge: "Sunrise GmbH's self-service troubleshooting tools had poor success rates and low customer engagement, pushing a high volume of technical support queries into the call centre. Existing diagnostic flows were rigid and disconnected from real network data, resulting in poor first-contact resolution and elevated average handling times for agents.",
+                solution: "Led a cross-functional team of 15+ to architect and deliver NEXUS zero-to-production — an LLM-powered troubleshooting platform integrating real-time network telemetry with AI-driven diagnostic workflows. Built on a Microservices Architecture with CI/CD Pipelines, using React and Node.js on the front end, Kubernetes for orchestration, and Solvatio and Storyblok as core AI and content platforms, supplemented by REST/GraphQL APIs and Cloud Infrastructure on Azure.",
+                results: [
+                    "Delivered 2.4M CHF in annual operational efficiency savings.",
+                    "Significantly increased call deflection rate — measurable shift of technical support queries to self-service resolution.",
+                    "Improved online tool engagement and first-contact resolution, reducing inbound call volume to live agents.",
+                    "Reduced Average Handling Time (AHT) for support agents through better pre-qualification of escalated cases.",
+                    "Exceeded departmental KPIs by approximately 20% in 2023."
+                ],
+                techStack: ["React", "Node.js", "TypeScript", "Kubernetes", "Solvatio", "Storyblok", "Java", "Microservices Architecture", "CI/CD Pipelines", "REST/GraphQL APIs", "Cloud Infrastructure (Azure)"],
+                role: "Product Owner (Digital Transformation)",
+                timeline: "Sep 2022 – Feb 2024",
+                impactMetric: "2.4M CHF Saved"
             },
             "GenAI Strategy & MVP": {
-                challenge: "Traditional IVRs and chatbots had rigid decision trees, leading to poor customer experiences. Implementing LLMs required solving issues related to hallucinations, GDPR compliance, and complex integration with legacy billing platforms.",
-                solution: "Devised a comprehensive GenAI roadmap, aligning C-level executives. Launched safe MVP trials utilising Retrieval-Augmented Generation (RAG) and custom LLM gateway guardrails for privacy and safety.",
-                results: ["Delivered 8M+ CHF in annual efficiency savings through automated process execution.", "Successfully automated 6 high-volume, multi-turn customer care journeys.", "Maintained a near-zero hallucination rate using strict contextual embeddings and deterministic fallbacks."],
-                techStack: ["OpenAI API", "LangChain", "Vector Databases", "Python", "React", "GDPR Guardrails", "Azure Cloud"],
-                role: "Manager – Digital Transformation Strategy", timeline: "Ongoing (Launched 2024)", impactMetric: "8M+ CHF Value"
+                challenge: "Existing customer service at Sunrise GmbH relied on rigid IVRs and legacy platforms with low self-service resolution rates. Scaling LLMs across the business required navigating hallucination risks, GDPR compliance requirements, and complex integration with multiple legacy systems.",
+                solution: "Defined a comprehensive GenAI roadmap and secured C-level alignment across 5+ cross-functional teams. Deployed Sprinklr as the core platform, combining Retrieval-Augmented Generation (RAG) and workflow-based LLM approaches, backed by Vector Databases and built-in GDPR guardrails. Governed vendor ecosystems and external partnerships to ensure delivery quality and strategic alignment.",
+                results: [
+                    "Delivered 8M+ CHF in annual efficiency savings through GenAI integrations and process automation.",
+                    "Automated 6 high-volume, multi-turn customer care journeys end-to-end.",
+                    "Reduced inbound call volume to live agents through improved self-service resolution.",
+                    "Improved NPS through faster, more accurate customer query resolution.",
+                    "Streamlined operational workflows across business units, enabling teams to focus on higher-value activities."
+                ],
+                techStack: ["Sprinklr", "Multi-LLM Models", "Vector Databases", "Python", "React", "GDPR Guardrails", "Multi-Cloud Infrastructure"],
+                role: "Manager Digital Transformation",
+                timeline: "Feb 2024 – Present",
+                impactMetric: "8M+ CHF Saved"
             },
-            "Lido Aviation DMS": {
-                challenge: "Safety-critical flight navigation databases were produced using monolithic legacy applications. The cycle time to process and package worldwide aeronautical updates was 5 days, leaving no room for operational flexibility.",
-                solution: "Led a cross-border agile team of 15+ engineers to rebuild the data pipeline. Transitioned the monolith to cloud-native microservices, automated GIS verification layers, and created a unified navigation console.",
-                results: ["Reduced navigation database turnaround cycle from 5 days to 2 days (60% efficiency gain).", "Achieved zero data incidents across critical global airline update releases.", "Exceeded annual cost-saving targets by 40% through infrastructure modernisation."],
-                techStack: ["Java / Spring Boot", "Docker", "Kafka", "PostgreSQL", "GIS Engine", "React Admin Portal"],
-                role: "Product Owner (Navigation Services)", timeline: "4 Years (2018 – 2022)", impactMetric: "60% Turnaround Gain"
+            "Aviation IT Portfolio Modernisation": {
+                challenge: "A fragmented portfolio of 77 applications operating on legacy systems, with cost overruns accumulating and no standardisation across products or delivery processes. Cross-border teams were misaligned, governance was inconsistent, and roadmaps lacked coherence.",
+                solution: "Led a comprehensive portfolio consolidation initiative, introducing Agile SCRUM across delivery teams, establishing governance frameworks, and aligning product roadmaps to measurable business objectives. Embedded structured risk management practices to improve delivery predictability and reduce cost overruns.",
+                results: [
+                    "Achieved a 60% improvement in operational efficiency across the 77-application portfolio.",
+                    "Reduced budget spend by 40%+ through portfolio consolidation and delivery standardisation.",
+                    "Established governance and roadmap alignment frameworks adopted across the organisation."
+                ],
+                techStack: ["JIRA", "Confluence", "Lido Applications (Internally Developed)", "Agile/SCRUM", "Risk Management Frameworks"],
+                role: "Product Owner",
+                timeline: "Mar 2018 – Aug 2022",
+                impactMetric: "60% Efficiency Gain"
+            },
+            "Data-Driven Aviation Maps": {
+                challenge: "Aviation chart production at Lufthansa Systems relied on manual, static processes — slow, error-prone, and increasingly unscalable for a data-intensive industry operating under strict EASA and ICAO regulatory requirements.",
+                solution: "Led the full vendor lifecycle from sourcing through contract negotiation, proof-of-concept, and MVP delivery. Defined rigorous data quality standards and requirements, then designed the end-to-end integration process to embed the new data-driven chart generation approach into Lido's internal production platform — fundamentally transforming how charts were produced.",
+                results: [
+                    "Successfully launched a zero-to-production program replacing manual aviation chart workflows with dynamic, data-driven generation.",
+                    "Achieved EASA and ICAO regulatory certification for the new production process.",
+                    "Reduced chart production time-to-market and improved accuracy and scalability.",
+                    "Transformed ways of working across the production organisation, establishing a repeatable, data-driven production model."
+                ],
+                techStack: ["External Vendor Tooling", "Lido Internal Platforms", "Data Quality Frameworks", "Regulatory Compliance (EASA/ICAO)"],
+                role: "Production Manager",
+                timeline: "Feb 2016 – Feb 2018",
+                impactMetric: "Zero-to-Production"
+            },
+            "Leadership Across Aviation & Telecoms": {
+                challenge: "Across two industries and multiple organisations, the recurring challenge was the same — fragmented teams, legacy systems, misaligned stakeholders, and the need to drive meaningful transformation in regulated, complex, and high-stakes environments.",
+                solution: "Built and led multicultural cross-functional teams across borders and disciplines — from a 19-FTE multilingual aviation operations team to 15+ product and engineering teams at a major Swiss telco. Drove transformation at every level: introducing Agile SCRUM across a 77-application portfolio, securing C-level alignment for enterprise GenAI strategy, managing full vendor lifecycles from POC to certified production, and governing strategic partner ecosystems.",
+                results: [
+                    "10M+ CHF in documented efficiency savings attributable to transformation-led initiatives.",
+                    "Delivered a 5M+ customer-facing AI platform zero-to-production.",
+                    "Owned the digital product strategy for a CHF 1B+ telco, aligning 5+ cross-functional teams.",
+                    "Launched an EASA & ICAO certified aviation production program from the ground up.",
+                    "Achieved 40%+ budget reduction and 60% efficiency improvement across a 77-application aviation IT portfolio."
+                ],
+                techStack: ["Agile/SCRUM", "OKR Frameworks", "Risk Management", "Vendor Governance", "Digital Transformation Strategy", "GenAI Strategy"],
+                role: "Multiple Leadership Roles",
+                timeline: "2006 – Present",
+                impactMetric: "15+ Years | 2 Industries"
             }
         };
 
         const FALLBACK_PROJECTS = [
-            { title: "NEXUS: AI Troubleshooting", tag: "Telecom AI", stats: "5M+ Users", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800", description: "Spearheaded the first AI-driven troubleshooting engine for technical support at Sunrise GmbH, significantly reducing support volume.", order: 0 },
-            { title: "GenAI Strategy & MVP", tag: "Digital Transformation", stats: "8M+ CHF Saved", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800", description: "Orchestrating the GenAI roadmap to automate high-volume customer journeys, defining the convergence of LLMs and business strategy.", order: 1 },
-            { title: "Lido Aviation DMS", tag: "Aviation Software", stats: "60% Efficiency", image: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?auto=format&fit=crop&q=80&w=800", description: "Led the transformation of legacy flight navigation data management systems into high-efficiency microservices for Lufthansa Systems.", order: 2 }
+            { title: "NEXUS: AI Troubleshooting", tag: "Telecom AI", stats: "5M+ Users", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800", description: "Architected and launched NEXUS — an LLM-powered troubleshooting platform serving 5M+ customers at Sunrise GmbH, driving significant call deflection and operational savings.", order: 0 },
+            { title: "GenAI Strategy & MVP", tag: "Digital Transformation", stats: "8M+ CHF Saved", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800", description: "Defined and delivered the enterprise GenAI roadmap for a CHF 1B+ telco, automating customer care journeys and driving 8M+ CHF in annual efficiency savings.", order: 1 },
+            { title: "Aviation IT Portfolio Modernisation", tag: "Aviation Software", stats: "60% Efficiency Gain", image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=800", description: "Modernised a fragmented 77-application aviation IT portfolio at Lufthansa Systems — introducing Agile SCRUM, governance frameworks, and roadmap alignment to unlock 40%+ in budget savings.", order: 2 },
+            { title: "Data-Driven Aviation Maps", tag: "Aviation Software", stats: "Zero-to-Production", image: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800", description: "Led the end-to-end program to replace manual static aviation chart production with a dynamic, data-driven generation platform — EASA and ICAO certified.", order: 3 },
+            { title: "Leadership Across Aviation & Telecoms", tag: "Strategy & Leadership", stats: "15+ Years | 2 Industries", image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800", description: "A two-decade leadership track across aviation and telecoms — from multicultural 19-FTE operations teams to C-suite GenAI strategy at a CHF 1B+ telco.", order: 4 }
         ];
 
         let projectsData = [];

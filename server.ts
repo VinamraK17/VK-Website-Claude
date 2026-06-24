@@ -113,37 +113,59 @@ async function sendEmail(name: string, email: string, message: string) {
 }
 
 async function seedData() {
+  const projectsToSeed = [
+    {
+      title: "NEXUS: AI Troubleshooting",
+      tag: "Telecom AI",
+      stats: "5M+ Users",
+      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
+      description: "Architected and launched NEXUS — an LLM-powered troubleshooting platform serving 5M+ customers at Sunrise GmbH, driving significant call deflection and operational savings.",
+      order: 0
+    },
+    {
+      title: "GenAI Strategy & MVP",
+      tag: "Digital Transformation",
+      stats: "8M+ CHF Saved",
+      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800",
+      description: "Defined and delivered the enterprise GenAI roadmap for a CHF 1B+ telco, automating customer care journeys and driving 8M+ CHF in annual efficiency savings.",
+      order: 1
+    },
+    {
+      title: "Aviation IT Portfolio Modernisation",
+      tag: "Aviation Software",
+      stats: "60% Efficiency Gain",
+      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=800",
+      description: "Modernised a fragmented 77-application aviation IT portfolio at Lufthansa Systems — introducing Agile SCRUM, governance frameworks, and roadmap alignment to unlock 40%+ in budget savings.",
+      order: 2
+    },
+    {
+      title: "Data-Driven Aviation Maps",
+      tag: "Aviation Software",
+      stats: "Zero-to-Production",
+      image: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800",
+      description: "Led the end-to-end program to replace manual static aviation chart production with a dynamic, data-driven generation platform — EASA and ICAO certified.",
+      order: 3
+    },
+    {
+      title: "Leadership Across Aviation & Telecoms",
+      tag: "Strategy & Leadership",
+      stats: "15+ Years | 2 Industries",
+      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800",
+      description: "A two-decade leadership track across aviation and telecoms — from multicultural 19-FTE operations teams to C-suite GenAI strategy at a CHF 1B+ telco.",
+      order: 4
+    }
+  ];
+
   const projectCount = await prisma.project.count();
-  if (projectCount === 0) {
-    console.log("Seeding initial projects...");
-    await prisma.project.createMany({
-      data: [
-        {
-          title: "NEXUS: AI Troubleshooting",
-          tag: "Telecom AI",
-          stats: "5M+ Users",
-          image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
-          description: "Spearheaded the first AI-driven troubleshooting engine for technical support at Sunrise GmbH, significantly reducing support volume.",
-          order: 0
-        },
-        {
-          title: "GenAI Strategy & MVP",
-          tag: "Digital Transformation",
-          stats: "8M+ CHF Saved",
-          image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800",
-          description: "Orchestrating the GenAI roadmap to automate high-volume customer journeys, defining the convergence of LLMs and business strategy.",
-          order: 1
-        },
-        {
-          title: "Lido Aviation DMS",
-          tag: "Aviation Software",
-          stats: "60% Efficiency",
-          image: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?auto=format&fit=crop&q=80&w=800",
-          description: "Led the transformation of legacy flight navigation data management systems into high-efficiency microservices for Lufthansa Systems.",
-          order: 2
-        }
-      ]
-    });
+  const expectedTitles = projectsToSeed.map(p => p.title);
+  const existingProjects = await prisma.project.findMany({ select: { title: true } });
+  const existingTitles = existingProjects.map(p => p.title);
+  const needsReseed = projectCount !== projectsToSeed.length || !expectedTitles.every(t => existingTitles.includes(t));
+
+  if (needsReseed) {
+    console.log("Updating projects to latest version...");
+    await prisma.project.deleteMany();
+    await prisma.project.createMany({ data: projectsToSeed });
   }
 
   const expCount = await prisma.experience.count();

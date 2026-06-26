@@ -103,3 +103,65 @@ describe('Navigation links — consistent across all nav pages', () => {
     }
   }
 });
+
+// ─── 6. Mobile menu must cover full viewport (fixed positioning) ───────────
+describe('Mobile menu — full-viewport coverage', () => {
+  test('shared.css uses fixed positioning for #mobile-menu', () => {
+    const css = fs.readFileSync(SHARED_CSS, 'utf8');
+    assert.ok(
+      css.includes('#mobile-menu') && css.includes('position: fixed'),
+      'shared.css must set position:fixed on #mobile-menu so it covers the full viewport below the nav'
+    );
+  });
+  test('shared.css sets bottom:0 so menu reaches the screen bottom', () => {
+    const css = fs.readFileSync(SHARED_CSS, 'utf8');
+    assert.ok(
+      css.includes('bottom: 0'),
+      'shared.css must set bottom:0 on #mobile-menu so it fills the viewport height'
+    );
+  });
+});
+
+// ─── 7. Horizontal overflow prevention ────────────────────────────────────
+describe('Responsive layout — no horizontal overflow', () => {
+  test('shared.css sets overflow-x: hidden on body', () => {
+    const css = fs.readFileSync(SHARED_CSS, 'utf8');
+    assert.ok(
+      css.includes('overflow-x: hidden'),
+      'shared.css must set overflow-x:hidden to prevent horizontal scrolling on mobile'
+    );
+  });
+
+  // Hero h1 on index must start at a mobile-safe size (text-5xl or smaller)
+  // text-7xl (72px) in Space Grotesk can overflow on phones narrower than 390px
+  test('index.html — hero h1 uses a mobile-safe starting font size', () => {
+    const content = PAGE_FILES.find(f => f.name === 'index.html').content;
+    const h1Match = content.match(/class="([^"]*text-\w+[^"]*display-gradient[^"]*)"/);
+    assert.ok(h1Match, 'index.html: could not find hero h1 with display-gradient');
+    const classes = h1Match[1];
+    // Must NOT start at text-7xl or larger without a smaller mobile override
+    const hasMobileSafe = /text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl)(\s|$)/.test(classes);
+    assert.ok(
+      hasMobileSafe,
+      `index.html: hero h1 classes "${classes}" must include a mobile-safe size ` +
+      '(text-5xl or smaller as the base, before sm:/md: breakpoint prefixes)'
+    );
+  });
+
+  // Page h1s on inner pages must start at a mobile-safe size
+  const INNER_PAGES = ['services.html', 'projects.html', 'experience.html', 'contact.html'];
+  for (const name of INNER_PAGES) {
+    test(`${name} — page h1 uses a mobile-safe starting font size`, () => {
+      const content = PAGE_FILES.find(f => f.name === name).content;
+      const h1Match = content.match(/class="([^"]*text-\w+[^"]*display-gradient[^"]*)"/);
+      assert.ok(h1Match, `${name}: could not find page h1 with display-gradient`);
+      const classes = h1Match[1];
+      const hasMobileSafe = /text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl)(\s|$)/.test(classes);
+      assert.ok(
+        hasMobileSafe,
+        `${name}: page h1 classes "${classes}" must include a mobile-safe base size ` +
+        '(text-4xl or smaller before sm:/md: breakpoint prefixes)'
+      );
+    });
+  }
+});

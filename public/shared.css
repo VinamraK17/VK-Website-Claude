@@ -170,9 +170,23 @@ input, textarea {
 }
 
 /* ── Mobile menu ───────────────────────────────────────────────────────── */
-/* Tailwind's opacity modifier (/95) does not work with CSS custom property  */
-/* hex values — the browser cannot extract RGB channels from var(). Override  */
-/* with a solid background to prevent hero content bleeding through.          */
+/* Fixed positioning so the menu covers the full viewport below the nav.      */
+/* background-color override guards against Tailwind's broken /N opacity      */
+/* modifier on CSS custom property hex values (renders transparent otherwise).*/
 #mobile-menu {
     background-color: var(--color-surface) !important;
+    position: fixed !important;
+    top: 76px !important;   /* matches body padding-top / nav height */
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    overflow-y: auto;
+    z-index: 49;
+}
+
+/* ── Prevent horizontal overflow on mobile ─────────────────────────────── */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
 }

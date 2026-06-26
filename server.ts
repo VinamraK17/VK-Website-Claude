@@ -310,7 +310,7 @@ async function startServer() {
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com",
         "font-src 'self' https://fonts.gstatic.com data:",
         "img-src 'self' data: https:",
-        "connect-src 'self'",
+        "connect-src 'self' https://unpkg.com",
         "frame-ancestors 'none'",
         "base-uri 'self'",
         "form-action 'self'",

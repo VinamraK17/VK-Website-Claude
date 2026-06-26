@@ -168,3 +168,11 @@ input, textarea {
     border-bottom: 1px solid var(--color-accent);
     padding-bottom: 2px;
 }
+
+/* ── Mobile menu ───────────────────────────────────────────────────────── */
+/* Tailwind's opacity modifier (/95) does not work with CSS custom property  */
+/* hex values — the browser cannot extract RGB channels from var(). Override  */
+/* with a solid background to prevent hero content bleeding through.          */
+#mobile-menu {
+    background-color: var(--color-surface) !important;
+}

@@ -153,6 +153,14 @@ async function seedData() {
       image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800",
       description: "A two-decade leadership track across aviation and telecoms — from multicultural 19-FTE operations teams to C-suite GenAI strategy at a CHF 1B+ telco.",
       order: 4
+    },
+    {
+      title: "Pro Bono Mentoring",
+      tag: "Mentoring",
+      stats: "10+ Mentees",
+      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800",
+      description: "Voluntary one-to-one mentoring of professionals across technology, business, and career transition — sharing 20+ years of leadership, AI, and product management experience to create tangible impact.",
+      order: 5
     }
   ];
 
@@ -168,9 +176,11 @@ async function seedData() {
     await prisma.project.createMany({ data: projectsToSeed });
   }
 
+  const EXPECTED_EXP_COUNT = 8;
   const expCount = await prisma.experience.count();
-  if (expCount === 0) {
-    console.log("Seeding full experience history...");
+  if (expCount !== EXPECTED_EXP_COUNT) {
+    console.log("Resyncing experience history...");
+    await prisma.experience.deleteMany();
 
     await prisma.experience.create({
       data: {
@@ -280,6 +290,23 @@ async function seedData() {
           "Controller Training: Developed training notes, presentations, and simulator exercises for the Area Control Centre, raising performance standards."
         ],
         order: 6
+      }
+    });
+
+    await prisma.experience.create({
+      data: {
+        company: "Pro Bono / Independent",
+        role: "Career & Leadership Mentor",
+        period: "Ongoing",
+        location: "Switzerland / Remote",
+        description: "Voluntary one-to-one mentoring of professionals across technology, business, and early-career backgrounds — guiding individuals through career transitions, first-time leadership challenges, and pivots into AI and product management.",
+        achievements: [
+          "Career Transitions: Guided multiple mentees through successful industry pivots and role changes, providing frameworks for personal positioning, interview preparation, and stakeholder navigation.",
+          "Leadership Development: Coached first-time managers and team leads through the practical challenges of moving from individual contributor to people leader.",
+          "AI & Product Strategy: Shared hands-on experience from enterprise AI and digital transformation programmes to help technology professionals identify and pursue high-impact career directions.",
+          "Outcomes: Mentees achieved a range of milestones — including new roles, promotions, and significant gains in professional confidence and strategic clarity."
+        ],
+        order: 7
       }
     });
   }

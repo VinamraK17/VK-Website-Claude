@@ -71,6 +71,14 @@
 
     <!-- Shared CSS -->
     <link rel="stylesheet" href="/shared.css">
+    <!-- Logo strip styles (inline to avoid CSS cache issues) -->
+    <style>
+      /* Show original brand colours in both modes */
+      .company-logo { filter: none; opacity: 0.75; transition: opacity 0.2s; }
+      .company-logo:hover { opacity: 1; }
+      [data-mode="light"] .company-logo { opacity: 0.85; }
+      [data-mode="light"] .company-logo:hover { opacity: 1; }
+    </style>
 </head>
 <body class="font-sans">
 
@@ -200,11 +208,11 @@
         <!-- Company Logo Strip -->
         <section class="max-w-6xl mx-auto pb-24 fade-up">
             <p class="text-center text-[9px] font-mono uppercase tracking-widest text-[var(--color-ink)]/20 mb-10">Career Experience</p>
-            <div class="flex flex-wrap items-center justify-center gap-x-14 gap-y-8">
-                <img src="/logos/profed-2024.png" alt="MIT Professional Education" class="company-logo h-7 w-auto">
-                <img src="/logos/sunrise.svg" alt="Sunrise GmbH" class="company-logo h-10 w-auto">
-                <img src="/logos/lh-systems.svg" alt="Lufthansa Systems" class="company-logo h-5 w-auto max-w-[180px]">
-                <img src="/logos/Airports_authority_of_India_Logo.png" alt="Airports Authority of India" class="company-logo h-14 w-auto">
+            <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
+                <img src="/logos/sunrise.svg" alt="Sunrise GmbH" class="company-logo h-12 w-auto">
+                <img src="/logos/lh-systems.svg" alt="Lufthansa Systems" class="company-logo h-6 w-auto max-w-[180px]">
+                <img src="/logos/Airports_authority_of_India_Logo.png" alt="Airports Authority of India" class="company-logo h-12 w-auto max-w-[120px]">
+                <img src="/logos/profed-2024.png" alt="MIT Professional Education" class="company-logo h-8 w-auto max-w-[160px]">
             </div>
         </section>
 
@@ -306,22 +314,26 @@
                 <div class="text-center mb-10">
                     <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--color-ink)]/30 font-mono font-bold">Landmark Organizations & Credentials</span>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-center justify-items-center">
-                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
-                        <span class="font-sans font-bold text-base text-[var(--color-ink)] tracking-tight">Sunrise GmbH</span>
-                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">Switzerland</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch justify-items-center">
+                    <div class="flex flex-col items-center justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full text-center gap-2">
+                        <img src="/logos/sunrise.svg" alt="Sunrise GmbH" class="company-logo h-10 w-auto mb-1">
+                        <span class="font-sans font-semibold text-sm text-[var(--color-ink)]/80 tracking-tight">Sunrise GmbH</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/30 uppercase tracking-wider">Switzerland</span>
                     </div>
-                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
-                        <span class="font-sans font-bold text-base text-[var(--color-ink)] tracking-tight">Lufthansa Systems</span>
-                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">LSY AG</span>
+                    <div class="flex flex-col items-center justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full text-center gap-2">
+                        <img src="/logos/lh-systems.svg" alt="Lufthansa Systems" class="company-logo h-5 w-auto max-w-full mb-1">
+                        <span class="font-sans font-semibold text-sm text-[var(--color-ink)]/80 tracking-tight">Lufthansa Systems</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/30 uppercase tracking-wider">LSY AG</span>
                     </div>
-                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
-                        <span class="font-sans font-bold text-base text-[var(--color-ink)] tracking-tight">AAI</span>
-                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">Airports Authority of India</span>
+                    <div class="flex flex-col items-center justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full text-center gap-2">
+                        <img src="/logos/Airports_authority_of_India_Logo.png" alt="Airports Authority of India" class="company-logo h-10 w-auto max-w-[80px] mb-1">
+                        <span class="font-sans font-semibold text-sm text-[var(--color-ink)]/80 tracking-tight">Airports Authority of India</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/30 uppercase tracking-wider">India</span>
                     </div>
-                    <div class="flex flex-col justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full h-24 text-center">
-                        <span class="font-serif font-bold text-base italic text-[var(--color-ink)] tracking-tight">MIT Professional</span>
-                        <span class="text-[9px] text-[var(--color-ink)]/40 uppercase tracking-wider mt-1">Digital Transformation</span>
+                    <div class="flex flex-col items-center justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full text-center gap-2">
+                        <img src="/logos/profed-2024.png" alt="MIT Professional Education" class="company-logo h-7 w-auto max-w-full mb-1">
+                        <span class="font-sans font-semibold text-sm text-[var(--color-ink)]/80 tracking-tight">MIT Professional Education</span>
+                        <span class="text-[9px] text-[var(--color-ink)]/30 uppercase tracking-wider">Digital Transformation</span>
                     </div>
                 </div>
             </div>

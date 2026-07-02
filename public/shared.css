@@ -211,30 +211,54 @@ html, body {
     opacity: 1;
 }
 
-/* Logo pill: subtle light surface so dark-coloured logos (navy, maroon) remain
-   visible against the dark page background */
+/* Logo pill: white frosted-glass card so dark-coloured logos (navy, maroon)
+   are legible against the dark page background — standard industry approach */
 .logo-pill {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px 18px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.07);
-    transition: background 0.2s;
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
-.logo-pill:hover { background: rgba(255, 255, 255, 0.11); }
-[data-mode="light"] .logo-pill { background: transparent; }
-[data-mode="light"] .logo-pill:hover { background: transparent; }
+.logo-pill:hover {
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+[data-mode="light"] .logo-pill {
+    background: rgba(0, 0, 0, 0.04);
+    backdrop-filter: none;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    box-shadow: none;
+}
+[data-mode="light"] .logo-pill:hover {
+    background: rgba(0, 0, 0, 0.07);
+    box-shadow: none;
+}
 
 /* Logo container within credibility cards */
 .logo-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.07);
-    min-height: 44px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    min-height: 48px;
     width: 100%;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
 }
-[data-mode="light"] .logo-container { background: rgba(0, 0, 0, 0.03); }
+[data-mode="light"] .logo-container {
+    background: rgba(0, 0, 0, 0.03);
+    backdrop-filter: none;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: none;
+}

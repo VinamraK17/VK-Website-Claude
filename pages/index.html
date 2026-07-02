@@ -110,6 +110,19 @@
         border: none !important;
         box-shadow: none !important;
       }
+      /* ── Mobile menu: inline to bypass Cloudflare cached shared.css ── */
+      #mobile-menu {
+        background-color: var(--color-surface) !important;
+        position: fixed !important;
+        top: 76px !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        min-height: calc(100vh - 76px) !important;
+        overflow-y: auto !important;
+        z-index: 100 !important;
+      }
     </style>
 </head>
 <body class="font-sans">
@@ -141,7 +154,7 @@
             </div>
         </div>
         <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[var(--color-surface)] backdrop-blur-xl border-b border-[var(--color-border)] md:hidden z-40 p-8 flex flex-col gap-6 shadow-2xl">
+        <div id="mobile-menu" class="hidden md:hidden flex flex-col gap-6 p-8 border-b border-[var(--color-border)] shadow-2xl">
             <div class="flex flex-col gap-2">
                 <a href="/" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Home</a>
                 <a href="/services" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Services</a>
@@ -454,7 +467,7 @@
                     <p class="pl-4">Aligned with Swiss Federal Act on Data Protection (FADP) and GDPR. You have the right to access and request erasure of your data at any time.</p>
                 </div>
                 <div class="space-y-2">
-                    <h3 class="font-bold text-base text-[var(--color-ink)]">3. Intellectual Property & Copy Protection</h3>
+                    <h3 class="font-bold text-base text-[var(--color-ink)]">3. Intellectual Property &amp; Copy Protection</h3>
                     <p class="pl-4">All content is the exclusive intellectual property of <strong>Vinamra Kumar</strong>. Scrape protection measures are applied. Reproduction is strictly prohibited.</p>
                 </div>
             </div>

@@ -181,8 +181,9 @@ input, textarea {
     right: 0 !important;
     bottom: 0 !important;
     width: 100% !important;
-    overflow-y: auto;
-    z-index: 49;
+    min-height: calc(100vh - 76px) !important;
+    overflow-y: auto !important;
+    z-index: 100 !important; /* above nav z-50 */
 }
 
 /* ── Prevent horizontal overflow on mobile ─────────────────────────────── */

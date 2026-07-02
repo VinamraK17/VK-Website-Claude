@@ -1,5 +1,7 @@
 /**
- * Regression tests — Mobile Navigation
+ * Regression tests — VK Portfolio
+ * Covers: mobile navigation, logo rendering, credibility section,
+ *         pro bono mentoring, homepage stats, CSS anti-patterns.
  * Run:  npm test   OR   node --test tests/navigation.test.mjs
  */
 import { test, describe } from 'node:test';
@@ -9,10 +11,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT       = path.resolve(__dirname, '..');
-const PAGES_DIR  = path.join(ROOT, 'pages');
-const SHARED_CSS = path.join(ROOT, 'public', 'shared.css');
-const SHARED_JS  = path.join(ROOT, 'public', 'shared.js');
+const ROOT        = path.resolve(__dirname, '..');
+const PAGES_DIR   = path.join(ROOT, 'pages');
+const SHARED_CSS  = path.join(ROOT, 'public', 'shared.css');
+const SHARED_JS   = path.join(ROOT, 'public', 'shared.js');
+const LOGOS_DIR   = path.join(ROOT, 'public', 'logos');
+const SUNRISE_SVG = path.join(LOGOS_DIR, 'sunrise.svg');
+const LH_SVG      = path.join(LOGOS_DIR, 'lh-systems.svg');
 
 const NAV_PAGES = ['index.html', 'services.html', 'projects.html', 'experience.html', 'contact.html'];
 const PAGE_FILES = NAV_PAGES.map(f => ({
@@ -164,4 +169,329 @@ describe('Responsive layout — no horizontal overflow', () => {
       );
     });
   }
+});
+
+// ─── 8. SVG logo asset files exist ────────────────────────────────────────
+describe('Logo assets — files exist in public/logos/', () => {
+  const LOGO_FILES = [
+    'sunrise.svg',
+    'lh-systems.svg',
+    'Airports_authority_of_India_Logo.png',
+    'profed-2024.png',
+  ];
+  for (const file of LOGO_FILES) {
+    test(`public/logos/${file} exists`, () => {
+      assert.ok(
+        fs.existsSync(path.join(LOGOS_DIR, file)),
+        `Missing logo asset: public/logos/${file}`
+      );
+    });
+  }
+});
+
+// ─── 9. SVG logo brand colours — no fill="currentColor" ───────────────────
+// Using fill="currentColor" in an <img> tag renders as black regardless of
+// CSS context, making logos invisible on dark backgrounds.
+describe('SVG logos — hardcoded brand colours (not currentColor)', () => {
+  test('sunrise.svg uses Sunrise brand red #DA291C', () => {
+    const svg = fs.readFileSync(SUNRISE_SVG, 'utf8');
+    assert.ok(
+      svg.includes('fill="#DA291C"'),
+      'sunrise.svg must use fill="#DA291C" — currentColor renders black in <img> tags'
+    );
+  });
+  test('sunrise.svg has no fill="currentColor"', () => {
+    const svg = fs.readFileSync(SUNRISE_SVG, 'utf8');
+    assert.ok(
+      !svg.includes('fill="currentColor"'),
+      'sunrise.svg must not use fill="currentColor" — it renders black in <img> context'
+    );
+  });
+  test('lh-systems.svg uses Lufthansa Systems navy #05164D', () => {
+    const svg = fs.readFileSync(LH_SVG, 'utf8');
+    assert.ok(
+      svg.includes('fill="#05164D"'),
+      'lh-systems.svg must use fill="#05164D" — currentColor renders black in <img> tags'
+    );
+  });
+  test('lh-systems.svg has no fill="currentColor"', () => {
+    const svg = fs.readFileSync(LH_SVG, 'utf8');
+    assert.ok(
+      !svg.includes('fill="currentColor"'),
+      'lh-systems.svg must not use fill="currentColor" — it renders black in <img> context'
+    );
+  });
+});
+
+// ─── 10. shared.css logo CSS rules ────────────────────────────────────────
+describe('shared.css — company logo rendering rules', () => {
+  const css = fs.readFileSync(SHARED_CSS, 'utf8');
+
+  test('.company-logo uses filter: none (no brightness/invert manipulation)', () => {
+    assert.ok(
+      css.includes('filter: none'),
+      '.company-logo must use filter:none — brightness(0)/invert(1) destroys brand colours'
+    );
+  });
+  test('.company-logo does NOT use brightness(0) filter', () => {
+    // brightness(0) turns logos black; brightness(0) invert(1) turns them white
+    assert.ok(
+      !css.includes('brightness(0)'),
+      'shared.css must not use brightness(0) on .company-logo — this overrides brand colours'
+    );
+  });
+  test('.logo-pill class is defined in shared.css', () => {
+    assert.ok(css.includes('.logo-pill'), 'shared.css must define .logo-pill for logo strip containers');
+  });
+  test('.logo-pill dark mode has high-opacity white background for dark-coloured logo visibility', () => {
+    // Must have rgba(255,255,255,...) with opacity >= 0.80 so navy/maroon logos are legible
+    const pillMatch = css.match(/\.logo-pill\s*\{([^}]+)\}/);
+    assert.ok(pillMatch, 'shared.css must define .logo-pill { ... }');
+    const rgbaMatch = pillMatch[1].match(/rgba\(255,\s*255,\s*255,\s*([\d.]+)\)/);
+    assert.ok(rgbaMatch, '.logo-pill must use rgba(255,255,255,X) background for dark mode contrast');
+    const opacity = parseFloat(rgbaMatch[1]);
+    assert.ok(
+      opacity >= 0.80,
+      `.logo-pill background opacity ${opacity} is too low — dark-coloured logos (e.g. navy) need >= 0.80`
+    );
+  });
+  test('[data-mode="light"] .logo-pill has transparent background (no capsule in light mode)', () => {
+    assert.ok(
+      css.includes('[data-mode="light"] .logo-pill'),
+      'shared.css must override .logo-pill for light mode'
+    );
+    const lightSection = css.split('[data-mode="light"] .logo-pill')[1]?.split('}')[0] ?? '';
+    assert.ok(
+      lightSection.includes('background: transparent'),
+      '[data-mode="light"] .logo-pill must set background:transparent — no visible capsule in light mode'
+    );
+  });
+  test('.logo-container class is defined in shared.css', () => {
+    assert.ok(css.includes('.logo-container'), 'shared.css must define .logo-container for credibility cards');
+  });
+  test('[data-mode="light"] .logo-container has transparent background', () => {
+    const lightSection = css.split('[data-mode="light"] .logo-container')[1]?.split('}')[0] ?? '';
+    assert.ok(
+      lightSection.includes('background: transparent'),
+      '[data-mode="light"] .logo-container must use transparent background in light mode'
+    );
+  });
+});
+
+// ─── 11. Homepage — logo strip (Career Experience section) ────────────────
+describe('index.html — Career Experience logo strip', () => {
+  const index = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf8');
+
+  test('has Career Experience heading label', () => {
+    assert.ok(
+      index.toLowerCase().includes('career experience'),
+      'index.html must include a "Career Experience" label above the logo strip'
+    );
+  });
+
+  const LOGO_SRCS = [
+    { alt: 'Sunrise GmbH',                src: '/logos/sunrise.svg' },
+    { alt: 'Lufthansa Systems',            src: '/logos/lh-systems.svg' },
+    { alt: 'Airports Authority of India',  src: '/logos/Airports_authority_of_India_Logo.png' },
+    { alt: 'MIT Professional Education',   src: '/logos/profed-2024.png' },
+  ];
+
+  for (const { alt, src } of LOGO_SRCS) {
+    test(`strip includes logo: ${alt}`, () => {
+      assert.ok(
+        index.includes(`src="${src}"`),
+        `index.html logo strip must include <img src="${src}"> for ${alt}`
+      );
+    });
+    test(`strip logo wrapped in .logo-pill: ${alt}`, () => {
+      // The logo-pill div must appear before the img src in the source order
+      const pillIdx = index.lastIndexOf('logo-pill', index.indexOf(`src="${src}"`));
+      assert.ok(
+        pillIdx !== -1,
+        `${alt} logo must be wrapped in a .logo-pill div for dark-mode contrast`
+      );
+    });
+  }
+
+  test('logo strip order: Sunrise → LH Systems → AAI → MIT', () => {
+    const sunriseIdx = index.indexOf('/logos/sunrise.svg');
+    const lhIdx      = index.indexOf('/logos/lh-systems.svg');
+    const aaiIdx     = index.indexOf('/logos/Airports_authority_of_India_Logo.png');
+    const mitIdx     = index.indexOf('/logos/profed-2024.png');
+    assert.ok(sunriseIdx < lhIdx,  'Sunrise must appear before LH Systems in logo strip');
+    assert.ok(lhIdx      < aaiIdx, 'LH Systems must appear before AAI in logo strip');
+    assert.ok(aaiIdx     < mitIdx, 'AAI must appear before MIT in logo strip');
+  });
+
+  test('inline <style> overrides filter to none with !important', () => {
+    assert.ok(
+      index.includes('filter: none !important'),
+      'index.html inline <style> must include "filter: none !important" to override any cached shared.css'
+    );
+  });
+
+  test('inline <style> sets .logo-pill white background for dark mode', () => {
+    // Check that the inline style defines logo-pill with a high-opacity white background
+    const styleBlock = index.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '';
+    assert.ok(
+      styleBlock.includes('logo-pill'),
+      'index.html inline <style> must define .logo-pill styles (cache-busting override)'
+    );
+    assert.ok(
+      styleBlock.includes('rgba(255,255,255'),
+      'index.html inline <style> .logo-pill must use rgba(255,255,255,...) for dark mode logo contrast'
+    );
+  });
+
+  test('inline <style> sets [data-mode="light"] .logo-pill to transparent', () => {
+    const styleBlock = index.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? '';
+    assert.ok(
+      styleBlock.includes('[data-mode="light"] .logo-pill'),
+      'index.html inline <style> must override .logo-pill for light mode'
+    );
+    const lightPart = styleBlock.split('[data-mode="light"] .logo-pill')[1]?.split('}')[0] ?? '';
+    assert.ok(
+      lightPart.includes('transparent'),
+      '[data-mode="light"] .logo-pill in inline style must be transparent — no visible capsule in light mode'
+    );
+  });
+});
+
+// ─── 12. Homepage — Credibility in High-Impact Environments section ────────
+describe('index.html — Credibility section cards', () => {
+  const index = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf8');
+
+  const COMPANIES = [
+    { name: 'Sunrise GmbH',                subtitle: 'Switzerland' },
+    { name: 'Lufthansa Systems',            subtitle: 'Switzerland' },
+    { name: 'Airports Authority of India',  subtitle: 'India' },
+    { name: 'MIT Professional Education',   subtitle: 'Digital Transformation' },
+  ];
+
+  for (const { name, subtitle } of COMPANIES) {
+    test(`credibility card shows company name: "${name}"`, () => {
+      assert.ok(
+        index.includes(name),
+        `index.html credibility section must display company name: ${name}`
+      );
+    });
+    test(`credibility card subtitle correct for "${name}": "${subtitle}"`, () => {
+      assert.ok(
+        index.includes(subtitle),
+        `index.html credibility section must show "${subtitle}" as subtitle for ${name}`
+      );
+    });
+  }
+
+  test('credibility section subtitle for Lufthansa is "Switzerland" not "LSY AG"', () => {
+    // Extract only the credibility section to avoid false positives from other content
+    const credStart = index.indexOf('Credibility');
+    const credEnd   = index.indexOf('</section>', credStart);
+    const credHtml  = index.slice(credStart, credEnd);
+    assert.ok(
+      !credHtml.includes('LSY AG'),
+      'Credibility card for Lufthansa Systems must use "Switzerland" not "LSY AG"'
+    );
+  });
+
+  test('each credibility card logo is wrapped in .logo-container', () => {
+    const containers = (index.match(/class="logo-container/g) || []).length;
+    assert.ok(
+      containers >= 4,
+      `Expected at least 4 .logo-container wrappers in credibility cards, found ${containers}`
+    );
+  });
+
+  test('credibility logo order: Sunrise → LH Systems → AAI → MIT', () => {
+    // Find the credibility section boundaries
+    const credStart  = index.indexOf('Landmark Organizations');
+    const credSector = index.slice(credStart, credStart + 4000);
+    const sunriseIdx = credSector.indexOf('/logos/sunrise.svg');
+    const lhIdx      = credSector.indexOf('/logos/lh-systems.svg');
+    const aaiIdx     = credSector.indexOf('/logos/Airports_authority_of_India_Logo.png');
+    const mitIdx     = credSector.indexOf('/logos/profed-2024.png');
+    assert.ok(sunriseIdx !== -1, 'Credibility section must contain Sunrise logo');
+    assert.ok(lhIdx      !== -1, 'Credibility section must contain LH Systems logo');
+    assert.ok(aaiIdx     !== -1, 'Credibility section must contain AAI logo');
+    assert.ok(mitIdx     !== -1, 'Credibility section must contain MIT logo');
+    assert.ok(sunriseIdx < lhIdx,  'Credibility: Sunrise must come before LH Systems');
+    assert.ok(lhIdx      < aaiIdx, 'Credibility: LH Systems must come before AAI');
+    assert.ok(aaiIdx     < mitIdx, 'Credibility: AAI must come before MIT');
+  });
+});
+
+// ─── 13. Pro bono mentoring — present across all three locations ───────────
+describe('Pro bono mentoring — homepage bio, projects, experience', () => {
+  const index      = fs.readFileSync(path.join(PAGES_DIR, 'index.html'),     'utf8');
+  const projects   = fs.readFileSync(path.join(PAGES_DIR, 'projects.html'),  'utf8');
+  const experience = fs.readFileSync(path.join(PAGES_DIR, 'experience.html'),'utf8');
+
+  test('index.html bio section mentions pro bono mentoring', () => {
+    assert.ok(
+      index.toLowerCase().includes('pro bono mentor'),
+      'index.html bio must mention pro bono mentoring'
+    );
+  });
+  test('projects.html FALLBACK_PROJECTS includes Pro Bono Mentoring entry', () => {
+    assert.ok(
+      projects.includes('Pro Bono Mentoring'),
+      'projects.html FALLBACK_PROJECTS must include a "Pro Bono Mentoring" project card'
+    );
+  });
+  test('projects.html mentoring card has Mentoring tag', () => {
+    assert.ok(
+      projects.includes('"Mentoring"') || projects.includes("'Mentoring'"),
+      'projects.html mentoring entry must have tag: "Mentoring"'
+    );
+  });
+  test('projects.html mentoring card has stat about mentees', () => {
+    assert.ok(
+      projects.toLowerCase().includes('mentee'),
+      'projects.html mentoring card must include a stat referencing mentees'
+    );
+  });
+  test('experience.html FALLBACK_EXPERIENCES includes mentoring entry', () => {
+    assert.ok(
+      experience.toLowerCase().includes('mentor'),
+      'experience.html FALLBACK_EXPERIENCES must include a mentoring experience entry'
+    );
+  });
+  test('experience.html mentoring entry has role label', () => {
+    assert.ok(
+      experience.includes('Career & Leadership Mentor') ||
+      experience.toLowerCase().includes('mentor'),
+      'experience.html must show a mentor role in the timeline'
+    );
+  });
+  test('experience.html mentoring entry marked as Ongoing', () => {
+    assert.ok(
+      experience.includes('Ongoing'),
+      'experience.html mentoring entry must have period: "Ongoing"'
+    );
+  });
+});
+
+// ─── 14. Homepage stats — CHF 10M+ suffix correct ─────────────────────────
+describe('index.html — key statistics', () => {
+  const index = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf8');
+
+  test('CHF stat uses data-suffix="M+" (not "M")', () => {
+    assert.ok(
+      index.includes('data-suffix="M+"'),
+      'index.html CHF stat must use data-suffix="M+" — was incorrectly "M" before'
+    );
+  });
+  test('CHF stat does NOT use bare data-suffix="M"', () => {
+    // data-suffix="M+" should be the only suffix for the CHF figure
+    assert.ok(
+      !index.includes('data-suffix="M"'),
+      'index.html must not use data-suffix="M" — the correct value is "M+"'
+    );
+  });
+  test('index.html shows CHF financial impact stat', () => {
+    assert.ok(
+      index.includes('CHF'),
+      'index.html must include CHF stat in the hero statistics section'
+    );
+  });
 });

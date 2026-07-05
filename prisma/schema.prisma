@@ -56,6 +56,6 @@ model Experience {
   period       String
   location     String
   description  String
-  achievements Json   // Prisma 5 serialises Json as TEXT in SQLite — no code changes needed
+  achievements String // JSON array stored as text — SQLite connector does not support the Json type
   order        Int    @default(0)
 }

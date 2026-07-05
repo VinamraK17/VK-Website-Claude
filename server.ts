@@ -189,12 +189,12 @@ async function seedData() {
         period: "Feb 2024 – Present",
         location: "Zurich, Switzerland",
         description: "Owning the digital product strategy for a CHF 1B+ telco, aligning 5+ cross-functional teams around a unified transformation roadmap that accelerated time-to-market across the entire portfolio.",
-        achievements: [
+        achievements: JSON.stringify([
           "Digital Leadership: Managed a multi-million franc digital product portfolio, embedding OKR and KPI frameworks that connected product delivery directly to business revenue targets.",
           "Strategic Alignment: Built and governed an ecosystem of external partners and vendors, ensuring delivery quality, cost discipline, and strategic alignment across the full product development lifecycle.",
           "Market Competitive Positioning: Led ongoing market and trend analysis, enabling the business to identify and act on digital opportunities ahead of competitors.",
           "Financial Performance: Secured 8M+ CHF in annual efficiency savings through strategic GenAI integrations and process automation."
-        ],
+        ]),
         order: 0
       }
     });
@@ -206,12 +206,12 @@ async function seedData() {
         period: "Sep 2022 – Feb 2024",
         location: "Zürich Metropolitan Area",
         description: "Architected and shipped NEXUS — an LLM-powered AI troubleshooting platform serving 5M+ customers — leading a cross-functional team of 9 from zero to full production, reducing inbound tech support call volumes.",
-        achievements: [
+        achievements: JSON.stringify([
           "NEXUS Platform Architecture: Designed the end-to-end system architecture, making core infrastructure decisions on AI model integration, scalability, and platform resilience for millions of concurrent users.",
           "Cost Optimization: Exceeded departmental cost targets by 20% in 2023 by redesigning team operating models around the customer journey.",
           "Agile Delivery: Surpassed all departmental KPIs by 20% by owning product delivery end-to-end — from vision and business case through to launch and iteration.",
           "Team Development: Led People Development for a core agile team of 15+ engineers and designers."
-        ],
+        ]),
         order: 1
       }
     });
@@ -223,11 +223,11 @@ async function seedData() {
         period: "Mar 2018 – Aug 2022",
         location: "Zurich, Switzerland (Hybrid)",
         description: "Modernized a mission-critical internal application portfolio of 77 tools — leading a cross-functional team of 8 and driving a 60% increase in operational efficiency across international operations in Zurich and Gdansk.",
-        achievements: [
+        achievements: JSON.stringify([
           "Operational Savings: Delivered 40%+ savings against budget by replacing legacy workflows with agile, automation-first practices.",
           "Risk & Compliance Management: Ensured zero critical compliance gaps across all 77 aviation applications by building and maintaining a live risk register meeting stringent international aeronautical regulatory standards.",
           "Global Team Alignment: Unified stakeholder alignment across two international locations, eliminating release delays through structured backlog management."
-        ],
+        ]),
         order: 2
       }
     });
@@ -239,11 +239,11 @@ async function seedData() {
         period: "Feb 2016 – Feb 2018",
         location: "Zurich, Switzerland",
         description: "Launched a first-of-its-kind production process for the Data Driven Maps Program from zero to full implementation — defining quality standards, securing regulatory certifications, and scaling operations on time.",
-        achievements: [
+        achievements: JSON.stringify([
           "Procurement Cost Optimization: Reduced procurement costs by conducting rigorous make-or-buy analyses, selecting the optimal mix of external partners and internal capabilities.",
           "Skill Development & Capacity Building: Future-proofed the team by identifying critical skill gaps and building targeted training plans.",
           "Risk Mitigation: Mitigated program delivery risk by designing a robust transition plan that bridged current operations with future objectives."
-        ],
+        ]),
         order: 3
       }
     });
@@ -255,10 +255,10 @@ async function seedData() {
         period: "May 2012 – Mar 2016",
         location: "Zurich, Switzerland",
         description: "Led a multicultural production team of 19 FTE, managing the full AIRAC cycle — ensuring on-time, compliant delivery of aeronautical products to airline customers across international markets.",
-        achievements: [
+        achievements: JSON.stringify([
           "People Development: Drove team performance and retention by owning hiring, compensation decisions, and onboarding.",
           "Process Optimization: Improved cross-site coordination between Zurich and Gdansk by restructuring communication and process workflows, eliminating delays."
-        ],
+        ]),
         order: 4
       }
     });
@@ -270,10 +270,10 @@ async function seedData() {
         period: "May 2009 – May 2012",
         location: "Zurich, Switzerland",
         description: "Maintained zero-defect delivery of aeronautical charts to airline customers by ensuring full compliance with international safety and quality standards across every AIRAC cycle.",
-        achievements: [
+        achievements: JSON.stringify([
           "Mentorship: Accelerated team capability by mentoring and training new hires, reducing onboarding time.",
           "Quality Controls: Led the testing and evaluation of new tools before production integration, protecting operational continuity."
-        ],
+        ]),
         order: 5
       }
     });
@@ -285,10 +285,10 @@ async function seedData() {
         period: "Apr 2006 – May 2009",
         location: "Greater Delhi Area, India",
         description: "Ensured the safe and efficient movement of hundreds of aircraft and thousands of passengers daily at IGI Airport New Delhi — operating ATC (Non-Radar) services across Delhi FIR with zero margin for error.",
-        achievements: [
+        achievements: JSON.stringify([
           "Capacity Expansion: Contributed directly to airport capacity expansion by participating in the commissioning of Runway 11/29 and developing new ATC procedures.",
           "Controller Training: Developed training notes, presentations, and simulator exercises for the Area Control Centre, raising performance standards."
-        ],
+        ]),
         order: 6
       }
     });
@@ -300,12 +300,12 @@ async function seedData() {
         period: "Ongoing",
         location: "Switzerland / Remote",
         description: "Voluntary one-to-one mentoring of professionals across technology, business, and early-career backgrounds — guiding individuals through career transitions, first-time leadership challenges, and pivots into AI and product management.",
-        achievements: [
+        achievements: JSON.stringify([
           "Career Transitions: Guided multiple mentees through successful industry pivots and role changes, providing frameworks for personal positioning, interview preparation, and stakeholder navigation.",
           "Leadership Development: Coached first-time managers and team leads through the practical challenges of moving from individual contributor to people leader.",
           "AI & Product Strategy: Shared hands-on experience from enterprise AI and digital transformation programmes to help technology professionals identify and pursue high-impact career directions.",
           "Outcomes: Mentees achieved a range of milestones — including new roles, promotions, and significant gains in professional confidence and strategic clarity."
-        ],
+        ]),
         order: 7
       }
     });
@@ -423,7 +423,10 @@ async function startServer() {
       const experiences = await prisma.experience.findMany({
         orderBy: { order: "asc" }
       });
-      res.json(experiences);
+      res.json(experiences.map(e => ({
+        ...e,
+        achievements: JSON.parse(e.achievements as string)
+      })));
     } catch (error) {
       console.error("Error fetching experiences:", error);
       res.status(500).json({ error: "Failed to fetch experiences" });

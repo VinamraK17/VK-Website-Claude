@@ -6,6 +6,10 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y openssl && rm -rf
 WORKDIR /app
 
 COPY package.json ./
+# Copy the Prisma schema before npm install so @prisma/client's postinstall
+# script can find it. Without this, postinstall silently corrupts the cache
+# and the explicit prisma generate step below fails with exit code 1.
+COPY prisma ./prisma
 RUN npm install
 
 COPY . .

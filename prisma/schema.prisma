@@ -2,7 +2,11 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // node:20-slim is Debian Bookworm (OpenSSL 3.0). Pinning the target ensures
+  // Prisma bundles the correct engine binary at build time instead of trying
+  // to download it at container startup — prevents the "exit code 1" build failure.
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {

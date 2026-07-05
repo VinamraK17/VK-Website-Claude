@@ -1,8 +1,3 @@
-# Docker Compose for VK Portfolio - Synology NAS / Docker deployment
-# SQLite edition — single container, no separate database server.
-# Set environment variables in Dockhand's stack "Environment" tab.
-# Docker image is built automatically via GitHub Actions on every push to main.
-
 services:
 
   portfolio-web:
@@ -14,7 +9,6 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - CONTACT_EMAIL=${CONTACT_EMAIL}
       - CONTACT_PHONE=${CONTACT_PHONE}
-      # Optional SMTP — leave unset to use Google fallback
       - SMTP_HOST=${SMTP_HOST:-}
       - SMTP_PORT=${SMTP_PORT:-}
       - SMTP_USER=${SMTP_USER:-}
@@ -22,8 +16,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - portfolio-data:/app/data   # SQLite DB persists here across restarts
+      - portfolio-data:/app/data
     restart: always
 
 volumes:
-  portfolio-data:   # Docker-managed volume on the NAS
+  portfolio-data:

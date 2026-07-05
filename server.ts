@@ -436,18 +436,19 @@ async function startServer() {
   // DB Status Endpoint for NAS/Self-hosting verification
   app.get("/api/db-status", async (req, res) => {
     try {
-      await prisma.$connect();
-      res.json({ 
+      // SQLite is embedded — a simple query is sufficient to confirm the file is readable
+      await prisma.$queryRaw`SELECT 1`;
+      res.json({
         connected: true,
-        type: "MariaDB/Prisma",
-        persistence: "MariaDB (Docker on Synology)",
+        type: "SQLite",
+        persistence: "SQLite (Synology NAS volume)",
         status: "active"
       });
     } catch (err) {
-      res.json({ 
+      res.json({
         connected: false,
-        type: "MariaDB/Prisma",
-        persistence: "Connection Failed",
+        type: "SQLite",
+        persistence: "Storage Unavailable",
         status: "offline"
       });
     }

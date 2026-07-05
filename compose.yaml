@@ -1,65 +1,29 @@
 # Docker Compose for VK Portfolio - Synology NAS / Docker deployment
-# Set environment variables in Dockhand's stack "Environment" tab - they persist across redeployments.
+# SQLite edition — single container, no separate database server.
+# Set environment variables in Dockhand's stack "Environment" tab.
 # Docker image is built automatically via GitHub Actions on every push to main.
 
 services:
 
-  # 1. MariaDB Database
-  portfolio-db:
-    image: mariadb:lts
-    environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${MARIADB_DATABASE}
-      MARIADB_USER: ${MARIADB_USER}
-      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
-    volumes:
-      - portfolio-db-data:/var/lib/mysql
-    networks:
-      - portfolio-network
-    restart: always
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
-      start_period: 20s
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # 2. Portfolio Web Server
   portfolio-web:
     image: ghcr.io/vinamrak17/vk-website-claude:latest
     pull_policy: always
-    depends_on:
-      portfolio-db:
-        condition: service_healthy
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=file:/app/data/portfolio.db
       - NODE_ENV=production
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - CONTACT_EMAIL=${CONTACT_EMAIL}
+      - CONTACT_PHONE=${CONTACT_PHONE}
+      # Optional SMTP — leave unset to use Google fallback
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
     ports:
       - "3000:3000"
-    networks:
-      - portfolio-network
-    restart: always
-
-  # 3. phpMyAdmin
-  db-dashboard:
-    image: phpmyadmin:latest
-    depends_on:
-      portfolio-db:
-        condition: service_healthy
-    environment:
-      PMA_HOST: portfolio-db
-      PMA_USER: ${MARIADB_USER}
-      PMA_PASSWORD: ${MARIADB_PASSWORD}
-    ports:
-      - "8085:80"
-    networks:
-      - portfolio-network
+    volumes:
+      - portfolio-data:/app/data   # SQLite DB persists here across restarts
     restart: always
 
 volumes:
-  portfolio-db-data:
-
-networks:
-  portfolio-network:
-    driver: bridge
+  portfolio-data:   # Docker-managed volume on the NAS

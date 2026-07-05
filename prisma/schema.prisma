@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -14,21 +14,21 @@ model Message {
   id        Int      @id @default(autoincrement())
   name      String
   email     String
-  message   String   @db.Text
+  message   String
   createdAt DateTime @default(now())
 }
 
 model Analytics {
   id           Int      @id @default(autoincrement())
   event        String
-  details      String   @db.Text
+  details      String
   sessionId    String?
   country      String?
   deviceType   String?
   deviceVendor String?
   browser      String?
   os           String?
-  referrer     String?  @db.Text
+  referrer     String?
   createdAt    DateTime @default(now())
 
   @@index([sessionId])
@@ -36,22 +36,22 @@ model Analytics {
 }
 
 model Project {
-  id          Int      @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   title       String
   tag         String
   stats       String
   image       String
-  description String   @db.Text
-  order       Int      @default(0)
+  description String
+  order       Int    @default(0)
 }
 
 model Experience {
-  id           Int      @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   company      String
   role         String
   period       String
   location     String
-  description  String   @db.Text
-  achievements Json
-  order        Int      @default(0)
+  description  String
+  achievements Json   // Prisma 5 serialises Json as TEXT in SQLite — no code changes needed
+  order        Int    @default(0)
 }

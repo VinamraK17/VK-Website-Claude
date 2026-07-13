@@ -1,30 +1,25 @@
 /* ── Shared styles for VK Portfolio (all pages) ─────────────────────────── */
 
 :root {
-    --color-surface: #050505;
-    --color-ink: #ffffff;
-    --color-ink-faint: rgba(255, 255, 255, 0.4);
-    --color-accent: #4ecca3;
-    --color-border: rgba(255, 255, 255, 0.1);
-    --color-glass: rgba(255, 255, 255, 0.05);
-    --bg-gradient: radial-gradient(circle at 0% 0%, #1a1a2e 0%, #050505 50%), radial-gradient(circle at 100% 100%, #16213e 0%, #050505 50%);
+    --color-surface: #0d0d0f;
+    --color-ink: #f7f4ec;
+    --color-ink-faint: rgba(247, 244, 236, 0.42);
+    --color-accent: #d4af37;
+    --color-border: rgba(247, 244, 236, 0.1);
+    --color-glass: rgba(247, 244, 236, 0.05);
+    --bg-gradient: radial-gradient(circle at 0% 0%, #1a1608 0%, #0d0d0f 50%), radial-gradient(circle at 100% 100%, #150f05 0%, #0d0d0f 50%);
     color-scheme: dark;
 }
 
 [data-mode="light"] {
-    --color-surface: #f8f9fa;
+    --color-surface: #faf8f3;
     --color-ink: #1a1a1a;
     --color-ink-faint: #6c757d;
     --color-border: rgba(0, 0, 0, 0.1);
     --color-glass: rgba(255, 255, 255, 0.8);
-    --bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    --bg-gradient: linear-gradient(135deg, #faf8f3 0%, #ede7d9 100%);
     color-scheme: light;
 }
-
-[data-theme="luxury"] { --color-accent: #d4af37; }
-[data-theme="luxury"][data-mode="dark"] { --bg-gradient: radial-gradient(circle at 0% 0%, #1a1600 0%, #050505 50%), radial-gradient(circle at 100% 100%, #1a1600 0%, #050505 50%); }
-[data-theme="cyber"] { --color-accent: #ff00ff; }
-[data-theme="cyber"][data-mode="dark"] { --bg-gradient: radial-gradient(circle at 0% 0%, #1a001a 0%, #050505 50%), radial-gradient(circle at 100% 100%, #001a1a 0%, #050505 50%); }
 
 html { scroll-behavior: smooth; }
 
@@ -137,7 +132,7 @@ input, textarea {
     padding: 6px 16px;
     border-radius: 9999px;
     border: 1px solid var(--color-accent);
-    background: rgba(78, 204, 163, 0.08);
+    background: rgba(212, 175, 55, 0.08);
     font-size: 10px;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
@@ -152,14 +147,14 @@ input, textarea {
     animation: pulse-dot 2s ease-in-out infinite;
 }
 @keyframes pulse-dot {
-    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(78,204,163,0.4); }
-    50% { opacity: 0.7; transform: scale(1.4); box-shadow: 0 0 0 4px rgba(78,204,163,0); }
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(212,175,55,0.4); }
+    50% { opacity: 0.7; transform: scale(1.4); box-shadow: 0 0 0 4px rgba(212,175,55,0); }
 }
 
 /* ── Services CTA banner ───────────────────────────────────────────────── */
 .cta-banner {
-    background: linear-gradient(135deg, rgba(78,204,163,0.07) 0%, rgba(78,204,163,0.02) 100%);
-    border: 1px solid rgba(78,204,163,0.18);
+    background: linear-gradient(135deg, rgba(212,175,55,0.07) 0%, rgba(212,175,55,0.02) 100%);
+    border: 1px solid rgba(212,175,55,0.18);
 }
 
 /* ── Active nav link ───────────────────────────────────────────────────── */

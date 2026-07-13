@@ -9,8 +9,8 @@ import { UAParser } from "ua-parser-js";
 
 dotenv.config();
 
-// Prisma Setup (MariaDB on NAS)
-const dbUrl = process.env.DATABASE_URL || "mysql://user:password@localhost:3306/portfolio";
+// Prisma Setup (SQLite on NAS volume)
+const dbUrl = process.env.DATABASE_URL || "file:/app/data/portfolio.db";
 const prisma = new PrismaClient({
   datasources: {
     db: {
@@ -61,7 +61,7 @@ async function sendEmail(name: string, email: string, message: string) {
           <p><strong>Message:</strong></p>
           <p style="white-space: pre-wrap;">${safeMessage}</p>
           <br/><hr/>
-          <p><small>Sent via Nodemailer (Self-Hosted MariaDB/NAS)</small></p>
+          <p><small>Sent via Nodemailer (Self-Hosted SQLite/NAS)</small></p>
         `,
       });
       console.log("Email sent via SMTP.");
@@ -93,7 +93,7 @@ async function sendEmail(name: string, email: string, message: string) {
       `<p style="white-space: pre-wrap;">${safeMessage}</p>`,
       "<br/>",
       "<hr/>",
-      "<p><small>Sent via Google Workspace Integration (Prisma/MariaDB Port)</small></p>"
+      "<p><small>Sent via Google Workspace Integration (Self-Hosted SQLite/NAS)</small></p>"
     ];
 
     const raw = Buffer.from(emailLines.join("\r\n"))
@@ -362,14 +362,31 @@ async function startServer() {
   app.post("/api/contact", async (req, res) => {
     try {
       const { name, email, message } = req.body;
-      
+
       if (!name || !email || !message) {
-        return res.status(400).json({ success: false, error: "Name, email, and message are required to reveal the personal email." });
+        return res.status(400).json({ success: false, error: "Name, email, and message are required." });
+      }
+
+      // Length limits — prevent oversized payloads bloating the DB
+      if (String(name).length > 100) {
+        return res.status(400).json({ success: false, error: "Name must be 100 characters or fewer." });
+      }
+      if (String(email).length > 254) {
+        return res.status(400).json({ success: false, error: "Email address is too long." });
+      }
+      if (String(message).length > 5000) {
+        return res.status(400).json({ success: false, error: "Message must be 5,000 characters or fewer." });
+      }
+
+      // Basic email format check
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(String(email))) {
+        return res.status(400).json({ success: false, error: "Please provide a valid email address." });
       }
 
       console.log(`[CONTACT] Message from ${name} <${email}>`);
 
-      // Store in MariaDB via Prisma
+      // Store in SQLite via Prisma
       await prisma.message.create({
         data: {
           name,
@@ -753,8 +770,42 @@ async function startServer() {
   const legacyPath = path.join(process.cwd(), "portfolio.html");
   app.get("/legacy", (req, res) => res.sendFile(legacyPath));
 
-  // Catch-all: redirect unknown routes to home
-  app.get("*", (req, res) => res.redirect("/"));
+  // 404 — return a styled page instead of redirecting (redirect hides 404s from search engines)
+  app.use((req, res) => {
+    res.status(404).send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Page Not Found | Vinamra Kumar</title>
+  <meta name="robots" content="noindex">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #050505; color: #e8e8e6; font-family: Inter, system-ui, sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100vh; text-align: center; padding: 2rem; gap: 1.5rem;
+    }
+    .code { font-size: clamp(5rem, 20vw, 9rem); font-weight: 700; letter-spacing: -0.05em; color: #2563eb; line-height: 1; }
+    .title { font-size: 1.25rem; font-weight: 500; color: #e8e8e6; }
+    .sub { font-size: 0.9rem; color: rgba(232,232,230,0.45); max-width: 36ch; line-height: 1.6; }
+    a {
+      display: inline-block; margin-top: 0.5rem; padding: 0.65rem 1.75rem;
+      background: #2563eb; color: #fff; text-decoration: none; border-radius: 6px;
+      font-size: 0.875rem; font-weight: 500; letter-spacing: 0.02em;
+      transition: opacity 0.15s;
+    }
+    a:hover { opacity: 0.85; }
+  </style>
+</head>
+<body>
+  <div class="code">404</div>
+  <p class="title">Page not found</p>
+  <p class="sub">The page you're looking for doesn't exist or has been moved.</p>
+  <a href="/">Back to home</a>
+</body>
+</html>`);
+  });
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);

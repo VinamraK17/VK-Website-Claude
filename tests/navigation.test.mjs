@@ -389,16 +389,39 @@ describe('shared.css — nav, body, and core utility rules', () => {
   test('.display-gradient is defined', () => {
     assert.ok(css.includes('.display-gradient'), 'shared.css must define .display-gradient');
   });
-  test(':root defines --color-surface as dark (#050505)', () => {
+  // Assert the *contract* (dark default, light override), not a specific hex —
+  // hard-coding palette values makes every re-theme a false test failure.
+  const hexLuminance = (hex) => {
+    const h = hex.replace('#', '');
+    const f = h.length === 3 ? h.split('').map(c => c + c).join('') : h.slice(0, 6);
+    const [r, g, b] = [0, 2, 4].map(i => parseInt(f.slice(i, i + 2), 16) / 255);
+    const lin = c => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+  };
+  const surfaceIn = (selector) => {
+    const esc = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const block = css.match(new RegExp(esc + '\\s*\\{([^}]*)\\}'));
+    if (!block) return null;
+    const m = block[1].match(/--color-surface:\s*(#[0-9a-fA-F]{3,8})/);
+    return m ? m[1] : null;
+  };
+
+  test(':root defines --color-surface as a dark colour', () => {
+    const hex = surfaceIn(':root');
+    assert.ok(hex, 'shared.css :root must define --color-surface');
+    const L = hexLuminance(hex);
     assert.ok(
-      css.includes('--color-surface: #050505'),
-      'shared.css :root must set --color-surface:#050505 for dark mode default'
+      L < 0.2,
+      `shared.css :root --color-surface is ${hex} (luminance ${L.toFixed(3)}) — the dark-mode default must be a dark colour`
     );
   });
-  test('[data-mode="light"] defines --color-surface as light (#f8f9fa)', () => {
+  test('[data-mode="light"] defines --color-surface as a light colour', () => {
+    const hex = surfaceIn('[data-mode="light"]');
+    assert.ok(hex, 'shared.css must define --color-surface inside [data-mode="light"]');
+    const L = hexLuminance(hex);
     assert.ok(
-      css.includes('--color-surface: #f8f9fa'),
-      'shared.css must set --color-surface:#f8f9fa in [data-mode="light"]'
+      L > 0.7,
+      `shared.css [data-mode="light"] --color-surface is ${hex} (luminance ${L.toFixed(3)}) — light mode must be a light colour`
     );
   });
 });

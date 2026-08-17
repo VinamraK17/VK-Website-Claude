@@ -331,10 +331,16 @@ describe('Meta tags — viewport, canonical, OG, and Twitter on every page', () 
         assert.ok(content.includes(tag), `${name}: missing Twitter Card meta: ${tag}`);
       });
     }
-    test(`${name} — og:image points to hero_hq.jpg`, () => {
+    test(`${name} — og:image points to an existing per-page card in /public/img`, () => {
+      const m = content.match(/property="og:image" content="[^"]*\/img\/(og-[a-z]+\.jpg)"/);
+      assert.ok(m, `${name}: og:image must reference a /img/og-*.jpg card`);
       assert.ok(
-        content.includes('hero_hq.jpg'),
-        `${name}: og:image must reference hero_hq.jpg`
+        fs.existsSync(path.join(PUBLIC_DIR, 'img', m[1])),
+        `${name}: og:image references public/img/${m[1]}, which does not exist`
+      );
+      assert.ok(
+        !content.includes('hero_hq.jpg'),
+        `${name}: must not reference the retired hero_hq.jpg`
       );
     });
   }

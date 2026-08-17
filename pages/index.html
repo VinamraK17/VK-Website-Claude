@@ -16,14 +16,14 @@
     <meta property="og:url" content="https://vinamrakumar.com/" />
     <meta property="og:title" content="Vinamra Kumar | Product Leadership & AI Strategy" />
     <meta property="og:description" content="MIT-certified Product Leader. 20+ years. CHF 10M+ impact. Fractional leadership, GenAI advisory, coaching." />
-    <meta property="og:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+    <meta property="og:image" content="https://vinamrakumar.com/img/og-home.jpg" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://vinamrakumar.com/" />
     <meta property="twitter:title" content="Vinamra Kumar | Product Leadership & AI Strategy" />
     <meta property="twitter:description" content="MIT-certified Product Leader. 20+ years. CHF 10M+ impact. Fractional leadership, GenAI advisory, coaching." />
-    <meta property="twitter:image" content="https://vinamrakumar.com/hero_hq.jpg" />
+    <meta property="twitter:image" content="https://vinamrakumar.com/img/og-home.jpg" />
 
     <!-- PWA -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -205,7 +205,10 @@
                     <div class="absolute inset-4 rounded-full border border-[var(--color-ink)]/10"></div>
                     <div class="absolute inset-0 flex items-center justify-center">
                         <div class="w-[85%] h-[85%] rounded-full glass overflow-hidden border-2 border-[var(--color-ink)]/20">
-                            <img src="/hero_hq.jpg" alt="Vinamra Kumar" class="w-full h-full object-cover object-top" loading="eager">
+                            <picture>
+                                <source srcset="/img/hero.webp" type="image/webp">
+                                <img src="/img/hero.jpg" alt="Vinamra Kumar" width="1200" height="1200" class="w-full h-full object-cover object-top" loading="eager" fetchpriority="high" decoding="async">
+                            </picture>
                         </div>
                     </div>
                     <div class="absolute top-10 right-0 w-16 h-16 glass rounded-2xl flex items-center justify-center border border-[var(--color-ink)]/20">

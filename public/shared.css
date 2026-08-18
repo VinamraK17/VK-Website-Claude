@@ -190,8 +190,8 @@ html, body {
 /* ── Company logo strip ────────────────────────────────────────────────── */
 /* Show original brand colours — no filter manipulation */
 .company-logo {
-    filter: none;
-    opacity: 0.9;
+    filter: none !important;
+    opacity: 1;
     transition: opacity 0.2s;
     display: block;
     max-width: 100%;
@@ -200,8 +200,8 @@ html, body {
     opacity: 1;
 }
 [data-mode="light"] .company-logo {
-    filter: none;
-    opacity: 0.85;
+    filter: none !important;
+    opacity: 1;
 }
 [data-mode="light"] .company-logo:hover {
     opacity: 1;

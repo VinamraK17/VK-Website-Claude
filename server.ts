@@ -358,10 +358,59 @@ async function startServer() {
   // Try to seed data (ignore if fails during build/env issues)
   seedData().catch(err => console.warn("Seed failed (ignorable if DB not ready):", err.message));
 
+  // Rate limiting for public contact form submissions (mitigate spam/flooding)
+  const CONTACT_MAX_REQUESTS = 5;
+  const CONTACT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+  const contactAttempts = new Map<string, { count: number; firstAttempt: number }>();
+
+  // Periodically cleanup expired contact attempts
+  setInterval(() => {
+    const now = Date.now();
+    for (const [ip, entry] of contactAttempts) {
+      if (now - entry.firstAttempt > CONTACT_WINDOW_MS) {
+        contactAttempts.delete(ip);
+      }
+    }
+  }, 60 * 60 * 1000);
+
   // Contact Form Endpoint
   app.post("/api/contact", async (req, res) => {
     try {
-      const { name, email, message } = req.body;
+      const { name, email, message, website_url } = req.body;
+
+      // Honeypot check: Bots fill hidden fields; humans do not
+      if (website_url) {
+        const ip = (req.ip || req.socket?.remoteAddress || "unknown").toString();
+        console.warn(`[CONTACT SPAM] Honeypot triggered from ${ip}`);
+        return res.json({
+          success: true,
+          message: "Thank you! Verification successful.",
+          email: "contact@vinamrakumar.com"
+        });
+      }
+
+      // Rate limit check
+      const ip = (req.ip || req.socket?.remoteAddress || "unknown").toString();
+      const now = Date.now();
+      const currentAttempt = contactAttempts.get(ip);
+
+      if (currentAttempt) {
+        if (now - currentAttempt.firstAttempt <= CONTACT_WINDOW_MS) {
+          if (currentAttempt.count >= CONTACT_MAX_REQUESTS) {
+            const retryAfterSec = Math.ceil((currentAttempt.firstAttempt + CONTACT_WINDOW_MS - now) / 1000);
+            res.setHeader("Retry-After", String(retryAfterSec));
+            return res.status(429).json({
+              success: false,
+              error: "Too many messages sent. Please wait a few minutes before trying again."
+            });
+          }
+          currentAttempt.count += 1;
+        } else {
+          contactAttempts.set(ip, { count: 1, firstAttempt: now });
+        }
+      } else {
+        contactAttempts.set(ip, { count: 1, firstAttempt: now });
+      }
 
       if (!name || !email || !message) {
         return res.status(400).json({ success: false, error: "Name, email, and message are required." });
@@ -766,9 +815,6 @@ async function startServer() {
   app.get("/projects", (req, res) => res.sendFile(path.join(pagesDir, "projects.html")));
   app.get("/experience", (req, res) => res.sendFile(path.join(pagesDir, "experience.html")));
   app.get("/contact", (req, res) => res.sendFile(path.join(pagesDir, "contact.html")));
-
-  const legacyPath = path.join(process.cwd(), "portfolio.html");
-  app.get("/legacy", (req, res) => res.sendFile(legacyPath));
 
   // 404 — return a styled page instead of redirecting (redirect hides 404s from search engines)
   app.use((req, res) => {

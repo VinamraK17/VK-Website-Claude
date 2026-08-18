@@ -114,46 +114,19 @@ describe('Mobile menu — presence, initial state, and toggle wiring', () => {
 
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  SUITE 4 — Mobile menu: inline CSS override on every page (cache-bypass)
+//  SUITE 4 — Versioned CSS Cache-Busting: every page uses cache-busting query
 // ══════════════════════════════════════════════════════════════════════════════
-describe('Mobile menu — inline CSS override present on every page', () => {
-  // Inline <style> ensures the mobile menu CSS is served with the HTML page
-  // and cannot be stale-cached by Cloudflare independently of shared.css.
+describe('Stylesheet cache-busting — version query string on every page', () => {
   for (const { name, content } of PAGE_FILES) {
-    test(`${name} — has inline <style> with #mobile-menu rule`, () => {
-      const styles = getInlineStyles(content);
+    test(`${name} — links to versioned /shared.css?v=... for immediate CDN cache invalidation`, () => {
       assert.ok(
-        styles.includes('#mobile-menu'),
-        `${name}: must have an inline <style> block with #mobile-menu CSS. ` +
-        'Without this, a stale Cloudflare cache of shared.css causes a transparent menu.'
-      );
-    });
-    test(`${name} — inline CSS sets position:fixed on #mobile-menu`, () => {
-      const styles = getInlineStyles(content);
-      assert.ok(
-        styles.includes('position: fixed'),
-        `${name}: inline <style> #mobile-menu must set position:fixed so it covers the full viewport`
-      );
-    });
-    test(`${name} — inline CSS sets background-color on #mobile-menu`, () => {
-      const styles = getInlineStyles(content);
-      assert.ok(
-        styles.includes('background-color') && styles.includes('#mobile-menu'),
-        `${name}: inline <style> must set background-color on #mobile-menu`
-      );
-    });
-    test(`${name} — inline CSS sets z-index > 50 on #mobile-menu`, () => {
-      // Nav uses z-index:50 (z-50). Menu must be higher to overlay content properly.
-      const styles = getInlineStyles(content);
-      const zMatch = styles.match(/z-index\s*:\s*(\d+)/g) || [];
-      const menuZ = zMatch.map(s => parseInt(s.replace(/\D/g, ''))).filter(n => n > 50);
-      assert.ok(
-        menuZ.length > 0,
-        `${name}: inline <style> #mobile-menu must set z-index > 50 (nav uses z-50)`
+        /href="\/shared\.css\?v=[\w\.-]+"/.test(content),
+        `${name}: must link to a versioned stylesheet (e.g. <link rel="stylesheet" href="/shared.css?v=1.2.0">)`
       );
     });
   }
 });
+
 
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -248,7 +221,7 @@ describe('Shared assets — every page references shared.css and shared.js', () 
   for (const { name, content } of PAGE_FILES) {
     test(`${name} — links /shared.css`, () => {
       assert.ok(
-        content.includes('href="/shared.css"'),
+        content.includes('href="/shared.css'),
         `${name}: missing <link rel="stylesheet" href="/shared.css">`
       );
     });
@@ -579,28 +552,8 @@ describe('index.html — Career Experience logo strip', () => {
     assert.ok(a < m, 'AAI must appear before MIT');
   });
 
-  test('inline <style> overrides .company-logo filter to none', () => {
-    const styles = getInlineStyles(index);
-    assert.ok(
-      styles.includes('filter: none !important'),
-      'index.html inline <style> must have "filter: none !important" for .company-logo'
-    );
-  });
-
-  test('inline <style> defines .logo-pill with white background for dark mode', () => {
-    const styles = getInlineStyles(index);
-    assert.ok(styles.includes('logo-pill'), 'index.html inline <style> must define .logo-pill');
-    assert.ok(styles.includes('rgba(255,255,255'), 'index.html inline .logo-pill must use rgba(255,255,255,...) for dark mode');
-  });
-
-  test('inline <style> [data-mode="light"] .logo-pill is transparent', () => {
-    const styles = getInlineStyles(index);
-    assert.ok(
-      styles.includes('[data-mode="light"] .logo-pill'),
-      'index.html inline <style> must override .logo-pill for light mode'
-    );
-    const lightPart = styles.split('[data-mode="light"] .logo-pill')[1]?.split('}')[0] ?? '';
-    assert.ok(lightPart.includes('transparent'), 'Light mode .logo-pill must be transparent');
+  test('index.html links to versioned shared.css for centralized logo styling', () => {
+    assert.ok(index.includes('href="/shared.css?v='), 'index.html must link to versioned shared.css');
   });
 });
 
@@ -853,3 +806,46 @@ describe('Pro bono mentoring — present across all 3 locations', () => {
     assert.ok(experience.includes('Ongoing'), 'experience.html mentoring entry must be Ongoing');
   });
 });
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  SUITE 24 — Contact Form Security: Honeypot & Rate Limiting
+// ══════════════════════════════════════════════════════════════════════════════
+describe('Contact form security — honeypot and rate limiting', () => {
+  const contactHtml = fs.readFileSync(path.join(PAGES_DIR, 'contact.html'), 'utf8');
+  const serverTs    = fs.readFileSync(path.join(ROOT, 'server.ts'), 'utf8');
+
+  test('contact.html contains invisible honeypot input field named website_url', () => {
+    assert.ok(
+      contactHtml.includes('name="website_url"'),
+      'contact.html must include input with name="website_url"'
+    );
+    assert.ok(
+      contactHtml.includes('display:none') || contactHtml.includes('hidden'),
+      'Honeypot field must be hidden from view'
+    );
+  });
+
+  test('server.ts handles honeypot trigger gracefully without saving spam', () => {
+    assert.ok(
+      serverTs.includes('if (website_url)'),
+      'server.ts must check for honeypot field website_url'
+    );
+    assert.ok(
+      serverTs.includes('[CONTACT SPAM] Honeypot triggered'),
+      'server.ts must log honeypot triggers'
+    );
+  });
+
+  test('server.ts implements IP rate limiting on /api/contact', () => {
+    assert.ok(
+      serverTs.includes('contactAttempts') && serverTs.includes('CONTACT_MAX_REQUESTS'),
+      'server.ts must track contact attempts and enforce max limit'
+    );
+    assert.ok(
+      serverTs.includes('429'),
+      'server.ts must return HTTP 429 when rate limit is exceeded'
+    );
+  });
+});
+

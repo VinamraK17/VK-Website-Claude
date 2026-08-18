@@ -41,22 +41,8 @@
       }
     </script>
     <script src="https://unpkg.com/lucide@0.424.0/dist/umd/lucide.min.js"></script>
-    <link rel="stylesheet" href="/shared.css">
-    <!-- Mobile menu override: inline to bypass Cloudflare cached shared.css -->
-    <style>
-      #mobile-menu {
-        background-color: var(--color-surface) !important;
-        position: fixed !important;
-        top: 76px !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important;
-        min-height: calc(100vh - 76px) !important;
-        overflow-y: auto !important;
-        z-index: 100 !important;
-      }
-    </style>
+    <!-- Shared CSS (versioned for immediate cache invalidation) -->
+    <link rel="stylesheet" href="/shared.css?v=1.2.0">
 </head>
 <body class="font-sans">
 
@@ -98,7 +84,7 @@
         </div>
     </nav>
 
-    <main class="px-6 relative z-10 copy-protected">
+    <main class="px-6 relative z-10">
 
         <!-- Page header -->
         <section class="max-w-6xl mx-auto pt-24 pb-16">
@@ -179,6 +165,12 @@
                     <!-- Right: form -->
                     <div id="contact-form-container" class="relative">
                         <form id="contact-form" class="space-y-6">
+                            <!-- Anti-spam Honeypot (hidden from real users) -->
+                            <div class="hidden" aria-hidden="true" style="display:none !important; position:absolute; left:-9999px;">
+                                <label for="website_url">Website</label>
+                                <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
+                            </div>
+
                             <!-- Interest pills -->
                             <div class="space-y-2">
                                 <label class="text-[10px] uppercase tracking-widest text-[var(--color-ink)]/30 ml-2">Area of Interest</label>

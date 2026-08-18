@@ -26,7 +26,6 @@ WORKDIR /app
 RUN apt-get update && apt-get upgrade -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/portfolio.html ./portfolio.html
 COPY --from=builder /app/pages ./pages
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./

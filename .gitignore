@@ -12,3 +12,9 @@ coverage/
 # local scratch (safe to remove)
 _preview/
 _to_delete/
+
+# local SQLite database — contains real contact-form submissions, never commit
+prisma/*.db
+prisma/*.db-journal
+prisma/*.sqlite
+prisma/*.sqlite3

@@ -102,14 +102,6 @@ input, textarea {
     -webkit-user-select: text !important;
 }
 
-/* ── Copy protection ───────────────────────────────────────────────────── */
-.copy-protected {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
 /* ── Scroll-reveal animations ─────────────────────────────────────────── */
 .fade-up {
     opacity: 0;

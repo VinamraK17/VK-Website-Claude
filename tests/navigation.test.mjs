@@ -130,6 +130,30 @@ describe('Stylesheet cache-busting — version query string on every page', () =
         `${name}: ${links} stylesheets. Each one is a separate round trip; fonts,` +
         ' Tailwind and shared.css are concatenated into public/app.css for that reason.');
     });
+    test(`${name} — every preloaded font exists and is declared in app.css`, () => {
+      const css = fs.readFileSync(path.join(PUBLIC_DIR, 'app.css'), 'utf8');
+      const preloads = [...content.matchAll(/rel="preload"[^>]*href="(\/fonts\/[^"]+)"/g)].map(m => m[1]);
+      assert.ok(preloads.length > 0, `${name}: no font preloads`);
+      for (const href of preloads) {
+        assert.ok(
+          fs.existsSync(path.join(PUBLIC_DIR, href.replace(/^\//, ''))),
+          `${name}: preloads ${href}, which does not exist. A preload pointing at a` +
+          ' missing file wastes a request and warns in the console, silently.'
+        );
+        assert.ok(
+          css.includes(href),
+          `${name}: preloads ${href} but no @font-face in app.css uses it, so the` +
+          ' browser downloads it and never applies it.'
+        );
+      }
+    });
+    test(`${name} — font preloads carry crossorigin`, () => {
+      const bad = [...content.matchAll(/<link rel="preload" as="font"[^>]*>/g)]
+        .filter(m => !m[0].includes('crossorigin'));
+      assert.equal(bad.length, 0,
+        `${name}: font preload missing crossorigin — fonts are fetched in CORS mode,` +
+        ' so without it the browser downloads the file twice.');
+    });
     test(`${name} — does not fetch fonts from Google`, () => {
       assert.ok(
         !/fonts\.(googleapis|gstatic)\.com/.test(content),

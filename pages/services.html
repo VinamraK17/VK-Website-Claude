@@ -27,24 +27,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              display: ['Space Grotesk', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
-            },
-            colors: { accent: '#d4af37', surface: '#0d0d0f' }
-          }
-        }
-      }
-    </script>
-    <script src="https://unpkg.com/lucide@0.424.0/dist/umd/lucide.min.js"></script>
+    <script src="/vendor/lucide.min.js?v=1.3.0"></script>
     <!-- Shared CSS (versioned for immediate cache invalidation) -->
-    <link rel="stylesheet" href="/shared.css?v=1.2.1">
+    <link rel="stylesheet" href="/tailwind.css?v=1.3.0">
+    <link rel="stylesheet" href="/shared.css?v=1.3.0">
 </head>
 <body class="font-sans">
 
@@ -215,28 +201,28 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch justify-items-center">
                     <div class="flex flex-col items-center justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full text-center gap-2">
                         <div class="logo-container mb-1">
-                            <img src="/logos/sunrise.svg" alt="Sunrise GmbH" class="company-logo h-9 w-auto">
+                            <img src="/logos/sunrise.svg" alt="Sunrise GmbH" class="company-logo h-9 w-auto" width="99" height="89">
                         </div>
                         <span class="font-sans font-semibold text-sm text-[var(--color-ink)]/80 tracking-tight">Sunrise GmbH</span>
                         <span class="text-[9px] text-[var(--color-ink)]/30 uppercase tracking-wider">Switzerland</span>
                     </div>
                     <div class="flex flex-col items-center justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full text-center gap-2">
                         <div class="logo-container mb-1">
-                            <img src="/logos/lh-systems.svg" alt="Lufthansa Systems" class="company-logo h-4 w-auto max-w-full">
+                            <img src="/logos/lh-systems.svg" alt="Lufthansa Systems" class="company-logo h-4 w-auto max-w-full" width="292" height="30">
                         </div>
                         <span class="font-sans font-semibold text-sm text-[var(--color-ink)]/80 tracking-tight">Lufthansa Systems</span>
                         <span class="text-[9px] text-[var(--color-ink)]/30 uppercase tracking-wider">Switzerland</span>
                     </div>
                     <div class="flex flex-col items-center justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full text-center gap-2">
                         <div class="logo-container mb-1">
-                            <img src="/logos/Airports_authority_of_India_Logo.png" alt="Airports Authority of India" class="company-logo h-9 w-auto max-w-[80px]">
+                            <img src="/logos/Airports_authority_of_India_Logo.png" alt="Airports Authority of India" class="company-logo h-9 w-auto max-w-[80px]" width="200" height="113">
                         </div>
                         <span class="font-sans font-semibold text-sm text-[var(--color-ink)]/80 tracking-tight">Airports Authority of India</span>
                         <span class="text-[9px] text-[var(--color-ink)]/30 uppercase tracking-wider">India</span>
                     </div>
                     <div class="flex flex-col items-center justify-center p-6 bg-[var(--color-ink)]/[0.01] hover:bg-[var(--color-ink)]/[0.03] rounded-2xl border border-[var(--color-ink)]/5 transition-all w-full text-center gap-2">
                         <div class="logo-container mb-1">
-                            <img src="/logos/profed-2024.png" alt="MIT Professional Education" class="company-logo h-6 w-auto max-w-full">
+                            <img src="/logos/profed-2024.png" alt="MIT Professional Education" class="company-logo h-6 w-auto max-w-full" width="260" height="51">
                         </div>
                         <span class="font-sans font-semibold text-sm text-[var(--color-ink)]/80 tracking-tight">MIT Professional Education</span>
                         <span class="text-[9px] text-[var(--color-ink)]/30 uppercase tracking-wider">Digital Transformation</span>
@@ -263,7 +249,7 @@
                 <a href="/projects" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Projects</a>
                 <a href="/experience" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Experience</a>
                 <a href="/contact" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Contact</a>
-                <a href="javascript:void(0)" onclick="openPrivacy()" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
+                <a href="/privacy" onclick="openPrivacy(); return false;" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
             </div>
             <div class="flex items-center gap-4">
                 <a href="https://www.linkedin.com/in/vinamrakumar" target="_blank" rel="noopener noreferrer"
@@ -287,6 +273,6 @@
         </div>
     </div>
 
-    <script src="/shared.js"></script>
+    <script src="/shared.js?v=1.3.0"></script>
 </body>
 </html>

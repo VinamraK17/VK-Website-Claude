@@ -1,0 +1,46 @@
+# Every file in this repo is stored with LF endings.
+#
+# Without this, a Windows editor can rewrite a file CRLF and git reports the
+# whole file as changed while not a single character of content differs. That
+# has produced three separate phantom diffs in this repo — a 3,329-line
+# portfolio.html diff, four "modified" files that turned out to be identical,
+# and 4,167 mirrored insertions/deletions after a branch switch.
+#
+# eol=lf normalises on commit and checks out LF everywhere. Editors handle LF
+# on Windows fine; git is the thing that cannot tell the difference between a
+# newline change and an edit.
+
+* text=auto eol=lf
+
+# Explicit, so content detection cannot get these wrong
+*.html      text eol=lf
+*.css       text eol=lf
+*.js        text eol=lf
+*.mjs       text eol=lf
+*.cjs       text eol=lf
+*.ts        text eol=lf
+*.json      text eol=lf
+*.md        text eol=lf
+*.xml       text eol=lf
+*.svg       text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.txt       text eol=lf
+*.prisma    text eol=lf
+Dockerfile  text eol=lf
+.gitignore  text eol=lf
+
+# Binary — must never be line-ending processed
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.webp      binary
+*.avif      binary
+*.gif       binary
+*.ico       binary
+*.woff      binary
+*.woff2     binary
+*.ttf       binary
+*.db        binary
+*.pdf       binary
+*.docx      binary

@@ -18,3 +18,6 @@ prisma/*.db
 prisma/*.db-journal
 prisma/*.sqlite
 prisma/*.sqlite3
+
+# editor/imagemagick backups
+*~

@@ -353,7 +353,18 @@ async function startServer() {
   });
 
   // Serve static assets (images, robots.txt, sitemap, etc.) from /public
-  app.use(express.static(path.join(process.cwd(), 'public')));
+  // Static assets. Everything referenced from HTML now carries a ?v= query, so
+  // those files can be cached hard and busted by changing the query string.
+  // Unversioned files (robots.txt, sitemap.xml, manifest) keep a short TTL.
+  const ONE_YEAR = 60 * 60 * 24 * 365;
+  app.use(express.static(path.join(process.cwd(), 'public'), {
+    maxAge: '1h',
+    setHeaders(res, filePath) {
+      if (/\.(css|js|png|jpe?g|webp|avif|svg|ico|woff2?)$/i.test(filePath)) {
+        res.setHeader('Cache-Control', `public, max-age=${ONE_YEAR}, immutable`);
+      }
+    },
+  }));
 
   // Try to seed data (ignore if fails during build/env issues)
   seedData().catch(err => console.warn("Seed failed (ignorable if DB not ready):", err.message));
@@ -815,6 +826,7 @@ async function startServer() {
   app.get("/projects", (req, res) => res.sendFile(path.join(pagesDir, "projects.html")));
   app.get("/experience", (req, res) => res.sendFile(path.join(pagesDir, "experience.html")));
   app.get("/contact", (req, res) => res.sendFile(path.join(pagesDir, "contact.html")));
+  app.get("/privacy", (req, res) => res.sendFile(path.join(pagesDir, "privacy.html")));
 
   // 404 — return a styled page instead of redirecting (redirect hides 404s from search engines)
   app.use((req, res) => {

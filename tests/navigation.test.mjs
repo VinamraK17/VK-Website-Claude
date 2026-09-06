@@ -225,16 +225,32 @@ describe('Shared assets — every page references shared.css and shared.js', () 
         `${name}: missing <link rel="stylesheet" href="/shared.css">`
       );
     });
-    test(`${name} — links /shared.js`, () => {
+    test(`${name} — links a version-stamped /shared.js`, () => {
       assert.ok(
-        content.includes('src="/shared.js"'),
-        `${name}: missing <script src="/shared.js">`
+        /src="\/shared\.js\?v=[\w.-]+"/.test(content),
+        `${name}: missing <script src="/shared.js?v=...">. The version query is what` +
+        ' lets the file be served immutable; an unversioned link would be cached for a year.'
       );
     });
-    test(`${name} — loads Tailwind CDN`, () => {
+    test(`${name} — uses compiled Tailwind, not the play CDN`, () => {
       assert.ok(
-        content.includes('cdn.tailwindcss.com'),
-        `${name}: missing Tailwind CDN script`
+        !content.includes('cdn.tailwindcss.com'),
+        `${name}: still loads the Tailwind play CDN. It ships a compiler to the browser` +
+        ' and is not intended for production — build public/tailwind.css instead.'
+      );
+      assert.ok(
+        /href="\/tailwind\.css\?v=[\w.-]+"/.test(content),
+        `${name}: missing <link href="/tailwind.css?v=...">`
+      );
+      assert.ok(
+        fs.existsSync(path.join(PUBLIC_DIR, 'tailwind.css')),
+        'public/tailwind.css is missing — run npm run build:css'
+      );
+    });
+    test(`${name} — self-hosts Lucide rather than calling unpkg`, () => {
+      assert.ok(
+        !content.includes('unpkg.com'),
+        `${name}: still loads Lucide from unpkg, a render-blocking third-party request`
       );
     });
   }

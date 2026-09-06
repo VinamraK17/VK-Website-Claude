@@ -12,7 +12,7 @@
  * cost 750 ms on mobile for 1.8 KiB of CSS, and then gated three woff2 fetches
  * of ~665 ms each on a third origin.
  */
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 
 // Weights actually used in the markup: font-light 300, normal 400, medium 500,
@@ -21,10 +21,13 @@ import path from 'node:path';
 // element — was being synthesised by the browser rather than rendered.
 const FONTS = [
   { pkg: '@fontsource/inter',          family: 'Inter',          weights: [300, 400, 500, 600, 700] },
-  { pkg: '@fontsource/space-grotesk',  family: 'Space Grotesk',  weights: [300, 400, 500, 600, 700] },
+  { pkg: '@fontsource/space-grotesk',  family: 'Space Grotesk',  weights: [300, 500, 600, 700] }, // 400 unused
   { pkg: '@fontsource/jetbrains-mono', family: 'JetBrains Mono', weights: [400, 500, 700] },
 ];
 
+// Rebuild the directory each time, or a weight removed from FONTS lingers on disk
+// and gets committed and deployed while nothing references it.
+rmSync('public/fonts', { recursive: true, force: true });
 mkdirSync('public/fonts', { recursive: true });
 
 let fontCss = '/* Self-hosted fonts — see scripts/build-css.mjs */\n';

@@ -34,10 +34,16 @@
     
 
     <!-- Lucide Icons -->
-    <script src="/vendor/lucide.min.js?v=1.4.0" defer></script>
+    <script src="/vendor/lucide.min.js?v=1.5.0" defer></script>
 
     <!-- Shared CSS (versioned for immediate cache invalidation) -->
-    <link rel="stylesheet" href="/app.css?v=1.4.0">
+    <!-- The three faces that render above the fold: body copy, the hero heading,
+         and the mono used for nav and section labels. Preloading them stops the
+         late swap-in that pushed Speed Index from 2.7s to 4.1s. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-400-normal.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-700-normal.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
+    <link rel="stylesheet" href="/app.css?v=1.5.0">
 </head>
 <body class="font-sans">
 
@@ -147,6 +153,6 @@
     </footer>
 
     <!-- Shared JS -->
-    <script src="/shared.js?v=1.4.0" defer></script>
+    <script src="/shared.js?v=1.5.0" defer></script>
 </body>
 </html>

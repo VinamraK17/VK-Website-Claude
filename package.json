@@ -10,7 +10,7 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "test": "node --test tests/**/*.test.mjs",
-    "build:css": "tailwindcss -c tailwind.config.js -i src/tailwind.input.css -o public/tailwind.css --minify",
+    "build:css": "tailwindcss -c tailwind.config.js -i src/tailwind.input.css -o public/tailwind.css --minify && node scripts/build-css.mjs",
     "build:icons": "node scripts/build-icons.mjs",
     "build:assets": "npm run build:css && npm run build:icons"
   },
@@ -25,6 +25,9 @@
     "ua-parser-js": "^1.0.40"
   },
   "devDependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
     "esbuild": "^0.25.0",

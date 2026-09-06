@@ -118,10 +118,23 @@ describe('Mobile menu — presence, initial state, and toggle wiring', () => {
 // ══════════════════════════════════════════════════════════════════════════════
 describe('Stylesheet cache-busting — version query string on every page', () => {
   for (const { name, content } of PAGE_FILES) {
-    test(`${name} — links to versioned /shared.css?v=... for immediate CDN cache invalidation`, () => {
+    test(`${name} — links to versioned /app.css?v=... for immediate CDN cache invalidation`, () => {
       assert.ok(
-        /href="\/shared\.css\?v=[\w\.-]+"/.test(content),
-        `${name}: must link to a versioned stylesheet (e.g. <link rel="stylesheet" href="/shared.css?v=1.2.0">)`
+        /href="\/app\.css\?v=[\w\.-]+"/.test(content),
+        `${name}: must link to a versioned stylesheet (e.g. <link rel="stylesheet" href="/app.css?v=1.4.0">)`
+      );
+    });
+    test(`${name} — loads exactly one stylesheet`, () => {
+      const links = (content.match(/<link rel="stylesheet"/g) || []).length;
+      assert.equal(links, 1,
+        `${name}: ${links} stylesheets. Each one is a separate round trip; fonts,` +
+        ' Tailwind and shared.css are concatenated into public/app.css for that reason.');
+    });
+    test(`${name} — does not fetch fonts from Google`, () => {
+      assert.ok(
+        !/fonts\.(googleapis|gstatic)\.com/.test(content),
+        `${name}: still requests Google Fonts. That CSS cost 750 ms on mobile and` +
+        ' gated three woff2 downloads on a third origin; fonts are self-hosted in /fonts.'
       );
     });
   }
@@ -221,8 +234,8 @@ describe('Shared assets — every page references shared.css and shared.js', () 
   for (const { name, content } of PAGE_FILES) {
     test(`${name} — links /shared.css`, () => {
       assert.ok(
-        content.includes('href="/shared.css'),
-        `${name}: missing <link rel="stylesheet" href="/shared.css">`
+        /href="\/app\.css\?v=[\w.-]+"/.test(content),
+        `${name}: missing <link rel="stylesheet" href="/app.css?v=...">`
       );
     });
     test(`${name} — links a version-stamped /shared.js`, () => {
@@ -239,12 +252,13 @@ describe('Shared assets — every page references shared.css and shared.js', () 
         ' and is not intended for production — build public/tailwind.css instead.'
       );
       assert.ok(
-        /href="\/tailwind\.css\?v=[\w.-]+"/.test(content),
-        `${name}: missing <link href="/tailwind.css?v=...">`
+        /href="\/app\.css\?v=[\w.-]+"/.test(content),
+        `${name}: missing <link href="/app.css?v=...">` +
+        ' (fonts + Tailwind + shared.css are concatenated into one request)'
       );
       assert.ok(
-        fs.existsSync(path.join(PUBLIC_DIR, 'tailwind.css')),
-        'public/tailwind.css is missing — run npm run build:css'
+        fs.existsSync(path.join(PUBLIC_DIR, 'app.css')),
+        'public/app.css is missing — run npm run build:css'
       );
     });
     test(`${name} — self-hosts Lucide rather than calling unpkg`, () => {
@@ -568,8 +582,8 @@ describe('index.html — Career Experience logo strip', () => {
     assert.ok(a < m, 'AAI must appear before MIT');
   });
 
-  test('index.html links to versioned shared.css for centralized logo styling', () => {
-    assert.ok(index.includes('href="/shared.css?v='), 'index.html must link to versioned shared.css');
+  test('index.html links to versioned app.css for centralized logo styling', () => {
+    assert.ok(index.includes('href="/app.css?v='), 'index.html must link to versioned app.css');
   });
 });
 

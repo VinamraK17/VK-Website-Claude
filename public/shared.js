@@ -233,13 +233,22 @@ document.addEventListener('DOMContentLoaded', () => {
     initStatCounters();
     initLinkTracking();
     highlightActiveNav();
-    updateDbStatus();
-    initEngagementTracking();
-    trackEvent('page_view', {
-        path: window.location.pathname,
-        referrer: document.referrer || null,
-        newVisitor: isNewVisitor()
-    });
+
+    // Network work that paints nothing. /api/db-status and /api/analytics were
+    // sitting in the critical request chain and stretching it to ~1.5s on
+    // mobile, to colour a status dot and record a page view. Neither is worth
+    // a millisecond of first paint. The 3s timeout guarantees they still fire
+    // on a busy main thread, and before a visitor is likely to leave.
+    const whenIdle = window.requestIdleCallback || (fn => setTimeout(fn, 1));
+    whenIdle(() => {
+        updateDbStatus();
+        initEngagementTracking();
+        trackEvent('page_view', {
+            path: window.location.pathname,
+            referrer: document.referrer || null,
+            newVisitor: isNewVisitor()
+        });
+    }, { timeout: 3000 });
 });
 
 window.addEventListener('load', initIcons);

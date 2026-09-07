@@ -333,17 +333,29 @@ async function startServer() {
       "Content-Security-Policy",
       [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com",
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com",
-        "font-src 'self' https://fonts.gstatic.com data:",
-        "img-src 'self' data: https:",
-        "connect-src 'self' https://unpkg.com",
+        // Scripts and styles are all first-party now. 'unsafe-inline' still has to
+        // stay: 78 inline event handlers (75 onclick, 3 oninput) and 5 inline
+        // <script> blocks. Removing it means refactoring those to addEventListener
+        // and hashing the blocks — see security_spec.md.
+        "script-src 'self' 'unsafe-inline'",
+        "style-src 'self' 'unsafe-inline'",
+        // Fonts are self-hosted; no third-party font origin is trusted any more.
+        "font-src 'self'",
+        // Was "https:", which trusted every host on the internet for images.
+        "img-src 'self' data: https://images.unsplash.com",
+        "connect-src 'self'",
+        "frame-src 'none'",
         "frame-ancestors 'none'",
         "base-uri 'self'",
         "form-action 'self'",
         "object-src 'none'",
+        "upgrade-insecure-requests",
       ].join("; ")
     );
+    // Isolate the browsing context: a page this one opens cannot reach back
+    // through window.opener, and other origins cannot embed our responses.
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
     // Keep the admin dashboard out of search engines/caches.
     if (req.path.startsWith("/admin") || req.path.startsWith("/api/admin")) {
       res.setHeader("X-Robots-Tag", "noindex, nofollow");

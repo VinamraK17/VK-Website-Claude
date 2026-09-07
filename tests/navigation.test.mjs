@@ -903,3 +903,90 @@ describe('Contact form security — honeypot and rate limiting', () => {
   });
 });
 
+// ══════════════════════════════════════════════════════════════════════════════
+//  SUITE — Security headers
+// ══════════════════════════════════════════════════════════════════════════════
+describe('Security headers — CSP reflects what the site actually loads', () => {
+  const server = fs.readFileSync(path.join(ROOT, 'server.ts'), 'utf8');
+  const csp = (server.match(/"Content-Security-Policy",\s*\[([\s\S]*?)\]\.join/) || [])[1] || '';
+
+  // Hosts the CSP trusts, versus hosts the site actually fetches from.
+  //
+  // Resource URLs are not always in src=""; projects.html builds its cards from a
+  // JS array whose objects carry image URLs as string literals. So collect every
+  // https:// host in the page and subtract the ones that are referenced but never
+  // requested. Each exclusion needs a reason — that is what keeps this honest.
+  const NEVER_FETCHED = {
+    'schema.org': 'JSON-LD @context — an identifier, not a URL the browser requests',
+    'www.linkedin.com': 'profile link (navigation, not a resource load)',
+    'calendar.app.google': 'booking link (navigation, not a resource load)',
+    'vinamrakumar.com': "the site's own canonical and og:url values",
+    'www.w3.org': 'SVG namespace identifier',
+    'tailwindcss.com': 'MIT licence comment inside the compiled app.css',
+  };
+
+  const cspHosts = [...csp.matchAll(/https:\/\/([a-z0-9.-]+)/g)].map(m => m[1]);
+  const loaded = new Set();
+  const files = [...NAV_PAGES, 'privacy.html', 'admin.html']
+    .map(f => path.join(PAGES_DIR, f))
+    .filter(f => fs.existsSync(f));
+  if (fs.existsSync(path.join(PUBLIC_DIR, 'app.css'))) files.push(path.join(PUBLIC_DIR, 'app.css'));
+  for (const f of files) {
+    for (const m of fs.readFileSync(f, 'utf8').matchAll(/https:\/\/([a-z0-9.-]+)/g)) {
+      if (!(m[1] in NEVER_FETCHED)) loaded.add(m[1]);
+    }
+  }
+
+  test('CSP does not trust a host the site never loads from', () => {
+    const stale = cspHosts.filter(h => !loaded.has(h));
+    assert.deepEqual(stale, [],
+      `CSP still allows ${stale.join(', ')} but nothing loads from there. A policy ` +
+      'that permits origins you removed is exactly the hole CSP exists to close.');
+  });
+
+  test('every host the site loads from is permitted by the CSP', () => {
+    const missing = [...loaded].filter(h => !cspHosts.includes(h));
+    assert.deepEqual(missing, [],
+      `pages load from ${missing.join(', ')} but the CSP does not allow it — those ` +
+      'requests will be blocked in the browser.');
+  });
+
+  test('the retired CDNs are gone from the CSP', () => {
+    for (const host of ['cdn.tailwindcss.com', 'unpkg.com', 'fonts.googleapis.com', 'fonts.gstatic.com']) {
+      assert.ok(!csp.includes(host), `CSP still trusts ${host}, which the site no longer uses`);
+    }
+  });
+
+  test("CSP never allows 'unsafe-eval'", () => {
+    assert.ok(!csp.includes('unsafe-eval'),
+      "'unsafe-eval' lets injected strings execute as code — the Tailwind play CDN " +
+      'needed it; nothing does now.');
+  });
+
+  for (const [header, value] of [
+    ['Strict-Transport-Security', 'max-age='],
+    ['X-Content-Type-Options', 'nosniff'],
+    ['X-Frame-Options', 'DENY'],
+    ['Cross-Origin-Opener-Policy', 'same-origin'],
+    ['Cross-Origin-Resource-Policy', 'same-origin'],
+    ['Referrer-Policy', 'strict-origin'],
+  ]) {
+    test(`sets ${header}`, () => {
+      assert.ok(new RegExp(`"${header}",\\s*"[^"]*${value}`).test(server),
+        `server.ts does not set ${header} to a value containing "${value}"`);
+    });
+  }
+
+  test('every external link opens with rel=noopener', () => {
+    const bad = [];
+    for (const f of [...NAV_PAGES, 'privacy.html']) {
+      const p2 = path.join(PAGES_DIR, f);
+      if (!fs.existsSync(p2)) continue;
+      const c = fs.readFileSync(p2, 'utf8');
+      for (const m of c.matchAll(/<a\b[^>]*target="_blank"[^>]*>/g)) {
+        if (!m[0].includes('noopener')) bad.push(`${f}: ${m[0].slice(0, 70)}`);
+      }
+    }
+    assert.deepEqual(bad, [], `target="_blank" without rel="noopener":\n${bad.join('\n')}`);
+  });
+});

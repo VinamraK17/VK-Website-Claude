@@ -122,7 +122,7 @@ async function seedData() {
       title: "Enterprise AI Transformation",
       tag: "Agentic AI",
       stats: "3 of 4 Streams",
-      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800",
+      image: "/img/projects/ai-transformation.svg",
       description: "Leads three of the four streams of Sunrise's enterprise AI transformation programme — AI workflow and process automation, AI journey transformation, and AI-first journeys — alongside concurrent platform evaluations for agentic AI and the governance around them.",
       order: 0
     },
@@ -130,7 +130,7 @@ async function seedData() {
       title: "NEXUS: AI Troubleshooting",
       tag: "Telecom AI",
       stats: "5M+ Customers",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
+      image: "/img/projects/nexus.svg",
       description: "Led the team that built and shipped NEXUS — an LLM-powered troubleshooting platform reaching 5M+ customers at Sunrise GmbH, deflecting inbound technical support volume and reducing cost to serve.",
       order: 1
     },
@@ -138,7 +138,7 @@ async function seedData() {
       title: "GenAI Strategy & MVP",
       tag: "Digital Transformation",
       stats: "CHF 8M Run-Rate",
-      image: "https://images.unsplash.com/photo-1535378620166-273708d44e4c?auto=format&fit=crop&q=80&w=800",
+      image: "/img/projects/genai.svg",
       description: "Defined and delivered the enterprise GenAI roadmap for Sunrise — automating customer care journeys and building to a CHF 8M annualised savings run-rate across the digital transformation and GenAI portfolio.",
       order: 2
     },
@@ -146,7 +146,7 @@ async function seedData() {
       title: "Aviation IT Portfolio Modernisation",
       tag: "Aviation Software",
       stats: "5 Days → 2 Days",
-      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=800",
+      image: "/img/projects/portfolio.svg",
       description: "Modernised a fragmented 77-application aviation IT portfolio at Lufthansa Systems FlightNav AG — cutting data production from five days to two, a 60% efficiency gain, and 40% cost savings beyond annual targets.",
       order: 3
     },
@@ -154,7 +154,7 @@ async function seedData() {
       title: "Data-Driven Aviation Maps",
       tag: "Aviation Software",
       stats: "ICAO Certified",
-      image: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800",
+      image: "/img/projects/maps.svg",
       description: "Led the end-to-end programme replacing manual static chart production with a dynamic, data-driven generation platform — defining the data quality requirements and securing certification against ICAO standards.",
       order: 4
     },
@@ -162,7 +162,7 @@ async function seedData() {
       title: "Leadership Across Aviation & Telecoms",
       tag: "Strategy & Leadership",
       stats: "20+ Years | 2 Industries",
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800",
+      image: "/img/projects/leadership.svg",
       description: "A two-decade leadership track across aviation and telecoms — from a 19-person production team supplying navigation charts to pilots at 300+ airlines, to enterprise AI transformation at Switzerland's largest telecom.",
       order: 5
     },
@@ -170,7 +170,7 @@ async function seedData() {
       title: "Pro Bono Mentoring",
       tag: "Mentoring",
       stats: "10+ Mentees",
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800",
+      image: "/img/projects/mentoring.svg",
       description: "Voluntary one-to-one mentoring of professionals across technology, business, and career transition — sharing 20+ years of leadership, AI, and product management experience to create tangible impact.",
       order: 6
     }
@@ -350,7 +350,7 @@ async function startServer() {
         // Fonts are self-hosted; no third-party font origin is trusted any more.
         "font-src 'self'",
         // Was "https:", which trusted every host on the internet for images.
-        "img-src 'self' data: https://images.unsplash.com",
+        "img-src 'self' data:",
         "connect-src 'self'",
         "frame-src 'none'",
         "frame-ancestors 'none'",

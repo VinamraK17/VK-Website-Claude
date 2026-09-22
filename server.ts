@@ -113,202 +113,210 @@ async function sendEmail(name: string, email: string, message: string) {
 }
 
 async function seedData() {
+  // ── Content source of truth ──────────────────────────────────────────────
+  // These two arrays are the ONLY place site content lives. pages/experience.html
+  // carries a mirrored FALLBACK_EXPERIENCES array for when the API is unreachable;
+  // regenerate it with `node scripts/sync-fallback.mjs` after editing this file.
   const projectsToSeed = [
+    {
+      title: "Enterprise AI Transformation",
+      tag: "Agentic AI",
+      stats: "3 of 4 Streams",
+      image: "/img/projects/ai-transformation.svg",
+      description: "Leads three of the four streams of Sunrise's enterprise AI transformation programme — AI workflow and process automation, AI journey transformation, and AI-first journeys — alongside concurrent platform evaluations for agentic AI and the governance around them.",
+      order: 0
+    },
     {
       title: "NEXUS: AI Troubleshooting",
       tag: "Telecom AI",
-      stats: "5M+ Users",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
-      description: "Architected and launched NEXUS — an LLM-powered troubleshooting platform serving 5M+ customers at Sunrise GmbH, driving significant call deflection and operational savings.",
-      order: 0
+      stats: "5M+ Customers",
+      image: "/img/projects/nexus.svg",
+      description: "Led the team that built and shipped NEXUS — an LLM-powered troubleshooting platform reaching 5M+ customers at Sunrise GmbH, deflecting inbound technical support volume and reducing cost to serve.",
+      order: 1
     },
     {
       title: "GenAI Strategy & MVP",
       tag: "Digital Transformation",
-      stats: "8M+ CHF Saved",
-      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800",
-      description: "Defined and delivered the enterprise GenAI roadmap for a CHF 1B+ telco, automating customer care journeys and driving 8M+ CHF in annual efficiency savings.",
-      order: 1
+      stats: "CHF 8M Run-Rate",
+      image: "/img/projects/genai.svg",
+      description: "Defined and delivered the enterprise GenAI roadmap for Sunrise — automating customer care journeys and building to a CHF 8M annualised savings run-rate across the digital transformation and GenAI portfolio.",
+      order: 2
     },
     {
       title: "Aviation IT Portfolio Modernisation",
       tag: "Aviation Software",
-      stats: "60% Efficiency Gain",
-      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=800",
-      description: "Modernised a fragmented 77-application aviation IT portfolio at Lufthansa Systems — introducing Agile SCRUM, governance frameworks, and roadmap alignment to unlock 40%+ in budget savings.",
-      order: 2
+      stats: "5 Days → 2 Days",
+      image: "/img/projects/portfolio.svg",
+      description: "Modernised a fragmented 77-application aviation IT portfolio at Lufthansa Systems FlightNav AG — cutting data production from five days to two, a 60% efficiency gain, and 40% cost savings beyond annual targets.",
+      order: 3
     },
     {
       title: "Data-Driven Aviation Maps",
       tag: "Aviation Software",
-      stats: "Zero-to-Production",
-      image: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800",
-      description: "Led the end-to-end program to replace manual static aviation chart production with a dynamic, data-driven generation platform — EASA and ICAO certified.",
-      order: 3
+      stats: "ICAO Certified",
+      image: "/img/projects/maps.svg",
+      description: "Led the end-to-end programme replacing manual static chart production with a dynamic, data-driven generation platform — defining the data quality requirements and securing certification against ICAO standards.",
+      order: 4
     },
     {
       title: "Leadership Across Aviation & Telecoms",
       tag: "Strategy & Leadership",
-      stats: "15+ Years | 2 Industries",
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800",
-      description: "A two-decade leadership track across aviation and telecoms — from multicultural 19-FTE operations teams to C-suite GenAI strategy at a CHF 1B+ telco.",
-      order: 4
+      stats: "20+ Years | 2 Industries",
+      image: "/img/projects/leadership.svg",
+      description: "A two-decade leadership track across aviation and telecoms — from a 19-person production team supplying navigation charts to pilots at 300+ airlines, to enterprise AI transformation at Switzerland's largest telecom.",
+      order: 5
     },
     {
       title: "Pro Bono Mentoring",
       tag: "Mentoring",
       stats: "10+ Mentees",
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800",
+      image: "/img/projects/mentoring.svg",
       description: "Voluntary one-to-one mentoring of professionals across technology, business, and career transition — sharing 20+ years of leadership, AI, and product management experience to create tangible impact.",
-      order: 5
+      order: 6
     }
   ];
 
-  const projectCount = await prisma.project.count();
-  const expectedTitles = projectsToSeed.map(p => p.title);
-  const existingProjects = await prisma.project.findMany({ select: { title: true } });
-  const existingTitles = existingProjects.map(p => p.title);
-  const needsReseed = projectCount !== projectsToSeed.length || !expectedTitles.every(t => existingTitles.includes(t));
+  const experiencesToSeed = [
+    {
+      company: "Sunrise GmbH",
+      role: "Manager Digital Transformation",
+      period: "Mar 2024 – Present",
+      location: "Zurich, Switzerland",
+      description: "Owning the digital product strategy for Switzerland's largest telecom, aligning six customer-journey teams plus IT, business, data specialists and external partners around a unified transformation roadmap.",
+      achievements: [
+        "AI Transformation Mandate: Leads three of the four streams of the enterprise AI transformation programme since June 2026 — AI workflow and process automation, AI journey transformation, and AI-first journeys.",
+        "Platform Selection: Runs concurrent platform evaluations for agentic AI and AI agent platforms — requirements, evaluation criteria, proof-of-concept design, build-vs-buy and commercial assessment, and the recommendation to the decision board.",
+        "AI Governance: Defines agentic AI governance — guardrails, human-in-the-loop design, data access, security, and vendor lock-in — and leads the AI workflow automation proof of concept from use-case selection through to the business case for scaling.",
+        "Customer Experience: Led the enterprise SSO implementation across digital entry points after KPI analysis exposed inconsistent login journeys, raising login success rate and NPS from 70% to 90%.",
+        "Risk Governance: Surfaces delivery, security, data and dependency risks early and coordinates the decisions across six journey teams.",
+        "Financial Performance: CHF 8M annualised savings run-rate across the digital transformation and GenAI portfolio."
+      ],
+      order: 0
+    },
+    {
+      company: "Sunrise GmbH",
+      role: "Product Owner Digital Transformation",
+      period: "Sep 2022 – Feb 2024",
+      location: "Zürich Metropolitan Area",
+      description: "Led the team that built and shipped NEXUS — an LLM-powered AI troubleshooting platform reaching 5M+ customers — taking a cross-functional team of 15+ from zero to full production and reducing inbound technical support volume.",
+      achievements: [
+        "NEXUS Delivery: Built and led the team that delivered Sunrise's first AI-driven troubleshooting solution, owning requirements, data preparation, model-training coordination, testing and feedback loops end to end.",
+        "Cost Optimisation: Exceeded departmental cost targets by 20% beyond a CHF 2M target in 2023 by redesigning team operating models around the customer journey.",
+        "Agile Delivery: Surpassed departmental performance targets by 20% by owning product delivery end-to-end — from vision and business case through to launch and iteration.",
+        "Team Development: Hired, coached and developed the team through competing priorities."
+      ],
+      order: 1
+    },
+    {
+      company: "Lufthansa Systems FlightNav AG",
+      role: "Product Owner",
+      period: "Mar 2018 – Aug 2022",
+      location: "Zurich, Switzerland (Hybrid)",
+      description: "Modernised a mission-critical internal application portfolio of 77 tools — leading a cross-functional team of 12 across Zurich and Gdansk, plus Product Standards, Windows and iOS teams.",
+      achievements: [
+        "Operational Efficiency: Improved data production efficiency by 60%, cutting the cycle from five days to two, and raised monthly data production from 300 to 420.",
+        "Cost Performance: Delivered 40% cost savings beyond annual targets by replacing legacy workflows with agile, automation-first practices.",
+        "Risk & Compliance Management: Established application risk registers covering security, technology lifecycle and operational continuity across all 77 aviation applications, meeting stringent international aeronautical regulatory standards.",
+        "Global Team Alignment: Unified stakeholder alignment across two international locations, eliminating release delays through structured backlog management."
+      ],
+      order: 2
+    },
+    {
+      company: "Lufthansa Systems FlightNav AG",
+      role: "Production Manager Data Driven Maps Program Lido/Navigation",
+      period: "Feb 2016 – Feb 2018",
+      location: "Zurich, Switzerland",
+      description: "Launched a first-of-its-kind production process for the Data Driven Maps Program from zero to full implementation — defining quality standards, securing regulatory certifications, and scaling operations on time.",
+      achievements: [
+        "Regulatory Certification: Defined the data quality requirements (DQR) and secured certification against ICAO standards.",
+        "Procurement Cost Optimisation: Built the business case and ran rigorous make-or-buy analyses, selecting the optimal mix of external partners and internal capabilities.",
+        "Vendor Governance: Selected, onboarded and governed a new external vendor, defining the transition plan, required skills and training.",
+        "Risk Mitigation: Mitigated programme delivery risk by designing a transition plan that bridged current operations with future objectives."
+      ],
+      order: 3
+    },
+    {
+      company: "Lufthansa Systems FlightNav AG",
+      role: "Manager Production Lido/Navigation",
+      period: "Mar 2012 – Mar 2016",
+      location: "Zurich, Switzerland",
+      description: "Led a multicultural production team of 19 producing navigation charts used by pilots at 300+ airlines globally, managing the full AIRAC cycle and ensuring on-time, compliant delivery to airline customers.",
+      achievements: [
+        "Process Optimisation: Improved data production efficiency by over 30%, shortening the cycle from 28 days to 20.",
+        "Quality: Reduced quality complaints by 40%.",
+        "People Development: Drove team performance and retention by owning hiring, compensation decisions, onboarding and the mentoring of new managers in Gdansk.",
+        "Cross-Site Coordination: Restructured communication and process workflows between Zurich and Gdansk, eliminating delays."
+      ],
+      order: 4
+    },
+    {
+      company: "Lufthansa Systems FlightNav AG",
+      role: "Quality Assurance / Aeronautical Chart Specialist",
+      period: "May 2009 – May 2012",
+      location: "Zurich, Switzerland",
+      description: "Maintained zero-defect delivery of aeronautical charts to airline customers through regulatory QA oversight of navigation data against ICAO standards across every AIRAC cycle.",
+      achievements: [
+        "Regulatory QA: Validated safety-critical aeronautical products against ICAO standards, investigated quality issues and coordinated corrective actions with audit-ready documentation.",
+        "Mentorship: Accelerated team capability by mentoring and training new hires, reducing onboarding time.",
+        "Quality Controls: Led the testing and evaluation of new tools before production integration, protecting operational continuity."
+      ],
+      order: 5
+    },
+    {
+      company: "Airports Authority of India (AAI)",
+      role: "Air Traffic Controller",
+      period: "Apr 2006 – May 2009",
+      location: "Greater Delhi Area, India",
+      description: "Ensured the safe and efficient movement of hundreds of aircraft and thousands of passengers daily at IGI Airport New Delhi — operating ATC (Non-Radar) services across Delhi FIR with zero margin for error.",
+      achievements: [
+        "Capacity Expansion: Contributed directly to airport capacity expansion by participating in the commissioning of Runway 11/29 and developing new ATC procedures.",
+        "Controller Training: Developed training notes, presentations, and simulator exercises for the Area Control Centre, raising performance standards."
+      ],
+      order: 6
+    },
+    {
+      company: "Pro Bono / Independent",
+      role: "Career & Leadership Mentor",
+      period: "Ongoing",
+      location: "Switzerland / Remote",
+      description: "Voluntary one-to-one mentoring of professionals across technology, business, and early-career backgrounds — guiding individuals through career transitions, first-time leadership challenges, and pivots into AI and product management.",
+      achievements: [
+        "Career Transitions: Guided multiple mentees through successful industry pivots and role changes, providing frameworks for personal positioning, interview preparation, and stakeholder navigation.",
+        "Leadership Development: Coached first-time managers and team leads through the practical challenges of moving from individual contributor to people leader.",
+        "AI & Product Strategy: Shared hands-on experience from enterprise AI and digital transformation programmes to help technology professionals identify and pursue high-impact career directions.",
+        "Outcomes: Mentees achieved a range of milestones — including new roles, promotions, and significant gains in professional confidence and strategic clarity."
+      ],
+      order: 7
+    }
+  ];
 
-  if (needsReseed) {
-    console.log("Updating projects to latest version...");
+  // ── Content-aware reseed ─────────────────────────────────────────────────
+  // Previously this compared only row COUNT (and project titles), so editing the
+  // text of an achievement, a date or a figure never reached the database: the
+  // container restarted and MariaDB kept serving the old copy. Compare content.
+  const norm = (rows: any[], keys: string[]) =>
+    JSON.stringify(rows.map(r => keys.map(k => String(r[k] ?? ""))));
+
+  const projectKeys = ["title", "tag", "stats", "image", "description", "order"];
+  const existingProjects = await prisma.project.findMany({ orderBy: { order: "asc" } });
+  if (norm(existingProjects, projectKeys) !== norm(projectsToSeed, projectKeys)) {
+    console.log("Projects changed — reseeding.");
     await prisma.project.deleteMany();
     await prisma.project.createMany({ data: projectsToSeed });
   }
 
-  const EXPECTED_EXP_COUNT = 8;
-  const expCount = await prisma.experience.count();
-  if (expCount !== EXPECTED_EXP_COUNT) {
-    console.log("Resyncing experience history...");
+  const experienceRows = experiencesToSeed.map(e => ({
+    ...e,
+    achievements: JSON.stringify(e.achievements)
+  }));
+  const expKeys = ["company", "role", "period", "location", "description", "achievements", "order"];
+  const existingExperiences = await prisma.experience.findMany({ orderBy: { order: "asc" } });
+  if (norm(existingExperiences, expKeys) !== norm(experienceRows, expKeys)) {
+    console.log("Experience history changed — reseeding.");
     await prisma.experience.deleteMany();
-
-    await prisma.experience.create({
-      data: {
-        company: "Sunrise GmbH",
-        role: "Manager Digital Transformation",
-        period: "Feb 2024 – Present",
-        location: "Zurich, Switzerland",
-        description: "Owning the digital product strategy for a CHF 1B+ telco, aligning 5+ cross-functional teams around a unified transformation roadmap that accelerated time-to-market across the entire portfolio.",
-        achievements: JSON.stringify([
-          "Digital Leadership: Managed a multi-million franc digital product portfolio, embedding OKR and KPI frameworks that connected product delivery directly to business revenue targets.",
-          "Strategic Alignment: Built and governed an ecosystem of external partners and vendors, ensuring delivery quality, cost discipline, and strategic alignment across the full product development lifecycle.",
-          "Market Competitive Positioning: Led ongoing market and trend analysis, enabling the business to identify and act on digital opportunities ahead of competitors.",
-          "Financial Performance: Secured 8M+ CHF in annual efficiency savings through strategic GenAI integrations and process automation."
-        ]),
-        order: 0
-      }
-    });
-
-    await prisma.experience.create({
-      data: {
-        company: "Sunrise GmbH",
-        role: "Product Owner Digital Transformation",
-        period: "Sep 2022 – Feb 2024",
-        location: "Zürich Metropolitan Area",
-        description: "Architected and shipped NEXUS — an LLM-powered AI troubleshooting platform serving 5M+ customers — leading a cross-functional team of 9 from zero to full production, reducing inbound tech support call volumes.",
-        achievements: JSON.stringify([
-          "NEXUS Platform Architecture: Designed the end-to-end system architecture, making core infrastructure decisions on AI model integration, scalability, and platform resilience for millions of concurrent users.",
-          "Cost Optimization: Exceeded departmental cost targets by 20% in 2023 by redesigning team operating models around the customer journey.",
-          "Agile Delivery: Surpassed all departmental KPIs by 20% by owning product delivery end-to-end — from vision and business case through to launch and iteration.",
-          "Team Development: Led People Development for a core agile team of 15+ engineers and designers."
-        ]),
-        order: 1
-      }
-    });
-
-    await prisma.experience.create({
-      data: {
-        company: "Lufthansa Systems",
-        role: "Product Owner",
-        period: "Mar 2018 – Aug 2022",
-        location: "Zurich, Switzerland (Hybrid)",
-        description: "Modernized a mission-critical internal application portfolio of 77 tools — leading a cross-functional team of 8 and driving a 60% increase in operational efficiency across international operations in Zurich and Gdansk.",
-        achievements: JSON.stringify([
-          "Operational Savings: Delivered 40%+ savings against budget by replacing legacy workflows with agile, automation-first practices.",
-          "Risk & Compliance Management: Ensured zero critical compliance gaps across all 77 aviation applications by building and maintaining a live risk register meeting stringent international aeronautical regulatory standards.",
-          "Global Team Alignment: Unified stakeholder alignment across two international locations, eliminating release delays through structured backlog management."
-        ]),
-        order: 2
-      }
-    });
-
-    await prisma.experience.create({
-      data: {
-        company: "Lufthansa Systems",
-        role: "Production Manager Data Driven Maps Program Lido/Navigation",
-        period: "Feb 2016 – Feb 2018",
-        location: "Zurich, Switzerland",
-        description: "Launched a first-of-its-kind production process for the Data Driven Maps Program from zero to full implementation — defining quality standards, securing regulatory certifications, and scaling operations on time.",
-        achievements: JSON.stringify([
-          "Procurement Cost Optimization: Reduced procurement costs by conducting rigorous make-or-buy analyses, selecting the optimal mix of external partners and internal capabilities.",
-          "Skill Development & Capacity Building: Future-proofed the team by identifying critical skill gaps and building targeted training plans.",
-          "Risk Mitigation: Mitigated program delivery risk by designing a robust transition plan that bridged current operations with future objectives."
-        ]),
-        order: 3
-      }
-    });
-
-    await prisma.experience.create({
-      data: {
-        company: "Lufthansa Systems",
-        role: "Manager Production Lido/Navigation",
-        period: "May 2012 – Mar 2016",
-        location: "Zurich, Switzerland",
-        description: "Led a multicultural production team of 19 FTE, managing the full AIRAC cycle — ensuring on-time, compliant delivery of aeronautical products to airline customers across international markets.",
-        achievements: JSON.stringify([
-          "People Development: Drove team performance and retention by owning hiring, compensation decisions, and onboarding.",
-          "Process Optimization: Improved cross-site coordination between Zurich and Gdansk by restructuring communication and process workflows, eliminating delays."
-        ]),
-        order: 4
-      }
-    });
-
-    await prisma.experience.create({
-      data: {
-        company: "Lufthansa Systems",
-        role: "Quality Assurance / Aeronautical Chart Specialist",
-        period: "May 2009 – May 2012",
-        location: "Zurich, Switzerland",
-        description: "Maintained zero-defect delivery of aeronautical charts to airline customers by ensuring full compliance with international safety and quality standards across every AIRAC cycle.",
-        achievements: JSON.stringify([
-          "Mentorship: Accelerated team capability by mentoring and training new hires, reducing onboarding time.",
-          "Quality Controls: Led the testing and evaluation of new tools before production integration, protecting operational continuity."
-        ]),
-        order: 5
-      }
-    });
-
-    await prisma.experience.create({
-      data: {
-        company: "Airports Authority of India (AAI)",
-        role: "Air Traffic Controller",
-        period: "Apr 2006 – May 2009",
-        location: "Greater Delhi Area, India",
-        description: "Ensured the safe and efficient movement of hundreds of aircraft and thousands of passengers daily at IGI Airport New Delhi — operating ATC (Non-Radar) services across Delhi FIR with zero margin for error.",
-        achievements: JSON.stringify([
-          "Capacity Expansion: Contributed directly to airport capacity expansion by participating in the commissioning of Runway 11/29 and developing new ATC procedures.",
-          "Controller Training: Developed training notes, presentations, and simulator exercises for the Area Control Centre, raising performance standards."
-        ]),
-        order: 6
-      }
-    });
-
-    await prisma.experience.create({
-      data: {
-        company: "Pro Bono / Independent",
-        role: "Career & Leadership Mentor",
-        period: "Ongoing",
-        location: "Switzerland / Remote",
-        description: "Voluntary one-to-one mentoring of professionals across technology, business, and early-career backgrounds — guiding individuals through career transitions, first-time leadership challenges, and pivots into AI and product management.",
-        achievements: JSON.stringify([
-          "Career Transitions: Guided multiple mentees through successful industry pivots and role changes, providing frameworks for personal positioning, interview preparation, and stakeholder navigation.",
-          "Leadership Development: Coached first-time managers and team leads through the practical challenges of moving from individual contributor to people leader.",
-          "AI & Product Strategy: Shared hands-on experience from enterprise AI and digital transformation programmes to help technology professionals identify and pursue high-impact career directions.",
-          "Outcomes: Mentees achieved a range of milestones — including new roles, promotions, and significant gains in professional confidence and strategic clarity."
-        ]),
-        order: 7
-      }
-    });
+    for (const row of experienceRows) {
+      await prisma.experience.create({ data: row });
+    }
   }
 }
 
@@ -342,7 +350,7 @@ async function startServer() {
         // Fonts are self-hosted; no third-party font origin is trusted any more.
         "font-src 'self'",
         // Was "https:", which trusted every host on the internet for images.
-        "img-src 'self' data: https://images.unsplash.com",
+        "img-src 'self' data:",
         "connect-src 'self'",
         "frame-src 'none'",
         "frame-ancestors 'none'",

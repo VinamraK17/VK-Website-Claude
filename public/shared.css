@@ -252,3 +252,35 @@ html, body {
     border: none;
     box-shadow: none;
 }
+
+/* Certification badge tile — sized for the official badge assets from each
+   issuing body. Keep badges unmodified: no recolouring, no cropping. */
+.cert-logo {
+    width: 72px;
+    height: 72px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.92);
+}
+.cert-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+/* Placeholder state, until the real badge file is dropped in */
+.cert-logo.is-placeholder {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+[data-mode="light"] .cert-logo {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+}
+[data-mode="light"] .cert-logo.is-placeholder {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}

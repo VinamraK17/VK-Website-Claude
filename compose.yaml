@@ -13,11 +13,48 @@ services:
       - SMTP_PORT=${SMTP_PORT:-}
       - SMTP_USER=${SMTP_USER:-}
       - SMTP_PASS=${SMTP_PASS:-}
+      # Primary notification channel: ntfy on the internal network below.
+      - NTFY_URL=${NTFY_URL:-http://ntfy}
+      - NTFY_TOPIC=${NTFY_TOPIC:-}
+      - NTFY_TOKEN=${NTFY_TOKEN:-}
+      - NTFY_CLICK_URL=${NTFY_CLICK_URL:-https://vinamrakumar.com/admin}
     ports:
       - "3000:3000"
     volumes:
       - portfolio-data:/app/data
+    networks:
+      - portfolio
+    depends_on:
+      - ntfy
     restart: always
+
+  ntfy:
+    image: binwiederhier/ntfy:v2
+    command: serve
+    environment:
+      # Public hostname, served through the existing Cloudflare tunnel.
+      - NTFY_BASE_URL=${NTFY_BASE_URL:-https://ntfy.vinamrakumar.com}
+      - NTFY_BEHIND_PROXY=true
+      - NTFY_CACHE_FILE=/var/lib/ntfy/cache.db
+      - NTFY_AUTH_FILE=/var/lib/ntfy/auth.db
+      # Nothing is readable or publishable without an account. DEPLOY.md has
+      # the steps for creating the publisher user and the access token.
+      - NTFY_AUTH_DEFAULT_ACCESS=deny-all
+      - NTFY_ENABLE_LOGIN=true
+      - NTFY_ATTACHMENT_CACHE_DIR=/var/cache/ntfy/attachments
+    volumes:
+      - ntfy-data:/var/lib/ntfy
+      - ntfy-cache:/var/cache/ntfy
+    ports:
+      - "8080:80"
+    networks:
+      - portfolio
+    restart: always
+
+networks:
+  portfolio:
 
 volumes:
   portfolio-data:
+  ntfy-data:
+  ntfy-cache:

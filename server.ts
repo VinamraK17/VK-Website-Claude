@@ -1,10 +1,9 @@
+import { notifyContact } from "./lib/notify";
 import express from "express";
 import path from "path";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { google } from "googleapis";
-import nodemailer from "nodemailer";
 import { UAParser } from "ua-parser-js";
 
 dotenv.config();
@@ -27,89 +26,6 @@ function escapeHtml(str: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-}
-
-// Gmail & SMTP Helper (Robust / NAS Compatible)
-async function sendEmail(name: string, email: string, message: string) {
-  const safeName = escapeHtml(name);
-  const safeEmail = escapeHtml(email);
-  const safeMessage = escapeHtml(message);
-  const targetEmail = "contact@vinamrakumar.com";
-  const subject = `Portfolio Contact from ${name}`;
-
-  // 1. SMTP (Robust & NAS Friendly)
-  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-    try {
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT || "465"),
-        secure: process.env.SMTP_PORT === "465",
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
-
-      await transporter.sendMail({
-        from: `"${safeName}" <${process.env.SMTP_USER}>`,
-        to: targetEmail,
-        replyTo: email,
-        subject: subject,
-        html: `
-          <h3>New contact request</h3>
-          <p><strong>From:</strong> ${safeName} (${safeEmail})</p>
-          <p><strong>Message:</strong></p>
-          <p style="white-space: pre-wrap;">${safeMessage}</p>
-          <br/><hr/>
-          <p><small>Sent via Nodemailer (Self-Hosted SQLite/NAS)</small></p>
-        `,
-      });
-      console.log("Email sent via SMTP.");
-      return;
-    } catch (smtpErr) {
-      console.error("SMTP failed, attempting Google fallback:", smtpErr);
-    }
-  }
-
-  // 2. Google APIs Fallback
-  try {
-    const auth = new google.auth.GoogleAuth({
-      scopes: ["https://www.googleapis.com/auth/gmail.send"],
-    });
-    const authClient = await auth.getClient() as any;
-    const gmail = google.gmail({ version: "v1", auth: authClient });
-
-    const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`;
-    
-    const emailLines = [
-      `To: ${targetEmail}`,
-      "Content-Type: text/html; charset=utf-8",
-      "MIME-Version: 1.0",
-      `Subject: ${utf8Subject}`,
-      "",
-      `<h3>New contact request</h3>`,
-      `<p><strong>From:</strong> ${safeName} (${safeEmail})</p>`,
-      `<p><strong>Message:</strong></p>`,
-      `<p style="white-space: pre-wrap;">${safeMessage}</p>`,
-      "<br/>",
-      "<hr/>",
-      "<p><small>Sent via Google Workspace Integration (Self-Hosted SQLite/NAS)</small></p>"
-    ];
-
-    const raw = Buffer.from(emailLines.join("\r\n"))
-      .toString("base64")
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=+$/, "");
-
-    await gmail.users.messages.send({
-      userId: "me",
-      requestBody: { raw },
-    });
-    console.log("Gmail notification sent.");
-  } catch (error) {
-    console.error("Gmail notification failed:", error);
-  }
 }
 
 async function seedData() {
@@ -467,7 +383,7 @@ async function startServer() {
       console.log(`[CONTACT] Message from ${name} <${email}>`);
 
       // Store in SQLite via Prisma
-      await prisma.message.create({
+      const saved = await prisma.message.create({
         data: {
           name,
           email,
@@ -475,8 +391,15 @@ async function startServer() {
         }
       });
 
-      // Email Notification - NON-BLOCKING
-      sendEmail(name, email, message);
+      // Notify, then record the outcome so the admin console shows what was
+      // actually delivered. ntfy is on the same Docker network, so this adds
+      // milliseconds; it is bounded by an 8s timeout either way.
+      try {
+        const outcome = await notifyContact(name, email, message);
+        await prisma.message.update({ where: { id: saved.id }, data: outcome });
+      } catch (notifyErr: any) {
+        console.error("[NOTIFY] recording outcome failed:", notifyErr?.message ?? notifyErr);
+      }
       
       res.json({ 
         success: true, 

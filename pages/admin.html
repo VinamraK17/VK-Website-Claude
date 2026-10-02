@@ -113,8 +113,8 @@
             <div class="card overflow-hidden">
                 <div class="overflow-x-auto">
                     <table>
-                        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Message</th><th>Received</th><th></th></tr></thead>
-                        <tbody id="messages-tbody"><tr><td colspan="6" class="text-center py-10" style="color:var(--ink-faint)">Loading…</td></tr></tbody>
+                        <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Message</th><th>Received</th><th>Notified</th><th></th></tr></thead>
+                        <tbody id="messages-tbody"><tr><td colspan="7" class="text-center py-10" style="color:var(--ink-faint)">Loading…</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -422,10 +422,23 @@ function renderEngagement(pageViews, avgTimeOnPage, avgScrollDepth) {
         : '<tr><td colspan="4" class="text-center py-10" style="color:rgba(255,255,255,0.3)">No engagement data yet.</td></tr>';
 }
 
+// Delivery status for a message. A failed notification used to be invisible
+// outside container logs, which is what made the inbox unusable as a signal.
+function notifyCell(m) {
+    if (m.notified) {
+        const via = m.notifyVia ? esc(m.notifyVia) : 'sent';
+        return `<span title="${esc(m.notifiedAt || '')}" style="color:#4ecca3">&#10003; ${via}</span>`;
+    }
+    if (m.notifyError) {
+        return `<span title="${esc(m.notifyError)}" style="color:#ff4d4d">&#10007; failed</span>`;
+    }
+    return `<span style="color:rgba(255,255,255,0.25)">&mdash;</span>`;
+}
+
 function renderMessages(msgs) {
     const tbody = document.getElementById('messages-tbody');
     if (!msgs.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-10" style="color:rgba(255,255,255,0.3)">No messages yet.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-10" style="color:rgba(255,255,255,0.3)">No messages yet.</td></tr>';
         document.getElementById('messages-count').textContent = '';
         return;
     }
@@ -439,6 +452,7 @@ function renderMessages(msgs) {
                 <button onclick="toggleMsg(${m.id})" class="text-xs mt-1 font-mono hover:underline" id="msg-btn-${m.id}" style="color:rgba(78,204,163,0.7)">Show more</button>
             </td>
             <td class="text-xs font-mono whitespace-nowrap" style="color:rgba(255,255,255,0.35)">${formatDate(m.createdAt)}</td>
+            <td class="text-xs font-mono whitespace-nowrap">${notifyCell(m)}</td>
             <td><button onclick="deleteMessage(${m.id})" class="text-xs font-mono px-2 py-1 rounded border hover:bg-red-500/10 transition-colors" style="color:#ff4d4d;border-color:rgba(255,77,77,0.3)">✕</button></td>
         </tr>`).join('');
     document.getElementById('messages-count').textContent = `${msgs.length} message${msgs.length !== 1 ? 's' : ''}`;

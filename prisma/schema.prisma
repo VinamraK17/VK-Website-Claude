@@ -20,6 +20,13 @@ model Message {
   email     String
   message   String
   createdAt DateTime @default(now())
+
+  // Notification delivery, so the admin console can show what actually reached
+  // Vin rather than leaving failures invisible in container logs.
+  notified    Boolean   @default(false)
+  notifiedAt  DateTime?
+  notifyVia   String?
+  notifyError String?
 }
 
 model Analytics {

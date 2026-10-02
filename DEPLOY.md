@@ -195,3 +195,75 @@ If a bad image is deployed:
 
 1. In Dockhand, change the image tag from `latest` to a specific SHA (visible in GitHub Actions logs, e.g. `sha-abc1234`).
 2. Redeploy. The `portfolio-data` volume is untouched, so no data is lost.
+
+---
+
+## 7. Contact notifications (ntfy)
+
+Contact submissions are stored in SQLite and pushed to a self-hosted ntfy
+instance running beside the site in the same Compose stack. Nothing leaves the
+NAS except the push itself.
+
+Until this was set up, the form saved messages and notified nobody: the old
+code required `SMTP_HOST`/`SMTP_USER`/`SMTP_PASS`, none of which were ever set,
+then fell through to a Google API path with no credentials in the container.
+Both failures were only logged to stdout.
+
+### One-time setup
+
+**1. Deploy the stack** so the `ntfy` service exists, then create the publisher
+account and a token. Run on the NAS:
+
+```bash
+docker exec -it ntfy ntfy user add --role=user vk
+docker exec -it ntfy ntfy access vk "vk-contact" rw
+docker exec -it ntfy ntfy token add vk
+```
+
+The last command prints a token starting `tk_`. Copy it.
+
+`NTFY_AUTH_DEFAULT_ACCESS=deny-all` is set in `compose.yaml`, so without an
+account nothing can be read or published — the topic name alone is not a
+credential.
+
+**2. Expose it through the existing Cloudflare tunnel.** Add a public hostname
+`ntfy.vinamrakumar.com` pointing at `http://<nas-ip>:8080` (or the `ntfy`
+service if the tunnel container shares the `portfolio` network). The site does
+NOT use this hostname — it talks to ntfy over the internal Docker network — it
+exists so the phone app can subscribe.
+
+**3. Set these in Dockhand** on the stack:
+
+| Variable | Value |
+|---|---|
+| `NTFY_TOPIC` | `vk-contact` |
+| `NTFY_TOKEN` | the `tk_...` token from step 1 |
+| `NTFY_BASE_URL` | `https://ntfy.vinamrakumar.com` |
+| `NTFY_URL` | leave unset — defaults to `http://ntfy` internally |
+
+**4. Subscribe on the phone.** Install the ntfy app, add
+`https://ntfy.vinamrakumar.com` as the server, sign in as `vk`, subscribe to
+`vk-contact`.
+
+### Verifying
+
+Send a message through the contact form. Then:
+
+- The phone should buzz within a second or two.
+- The admin console's **Notified** column shows `✓ ntfy` for that row.
+- A failure shows `✗ failed`; hover it for the reason, which is also stored on
+  the message row as `notifyError`.
+
+To test the push path alone, without going through the form:
+
+```bash
+curl -H "Authorization: Bearer tk_..." -H "Title: test" \
+     -d "hello" https://ntfy.vinamrakumar.com/vk-contact
+```
+
+### Optional: email as a second channel
+
+If `SMTP_HOST`, `SMTP_USER` and `SMTP_PASS` are all set, an email is sent in
+addition to the ntfy push. If any one of them is missing, SMTP is skipped —
+deliberately, and now visibly: the skip is recorded in `notifyError` rather
+than disappearing into the logs.

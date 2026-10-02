@@ -227,7 +227,7 @@ account nothing can be read or published — the topic name alone is not a
 credential.
 
 **2. Expose it through the existing Cloudflare tunnel.** Add a public hostname
-`ntfy.vinamrakumar.com` pointing at `http://<nas-ip>:8080` (or the `ntfy`
+`ntfy.vinamrakumar.com` pointing at `http://<nas-ip>:8089` (or the `ntfy`
 service if the tunnel container shares the `portfolio` network). The site does
 NOT use this hostname — it talks to ntfy over the internal Docker network — it
 exists so the phone app can subscribe.

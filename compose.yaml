@@ -45,8 +45,10 @@ services:
     volumes:
       - ntfy-data:/var/lib/ntfy
       - ntfy-cache:/var/cache/ntfy
+    # 8080 is already taken on the NAS (Portainer / dashboards), which fails at
+    # container start with no logs. Keep this off the crowded range.
     ports:
-      - "8080:80"
+      - "8089:80"
     networks:
       - portfolio
     restart: always

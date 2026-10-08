@@ -52,7 +52,9 @@ before(async () => {
 
 after(() => {
   server.close();
-  fs.rmSync(bundle, { force: true });
+  // Best-effort: some sandboxed mounts deny unlink, and failing to tidy a temp
+  // file must never fail the suite.
+  try { fs.rmSync(bundle, { force: true }); } catch {}
 });
 
 function env(overrides) {

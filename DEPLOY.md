@@ -267,3 +267,51 @@ If `SMTP_HOST`, `SMTP_USER` and `SMTP_PASS` are all set, an email is sent in
 addition to the ntfy push. If any one of them is missing, SMTP is skipped —
 deliberately, and now visibly: the skip is recorded in `notifyError` rather
 than disappearing into the logs.
+
+### Things that cost an hour the first time
+
+**Dockhand serves a cached compose.** Pulling a new image and recreating the
+web container does *not* re-read `compose.yaml` from Git. A new service in the
+compose file simply never appears. Use the stack-level redeploy that re-pulls
+the repository, then open the stack's compose view and confirm the change is
+actually there before debugging anything else.
+
+**Port 8080 is taken on this NAS.** ntfy is on `8089:80`. A port conflict fails
+at container *start*, which means Docker reports "failed to start" and there
+are **no container logs at all** — nothing ever ran. Dockhand → Activity shows
+the daemon's real error; the `create` event succeeding only tells you the image
+pulled.
+
+**The compose file is read-only because it comes from Git.** That is correct —
+secrets must not go in a public repo. Environment variables live in Dockhand's
+own layer at:
+
+```
+/app/data/stacks/kumarvinamra/vk-web-claude/.env.dockhand
+```
+
+Edit them through the stack's own Edit/Environment screen, not the compose
+viewer (which is read-only by design and has no editable env panel). Saving may
+ask for a **webhook secret** — that is Dockhand's Git auto-deploy feature, not
+related to ntfy. Any random string works; the webhook is only used if you also
+configure it on the GitHub side.
+
+**Changing env needs a recreate, not a restart.** After editing, redeploy and
+then confirm on Containers → `vk-web-claude-portfolio-web-1` → Environment that
+`NTFY_TOKEN` holds the real `tk_…`. A placeholder or an empty value there is the
+difference between a working push and a `✗ failed` row.
+
+**Android: subscribe on the right server.** The ntfy app defaults to ntfy.sh. In
+the app, **+** → topic name → tick **Use another server** → choose
+`https://ntfy.vinamrakumar.com`. Subscribing without that gives you a silent
+subscription to an unrelated public topic on ntfy.sh — the site publishes fine,
+the admin console shows `✓ ntfy`, and the phone never buzzes.
+
+Also on Pixel: Settings → Apps → ntfy → App battery usage → **Unrestricted**,
+and turn on **Instant delivery** in the app. Self-hosted ntfy holds a persistent
+connection instead of using Firebase, and Adaptive Battery will kill it.
+
+**iPhone would need one more setting.** iOS only accepts push via APNs, which a
+self-hosted server cannot reach. Add `NTFY_UPSTREAM_BASE_URL=https://ntfy.sh` to
+the ntfy service; it relays a wake-up ping containing only a topic hash, and the
+phone then fetches the content from this server. Not needed for Android.

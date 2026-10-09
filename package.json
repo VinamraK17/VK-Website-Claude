@@ -19,6 +19,7 @@
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "lucide": "^0.424.0",
+    "marked": "^14.1.4",
     "nodemailer": "^8.0.7",
     "prisma": "^5.22.0",
     "ua-parser-js": "^1.0.40"

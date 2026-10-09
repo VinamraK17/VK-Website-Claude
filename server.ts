@@ -1,4 +1,6 @@
 import { notifyContact } from "./lib/notify";
+import fs from "fs";
+import { loadInsights, fill, renderListItems, renderArticleValues, renderRss, extendSitemap } from "./lib/insights";
 import express from "express";
 import path from "path";
 import crypto from "crypto";
@@ -286,6 +288,18 @@ async function startServer() {
       res.setHeader("Cache-Control", "no-store");
     }
     next();
+  });
+
+  // Sitemap: the static file plus every published Insights issue. Registered
+  // before express.static so it wins over public/sitemap.xml.
+  app.get("/sitemap.xml", (req, res) => {
+    try {
+      const base = fs.readFileSync(path.join(process.cwd(), "public", "sitemap.xml"), "utf8");
+      res.type("application/xml").setHeader("Cache-Control", "public, max-age=3600");
+      res.send(extendSitemap(base, loadInsights()));
+    } catch (err: any) {
+      res.status(500).type("text/plain").send("Sitemap unavailable");
+    }
   });
 
   // Serve static assets (images, robots.txt, sitemap, etc.) from /public
@@ -770,6 +784,31 @@ async function startServer() {
   app.get("/experience", (req, res) => res.sendFile(path.join(pagesDir, "experience.html")));
   app.get("/contact", (req, res) => res.sendFile(path.join(pagesDir, "contact.html")));
   app.get("/privacy", (req, res) => res.sendFile(path.join(pagesDir, "privacy.html")));
+
+  // Insights (monthly newsletter archive) — Markdown in content/insights/
+  const readTemplate = (name: string) => fs.readFileSync(path.join(pagesDir, name), "utf8");
+
+  app.get("/insights", (req, res) => {
+    const items = loadInsights();
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.send(fill(readTemplate("insights.html"), {
+      LIST: renderListItems(items),
+      // An empty archive should not be indexed; it starts ranking once issue #1 is live.
+      ROBOTS: items.length ? "" : '    <meta name="robots" content="noindex" />\n',
+    }));
+  });
+
+  app.get("/insights/feed.xml", (req, res) => {
+    res.type("application/rss+xml").setHeader("Cache-Control", "public, max-age=3600");
+    res.send(renderRss(loadInsights()));
+  });
+
+  app.get("/insights/:slug", (req, res, next) => {
+    const item = loadInsights().find(i => i.slug === req.params.slug);
+    if (!item) return next(); // falls through to the 404 page
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.send(fill(readTemplate("insight.html"), renderArticleValues(item)));
+  });
 
   // 404 — return a styled page instead of redirecting (redirect hides 404s from search engines)
   app.use((req, res) => {

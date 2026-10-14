@@ -20,6 +20,7 @@ Each issue is one Markdown file in `content/insights/`. The site serves:
    - `published` — set to `false` to keep a finished file off the site
 3. Push to `main`, then pull + rebuild + restart the stack in Dockhand.
 4. Open `https://vinamrakumar.com/insights/<slug>` on the publication date and check it renders.
+5. Email it: `/admin` → **Newsletter** → select the issue → **Send test to me**, read it, then type `SEND` → **Send to subscribers**. See `NEWSLETTER_SETUP.md`.
 
 Files whose name starts with `_` are never published.
 

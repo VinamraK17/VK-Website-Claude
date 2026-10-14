@@ -66,3 +66,49 @@ model Experience {
   achievements String // JSON array stored as text — SQLite connector does not support the Json type
   order        Int    @default(0)
 }
+
+// ── Newsletter (Insights) ───────────────────────────────────────────────────
+// Double opt-in: a row starts as "pending" and only receives issues once the
+// confirmation link is used. Unconfirmed rows are deleted after 7 days and
+// unsubscribed rows after 30 (see lib/newsletter.ts, RETENTION).
+model Subscriber {
+  id             Int       @id @default(autoincrement())
+  email          String    @unique // stored lower-case
+  status         String    @default("pending") // pending | confirmed | unsubscribed
+  source         String? // where the form was: "insights" or "issue:<slug>"
+  consentVersion String // which wording of the consent text was shown
+  requestedAt    DateTime  @default(now())
+  confirmedAt    DateTime? // the moment consent was given
+  unsubscribedAt DateTime?
+  confirmToken   String    @unique
+  unsubToken     String    @unique
+
+  deliveries NewsletterDelivery[]
+
+  @@index([status])
+}
+
+// One row per issue per subscriber, so a resumed or repeated send never
+// emails anyone twice.
+model NewsletterDelivery {
+  id           Int        @id @default(autoincrement())
+  subscriberId Int
+  slug         String
+  ok           Boolean
+  error        String?
+  sentAt       DateTime   @default(now())
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  @@unique([subscriberId, slug])
+  @@index([slug])
+}
+
+// Optional "why did you leave?" answer. Deliberately not linked to the
+// subscriber: the token only lets the person who just unsubscribed answer once.
+model UnsubscribeFeedback {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  reason    String?
+  comment   String?
+  createdAt DateTime @default(now())
+}

@@ -97,15 +97,18 @@ function parseFile(file: string): Insight | null {
   };
 }
 
-/** Published issues, newest first. Future-dated and unpublished files are excluded. */
-export function loadInsights(dir = insightsDir(), today = todayInZurich()): Insight[] {
+/**
+ * Published issues, newest first. Future-dated and unpublished files are
+ * excluded unless includeScheduled is set (admin test sends only).
+ */
+export function loadInsights(dir = insightsDir(), today = todayInZurich(), includeScheduled = false): Insight[] {
   if (!fs.existsSync(dir)) return [];
   const items: Insight[] = [];
   for (const f of fs.readdirSync(dir)) {
     if (!f.endsWith(".md") || f.startsWith("_")) continue;
     try {
       const item = parseFile(path.join(dir, f));
-      if (item && item.date <= today) items.push(item);
+      if (item && (includeScheduled || item.date <= today)) items.push(item);
     } catch (err: any) {
       console.warn(`[insights] failed to read ${f}: ${err.message}`);
     }

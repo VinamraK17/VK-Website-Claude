@@ -1,6 +1,6 @@
 import { notifyContact } from "./lib/notify";
 import fs from "fs";
-import { loadInsights, fill, renderListItems, renderArticleValues, renderRss, extendSitemap } from "./lib/insights";
+import { loadInsights, fill, renderListItems, renderArticleValues, renderRss, extendSitemap, todayInZurich } from "./lib/insights";
 import {
   newsletterConfig, normaliseEmail, isValidEmail, isToken, cleanSource, subscribe, confirmSubscription,
   unsubscribe, resubscribe, saveFeedback, purgeExpired, confirmEmail, smtpSender, sendIssue, sendJob,
@@ -1018,7 +1018,10 @@ async function startServer() {
         feedback: (feedback as any[]).map(f => ({
           createdAt: f.createdAt, reason: f.reason ? FEEDBACK_REASONS[f.reason] || f.reason : null, comment: f.comment,
         })),
-        issues: loadInsights().map(i => ({ slug: i.slug, title: i.title, date: i.date, sent: sentBySlug[i.slug] || 0 })),
+        issues: loadInsights(undefined, undefined, true).map(i => ({
+          slug: i.slug, title: i.title, date: i.date, sent: sentBySlug[i.slug] || 0,
+          scheduled: i.date > todayInZurich(),
+        })),
         job: sendJob,
       });
     } catch (err: any) {
@@ -1042,8 +1045,13 @@ async function startServer() {
     const cfg = newsletterConfig();
     if (!cfg.enabled) return res.status(400).json({ error: `Sending is not configured. Missing: ${cfg.missing.join(", ")}` });
     const { slug, mode, confirm } = req.body || {};
-    const issue = loadInsights().find(i => i.slug === slug);
-    if (!issue) return res.status(404).json({ error: "Issue not found or not published yet." });
+    // Test sends may use a scheduled issue, so it can be proofread in an inbox
+    // before it goes live. Sending to subscribers needs the issue to be live.
+    const issue = loadInsights(undefined, undefined, true).find(i => i.slug === slug);
+    if (!issue) return res.status(404).json({ error: "Issue not found." });
+    if (mode === "all" && issue.date > todayInZurich()) {
+      return res.status(400).json({ error: `This issue is scheduled for ${issue.date}. Until then only "Send test to me" is allowed.` });
+    }
     if (mode !== "test" && mode !== "all") return res.status(400).json({ error: "mode must be test or all" });
     if (mode === "all" && confirm !== "SEND") return res.status(400).json({ error: 'Type SEND to confirm.' });
     if (sendJob.running) return res.status(409).json({ error: "A send is already running." });

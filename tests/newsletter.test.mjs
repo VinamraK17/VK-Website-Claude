@@ -263,3 +263,25 @@ describe('wiring', () => {
     }
   });
 });
+
+describe('scheduled issues', () => {
+  test('hidden from the site, available to admin test sends only', async () => {
+    const ins = await tsImport('../lib/insights.ts', import.meta.url);
+    const dir = fs.mkdtempSync(path.join((await import('node:os')).tmpdir(), 'ins-'));
+    fs.writeFileSync(path.join(dir, 'live.md'), '---\ntitle: Live\ndate: 2026-10-01\n---\nx');
+    fs.writeFileSync(path.join(dir, 'later.md'), '---\ntitle: Later\ndate: 2099-12-31\n---\nx');
+    assert.deepEqual(ins.loadInsights(dir, '2026-10-15').map(i => i.slug), ['live']);
+    assert.deepEqual(ins.loadInsights(dir, '2026-10-15', true).map(i => i.slug).sort(), ['later', 'live']);
+  });
+
+  test('server refuses a subscriber send of a scheduled issue', () => {
+    const s = read('server.ts');
+    const send = s.slice(s.indexOf('app.post("/api/admin/newsletter/send"'));
+    assert.ok(/mode === "all" && issue\.date > todayInZurich\(\)/.test(send));
+  });
+
+  test('the system test issue can never go live', () => {
+    const t = read('content/insights/zz-system-test.md');
+    assert.ok(t.includes('date: 2099-12-31'));
+  });
+});

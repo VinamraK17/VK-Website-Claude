@@ -1,118 +1,63 @@
-# Newsletter email setup (Amazon SES, Frankfurt)
+# Newsletter email setup (Proton Mail SMTP)
 
-The site sends the Insights newsletter through **Amazon SES in Frankfurt (`eu-central-1`)**. Subscriber data stays in SQLite on the NAS. SES only receives each recipient's address and the email content at the moment it is sent.
+Insights is sent through **Proton Mail's SMTP submission**, from `insights@vinamrakumar.com`. Subscriber data stays in SQLite on the NAS. Proton (Switzerland) receives only each recipient's address and the email content, at the moment of sending.
 
-Why Frankfurt and not Zurich: SES does run in Zurich (`eu-central-2`), but that region has **no SMTP endpoint**, and this site sends over SMTP. Germany counts as having adequate data protection under the Swiss FADP.
+No DNS changes are needed: `vinamrakumar.com` already publishes Proton's SPF, DKIM and DMARC records.
 
-**Deadline:** have step 5 submitted by **Tue 20 October** and steps 1–9 done by **Tue 27 October**. That leaves a week to test before the launch on 3 November.
-
-Cost: USD 0.10 per 1,000 emails. One issue to a few hundred readers costs a few cents a month.
+**Limits to respect:** Proton says it "is not designed for bulk mailing", and its sending limits depend on the account's reputation. The site therefore sends one email at a time, 5 seconds apart. **Move to a dedicated relay** (Appendix: Amazon SES) once the list passes about 100 subscribers, or at the first sign of throttling. Only the Dockhand settings change; the code stays the same.
 
 ---
 
-## 1. Open SES in the right region (5 min)
+## 1. Sending address (done 15 Oct 2026)
 
-1. Sign in to the AWS console. Use an existing account or create one. Turn on MFA for the root user before anything else.
-2. Switch the region selector (top right) to **Europe (Frankfurt) eu-central-1**. Everything below is per-region. An identity verified in another region does not count here.
-3. Open **Amazon Simple Email Service**.
+- Proton → Settings → **Identity and addresses**: address `insights@vinamrakumar.com`, display name `Vinamra Kumar`, signature empty.
+- **Proton Mail footer** switched **off**, so "Sent with Proton Mail" is not appended.
 
-## 2. Verify the domain with DKIM (10 min + waiting)
+## 2. SMTP token (done 15 Oct 2026)
 
-1. SES → **Configuration → Identities → Create identity**.
-2. Identity type: **Domain**. Domain: `vinamrakumar.com`.
-3. Tick **Use a custom MAIL FROM domain** and enter `bounce`, which gives `bounce.vinamrakumar.com`. Behaviour on MX failure: **Use default MAIL FROM domain**.
-4. Leave **Easy DKIM**, **RSA_2048_BIT**, DKIM signatures **enabled**.
-5. **Create identity**. SES now shows **three CNAME records** for DKIM, plus one **MX** and one **TXT** record for MAIL FROM.
+- Proton → Settings → **IMAP/SMTP → SMTP tokens** → token for `insights@vinamrakumar.com`.
+- Server `smtp.protonmail.ch`, port `587` (STARTTLS).
+- The token is stored only in Dockhand and the password manager. If it is ever exposed, delete it in Proton and generate a new one.
 
-## 3. Add the records in Cloudflare (10 min)
+## 3. Settings in Dockhand
 
-Cloudflare dashboard → `vinamrakumar.com` → **DNS → Records → Add record**. Copy each value exactly from the SES screen.
-
-| Type | Name | Content | Proxy |
-|---|---|---|---|
-| CNAME | `<token1>._domainkey` | `<token1>.dkim.amazonses.com` | **DNS only** (grey cloud) |
-| CNAME | `<token2>._domainkey` | `<token2>.dkim.amazonses.com` | **DNS only** |
-| CNAME | `<token3>._domainkey` | `<token3>.dkim.amazonses.com` | **DNS only** |
-| MX | `bounce` | `feedback-smtp.eu-central-1.amazonses.com`, priority `10` | n/a |
-| TXT | `bounce` | `v=spf1 include:amazonses.com ~all` | n/a |
-
-- **The DKIM CNAMEs must be "DNS only".** A proxied (orange cloud) CNAME breaks verification.
-- `bounce` must have exactly one MX record and must not be used for anything else.
-- **Do not change the SPF record on `vinamrakumar.com` itself.** It covers the mailbox you already use for the contact form. SES uses `bounce.vinamrakumar.com` for SPF instead.
-
-Back in SES, the identity turns **Verified** and DKIM **Successful**, usually within an hour (AWS allows up to 72 hours).
-
-## 4. DMARC (5 min)
-
-In Cloudflare DNS, look for a TXT record named `_dmarc`.
-
-- **One already exists:** leave it. Do not add a second record.
-- **None exists:** add one.
-
-| Type | Name | Content |
-|---|---|---|
-| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:<your address>` |
-
-`p=none` only monitors. Once a couple of issues have gone out cleanly, you can tighten it to `p=quarantine`.
-
-## 5. Request production access (5 min + up to ~24 h)
-
-A new SES account is in the **sandbox**: it can only send to addresses you have verified, and at most 200 emails a day. Request production access once the domain is verified, because a verified domain speeds up approval.
-
-SES → **Account dashboard** → **View Get set up page** → **Request production access**:
-
-- **Mail type:** Marketing
-- **Website URL:** `https://vinamrakumar.com/insights`
-- **Use case description** (paste and adjust):
-
-  > Monthly personal newsletter ("Insights") from vinamrakumar.com, one email on the first Tuesday of each month. Subscribers sign up through a form with an unticked consent box and must confirm by clicking a link in a confirmation email (double opt-in); unconfirmed addresses are deleted after 7 days. Every email carries RFC 8058 List-Unsubscribe and List-Unsubscribe-Post headers plus a visible one-click unsubscribe link, processed immediately. Bounces and complaints are handled by the SES account-level suppression list. Expected volume: under 500 emails per month initially. No purchased or third-party lists.
-
-- Tick the acknowledgement and **Submit**.
-
-AWS usually answers within 24 hours. While you wait, test by verifying your own address: Identities → Create identity → **Email address**. Then do steps 6–9 and send a test to that address.
-
-## 6. Check the suppression list (1 min)
-
-SES → **Configuration → Suppression list**. Check that account-level suppression is on for **Bounces and Complaints**. It is the default on new accounts. With it on, SES stops delivering to addresses that hard-bounce or mark the newsletter as spam, which protects your domain's reputation.
-
-## 7. Create SMTP credentials (5 min)
-
-1. SES → **SMTP settings**. Note the endpoint: `email-smtp.eu-central-1.amazonaws.com`, port `587` (STARTTLS).
-2. **Create SMTP credentials**. This creates a dedicated IAM user with send-only permission.
-3. Copy the **SMTP user name** and **SMTP password**. AWS shows the password only once. These are **not** your AWS sign-in details.
-
-## 8. Add the settings in Dockhand (5 min)
-
-Stack → **Environment variables**. Add these, never commit them:
+Stack → **Environment variables** (never commit these):
 
 | Variable | Value |
 |---|---|
-| `NEWSLETTER_SMTP_HOST` | `email-smtp.eu-central-1.amazonaws.com` |
+| `NEWSLETTER_SMTP_HOST` | `smtp.protonmail.ch` |
 | `NEWSLETTER_SMTP_PORT` | `587` |
-| `NEWSLETTER_SMTP_USER` | SMTP user name from step 7 |
-| `NEWSLETTER_SMTP_PASS` | SMTP password from step 7 |
+| `NEWSLETTER_SMTP_USER` | `insights@vinamrakumar.com` |
+| `NEWSLETTER_SMTP_PASS` | the SMTP token |
 | `NEWSLETTER_FROM` | `Vinamra Kumar <insights@vinamrakumar.com>` |
-| `NEWSLETTER_REPLY_TO` | the address where you want replies, e.g. your contact address |
-| `NEWSLETTER_TEST_TO` | your own address, for test sends |
-| `NEWSLETTER_PROCESSOR` | `Amazon Web Services EMEA SARL (Amazon SES, Frankfurt region, Germany)` |
+| `NEWSLETTER_REPLY_TO` | `contact@vinamrakumar.com` |
+| `NEWSLETTER_TEST_TO` | `contact@vinamrakumar.com` |
+| `NEWSLETTER_PROCESSOR` | `Proton AG (Proton Mail, Switzerland)` |
+| `NEWSLETTER_SEND_INTERVAL_MS` | `5000` |
 | `PUBLIC_URL` | `https://vinamrakumar.com` |
 
-- The subscribe form and the processor sentence on `/privacy` appear only when the first five settings are all present. Until then the site collects nothing.
-- `NEWSLETTER_FROM` must be on the verified domain. `insights@` does not need to be a real mailbox, because replies go to `NEWSLETTER_REPLY_TO`.
+The subscribe form, and the processor sentence on `/privacy`, appear only when `NEWSLETTER_SMTP_HOST`, `_USER`, `_PASS`, `NEWSLETTER_FROM` and `NEWSLETTER_PROCESSOR` are all set.
 
-Then merge the branch, **pull + rebuild + restart** the stack. The new database tables are created automatically on start (`prisma db push` in the Dockerfile).
+## 4. Deploy
 
-## 9. Test end to end (15 min)
+1. Merge the pull request into `main`. The GitHub Action builds `ghcr.io/vinamrak17/vk-website-claude:latest`, which takes a few minutes; wait until it shows a green tick.
+2. In Dockhand: **pull + redeploy** the stack. On start, `prisma db push` creates the three new tables (additive only; existing data is untouched).
+
+## 5. DNS clean-up (separate from the newsletter, do once)
+
+Cloudflare → DNS: delete the two leftover GoDaddy MX records, `mailstore1.secureserver.net` and `smtp.secureserver.net`. Mail is handled by Proton. These fallbacks can swallow mail whenever Proton is briefly unreachable.
+
+## 6. Test end to end (15 min)
 
 1. Open `https://vinamrakumar.com/insights`. The subscribe box should be visible.
-2. Open `https://vinamrakumar.com/privacy#newsletter`. The SES sentence should name the provider.
+2. Open `https://vinamrakumar.com/privacy#newsletter`. The newsletter section should name Proton AG as the email provider.
 3. Subscribe with your own address, then confirm from the email.
 4. `/admin` → **Newsletter** tab. You should appear as **confirmed**.
 5. Pick an issue → **Send test to me**.
-6. In Gmail, open the test → ⋮ → **Show original**. **SPF, DKIM and DMARC** must all say **PASS**. If DKIM fails, recheck step 3.
+6. Send the test to a Gmail address too (temporarily set `NEWSLETTER_TEST_TO` to it). In Gmail, open it → ⋮ → **Show original**. **SPF, DKIM and DMARC** must all say **PASS**, and the headers must include `List-Unsubscribe` and `List-Unsubscribe-Post`. If those two headers are missing, Proton stripped them: the link in the email still works, but plan the move to a relay.
 7. Click **Unsubscribe with one click** at the bottom of a real (non-test) issue and check that the admin tab shows you as unsubscribed. Then use **Stay subscribed** to undo it.
 
-## 10. Launch day (Tue 3 November)
+## 7. Launch day (Tue 3 November)
 
 1. The issue file is already deployed with `date: 2026-11-03`, so it goes live at midnight on its own.
 2. Read it once on the site.
@@ -129,7 +74,7 @@ Then merge the branch, **pull + rebuild + restart** the stack. The new database 
 - **One-click unsubscribe:** RFC 8058 headers, so Gmail and Apple Mail can show their own Unsubscribe button, plus a link in every email. Unsubscribing takes effect immediately.
 - **Retention:** unconfirmed addresses are deleted after 7 days, unsubscribed ones after 30. The clean-up runs hourly.
 - **Feedback:** optional, asked only after the unsubscribe is done, and stored without the address.
-- **No tracking:** no pixels, no redirected links. SES open and click tracking stay off, since no configuration set is used.
+- **No tracking:** no pixels, no redirected links.
 - **Access and erasure requests:** admin → Newsletter → **Export CSV** or **Erase**. Erasing also removes that person's delivery history.
 - **Abuse limits:** 5 sign-ups per IP per 15 minutes, a hidden bot field, at most one confirmation email per address per 10 minutes, and at most 100 confirmation emails per hour in total.
 
@@ -138,7 +83,17 @@ Then merge the branch, **pull + rebuild + restart** the stack. The new database 
 | Symptom | Likely cause |
 |---|---|
 | No subscribe box on `/insights` | One of the five required settings is missing. The admin Newsletter tab lists which. |
-| "Something went wrong" after subscribing | SMTP login or connection failed. Check the container logs for `[NEWSLETTER]`. |
-| Emails only reach your own address | The account is still in the SES sandbox (step 5). |
-| DKIM fails in "Show original" | A CNAME is proxied (orange cloud) or mistyped (step 3). |
+| "Something went wrong" after subscribing | SMTP login failed: the token is wrong or revoked. Check the container logs for `[NEWSLETTER]`. |
+| Sends fail partway with rate or limit errors | Proton throttling. Wait an hour and press Send again (delivered recipients are skipped), then plan the move to a relay. |
 | A send stopped halfway | Press **Send to subscribers** again. Delivered recipients are skipped. |
+
+---
+
+## Appendix: moving to Amazon SES (when you outgrow Proton)
+
+1. AWS console, region **Europe (Frankfurt) eu-central-1**. Zurich has no SES SMTP endpoint.
+2. SES → Identities → create domain identity `vinamrakumar.com`: Easy DKIM, RSA 2048, custom MAIL FROM `bounce.vinamrakumar.com`.
+3. Cloudflare: add the 3 DKIM CNAMEs as **DNS only** (grey cloud), plus MX `bounce` → `10 feedback-smtp.eu-central-1.amazonaws.com` and TXT `bounce` → `v=spf1 include:amazonses.com ~all`. Leave the root SPF and `_dmarc` as they are.
+4. Request production access (Marketing). Describe the double opt-in, one-click unsubscribe and suppression-list handling. AWS usually replies within 24 hours.
+5. SES → SMTP settings → create SMTP credentials.
+6. Dockhand: `NEWSLETTER_SMTP_HOST=email-smtp.eu-central-1.amazonaws.com`, the SES SMTP user and password, `NEWSLETTER_PROCESSOR=Amazon Web Services EMEA SARL (Amazon SES, Frankfurt region, Germany)`, `NEWSLETTER_SEND_INTERVAL_MS=1000`. Redeploy and send a test.

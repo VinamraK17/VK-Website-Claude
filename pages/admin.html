@@ -100,6 +100,7 @@
     <div class="px-6 mt-4 border-b flex gap-8" style="border-color:var(--border)">
         <button class="tab-btn active pb-3 text-sm font-semibold" data-tab="messages" onclick="switchTab('messages')">Messages</button>
         <button class="tab-btn pb-3 text-sm font-semibold" style="color:var(--ink-faint)" data-tab="analytics" onclick="switchTab('analytics')">Analytics</button>
+        <button class="tab-btn pb-3 text-sm font-semibold" style="color:var(--ink-faint)" data-tab="newsletter" onclick="switchTab('newsletter')">Newsletter</button>
     </div>
 
     <main class="px-6 py-6 max-w-7xl mx-auto">
@@ -202,6 +203,45 @@
             </div>
         </div>
 
+
+        <!-- Newsletter -->
+        <div id="tab-newsletter" class="hidden">
+            <div id="nl-warning" class="card p-4 mb-6 hidden text-sm" style="border-color:#f0a500;color:#f0a500"></div>
+            <div id="nl-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"></div>
+
+            <div class="card p-6 mb-6">
+                <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Send an issue</h3>
+                <div class="flex flex-col md:flex-row gap-3 md:items-center">
+                    <select id="nl-issue" class="text-sm" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:white;border-radius:10px;padding:10px 14px"></select>
+                    <button onclick="sendIssue('test')" class="px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider border" style="border-color:var(--border)">Send test to me</button>
+                    <input type="text" id="nl-confirm" placeholder="Type SEND" style="width:130px">
+                    <button onclick="sendIssue('all')" class="px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider" style="background:var(--accent);color:#050505">Send to subscribers</button>
+                </div>
+                <p id="nl-send-status" class="text-xs font-mono mt-4" style="color:var(--ink-faint)"></p>
+                <p class="text-xs mt-2" style="color:var(--ink-faint)">Sending skips anyone who already received the selected issue, so a stopped send can be started again safely.</p>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-sm font-semibold uppercase tracking-widest" style="color:var(--ink-faint)">Subscribers</h2>
+                <div class="flex gap-3">
+                    <input type="text" id="nl-search" placeholder="Search email…" oninput="renderSubscribers()" style="width:200px">
+                    <button onclick="exportSubscribers()" class="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border" style="border-color:var(--border)">Export CSV</button>
+                </div>
+            </div>
+            <div class="card overflow-hidden mb-6">
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead><tr><th>Email</th><th>Status</th><th>Source</th><th>Consent</th><th>Confirmed</th><th></th></tr></thead>
+                        <tbody id="nl-tbody"><tr><td colspan="6" class="text-center py-10" style="color:var(--ink-faint)">Loading…</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Unsubscribe feedback (anonymous)</h3>
+                <div id="nl-feedback" class="space-y-3 text-sm"></div>
+            </div>
+        </div>
     </main>
 </div>
 
@@ -530,6 +570,96 @@ function switchTab(name) {
     });
     document.getElementById('tab-messages').classList.toggle('hidden', name !== 'messages');
     document.getElementById('tab-analytics').classList.toggle('hidden', name !== 'analytics');
+    document.getElementById('tab-newsletter').classList.toggle('hidden', name !== 'newsletter');
+    if (name === 'newsletter') loadNewsletter();
+}
+
+
+// ── Newsletter ───────────────────────────────────────────────────────────────
+let nlData = null;
+let nlPoll = null;
+async function loadNewsletter() {
+    const res = await fetch('/api/admin/newsletter', { headers: { Authorization: 'Bearer ' + TOKEN } });
+    if (!res.ok) { document.getElementById('nl-tbody').innerHTML = '<tr><td colspan="6" class="text-center py-10" style="color:var(--danger)">Could not load newsletter data.</td></tr>'; return; }
+    nlData = await res.json();
+    const warn = document.getElementById('nl-warning');
+    warn.classList.toggle('hidden', nlData.configured);
+    warn.textContent = nlData.configured ? '' : 'Sending is not configured, so the subscribe form is hidden on the site. Missing: ' + nlData.missing.join(', ');
+    const subs = nlData.subscribers;
+    const count = st => subs.filter(s => s.status === st).length;
+    document.getElementById('nl-stats').innerHTML = [
+        ['Confirmed', count('confirmed')], ['Awaiting confirmation', count('pending')],
+        ['Unsubscribed (kept 30 days)', count('unsubscribed')], ['Feedback answers', nlData.feedback.filter(f => f.reason || f.comment).length + ' / ' + nlData.feedback.length],
+    ].map(([l, v]) => `<div class="stat-card"><div class="text-2xl font-bold">${esc(v)}</div><div class="text-[10px] font-mono uppercase tracking-widest mt-1" style="color:var(--ink-faint)">${esc(l)}</div></div>`).join('');
+    const sel = document.getElementById('nl-issue');
+    const keep = sel.value;
+    sel.innerHTML = nlData.issues.length
+        ? nlData.issues.map(i => `<option value="${esc(i.slug)}">${esc(i.date)} · ${esc(i.title)} (sent to ${i.sent})</option>`).join('')
+        : '<option value="">No published issues yet</option>';
+    if (keep) sel.value = keep;
+    renderSubscribers();
+    renderFeedback();
+    renderJob(nlData.job);
+}
+function renderSubscribers() {
+    if (!nlData) return;
+    const q = (document.getElementById('nl-search').value || '').toLowerCase();
+    const rows = nlData.subscribers.filter(s => s.email.includes(q));
+    const colour = { confirmed: 'var(--accent)', pending: '#f0a500', unsubscribed: 'var(--ink-faint)' };
+    document.getElementById('nl-tbody').innerHTML = rows.length ? rows.map(s => `<tr>
+        <td>${esc(s.email)}</td>
+        <td><span class="badge" style="color:${colour[s.status]};border:1px solid ${colour[s.status]}">${esc(s.status)}</span></td>
+        <td class="font-mono text-xs">${esc(s.source || '')}</td>
+        <td class="font-mono text-xs">${esc(s.consentVersion)}</td>
+        <td class="text-xs">${s.confirmedAt ? formatDate(s.confirmedAt) : '—'}</td>
+        <td><button onclick="deleteSubscriber(${s.id}, '${esc(s.email)}')" class="text-xs font-mono uppercase" style="color:var(--danger)">Erase</button></td>
+    </tr>`).join('') : '<tr><td colspan="6" class="text-center py-10" style="color:var(--ink-faint)">No subscribers yet.</td></tr>';
+}
+function renderFeedback() {
+    const items = nlData.feedback.filter(f => f.reason || f.comment);
+    document.getElementById('nl-feedback').innerHTML = items.length ? items.map(f => `<div class="border-b pb-3" style="border-color:var(--border)">
+        <div class="text-[10px] font-mono" style="color:var(--ink-faint)">${formatDate(f.createdAt)}</div>
+        ${f.reason ? `<div class="font-semibold mt-1">${esc(f.reason)}</div>` : ''}
+        ${f.comment ? `<div class="mt-1" style="color:rgba(255,255,255,0.7)">${esc(f.comment)}</div>` : ''}
+    </div>`).join('') : '<p style="color:var(--ink-faint)">No feedback yet.</p>';
+}
+function renderJob(j) {
+    const el = document.getElementById('nl-send-status');
+    if (!j || !j.slug) { el.textContent = ''; return; }
+    const what = j.mode === 'test' ? 'Test send' : 'Send';
+    el.textContent = j.running
+        ? `${what} of "${j.slug}" running: ${j.sent} of ${j.total} sent, ${j.failed} failed…`
+        : `${what} of "${j.slug}" finished: ${j.sent} sent, ${j.failed} failed, ${j.skipped} skipped.` + (j.lastError ? ' Last error: ' + j.lastError : '');
+    clearTimeout(nlPoll);
+    if (j.running) nlPoll = setTimeout(loadNewsletter, 2000);
+}
+async function sendIssue(mode) {
+    const slug = document.getElementById('nl-issue').value;
+    if (!slug) return;
+    const confirm = document.getElementById('nl-confirm').value.trim();
+    const res = await fetch('/api/admin/newsletter/send', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + TOKEN },
+        body: JSON.stringify({ slug, mode, confirm }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) { document.getElementById('nl-send-status').textContent = data.error || 'Send failed to start.'; return; }
+    document.getElementById('nl-confirm').value = '';
+    renderJob(data.job);
+}
+async function deleteSubscriber(id, email) {
+    const ok = prompt('Type ERASE to permanently delete ' + email + ' and their delivery history.');
+    if (ok !== 'ERASE') return;
+    await fetch('/api/admin/newsletter/subscribers/' + id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + TOKEN } });
+    loadNewsletter();
+}
+function exportSubscribers() {
+    if (!nlData) return;
+    const cols = ['email', 'status', 'source', 'consentVersion', 'requestedAt', 'confirmedAt', 'unsubscribedAt'];
+    const csv = [cols.join(',')].concat(nlData.subscribers.map(s => cols.map(c => '"' + String(s[c] ?? '').replace(/"/g, '""') + '"').join(','))).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = 'insights-subscribers-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
 }
 
 function esc(str) {

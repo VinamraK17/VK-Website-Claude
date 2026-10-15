@@ -284,3 +284,32 @@ html, body {
     background: rgba(0, 0, 0, 0.02);
     border: 1px solid rgba(0, 0, 0, 0.06);
 }
+
+/* ── Insights article body (Markdown rendered by lib/insights.ts) ───────────── */
+.prose-insight { color: var(--color-ink); font-weight: 300; font-size: 1.0625rem; line-height: 1.75; max-width: 68ch; }
+.prose-insight > * + * { margin-top: 1.25em; }
+.prose-insight h2 { margin-top: 2.5em; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1.25; }
+.prose-insight h3 { margin-top: 2em; font-weight: 600; font-size: 1.15rem; line-height: 1.35; }
+.prose-insight h2 + *, .prose-insight h3 + * { margin-top: 0.75em; }
+.prose-insight strong { font-weight: 600; }
+.prose-insight a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
+.prose-insight ul, .prose-insight ol { padding-left: 1.4em; }
+.prose-insight ul { list-style: disc; }
+.prose-insight ol { list-style: decimal; }
+.prose-insight li + li { margin-top: 0.4em; }
+.prose-insight blockquote { border-left: 2px solid var(--color-accent); padding-left: 1.1em; color: var(--color-ink-faint); font-style: italic; }
+.prose-insight hr { border: 0; border-top: 1px solid var(--color-border); margin: 3em 0; }
+.prose-insight code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
+.prose-insight img { max-width: 100%; height: auto; border-radius: 8px; }
+
+/* ── Newsletter form ─────────────────────────────────────────────────────────── */
+.nl-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.nl-input { background: color-mix(in srgb, var(--color-ink) 4%, transparent); border: 1px solid var(--color-border); color: var(--color-ink); border-radius: 999px; padding: 0.75rem 1.25rem; font-size: 0.875rem; outline: none; transition: border-color 0.2s; }
+textarea.nl-input { border-radius: 12px; }
+.nl-input::placeholder { color: var(--color-ink-faint); }
+.nl-input:focus { border-color: var(--color-accent); }
+.nl-button { background: var(--color-ink); color: var(--color-surface); border-radius: 999px; padding: 0.75rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: opacity 0.2s; cursor: pointer; }
+.nl-button:hover { opacity: 0.88; }
+.nl-button:disabled { opacity: 0.5; cursor: default; }
+.nl-check { accent-color: var(--color-accent); width: 1rem; height: 1rem; flex-shrink: 0; }
+.newsletter-box { background: color-mix(in srgb, var(--color-ink) 2%, transparent); }

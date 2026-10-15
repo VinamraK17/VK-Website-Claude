@@ -6,6 +6,7 @@ module.exports = {
     './pages/**/*.html',
     './public/**/*.js',
     './server.ts',
+    './lib/**/*.ts',
   ],
   theme: {
     extend: {

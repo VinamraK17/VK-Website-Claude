@@ -18,6 +18,18 @@ services:
       - NTFY_TOPIC=${NTFY_TOPIC:-}
       - NTFY_TOKEN=${NTFY_TOKEN:-}
       - NTFY_CLICK_URL=${NTFY_CLICK_URL:-https://vinamrakumar.com/admin}
+      # Newsletter (Insights). The subscribe form stays hidden until the first
+      # five are set. See NEWSLETTER_SETUP.md.
+      - NEWSLETTER_SMTP_HOST=${NEWSLETTER_SMTP_HOST:-}
+      - NEWSLETTER_SMTP_USER=${NEWSLETTER_SMTP_USER:-}
+      - NEWSLETTER_SMTP_PASS=${NEWSLETTER_SMTP_PASS:-}
+      - NEWSLETTER_FROM=${NEWSLETTER_FROM:-}
+      - NEWSLETTER_PROCESSOR=${NEWSLETTER_PROCESSOR:-}
+      - NEWSLETTER_SMTP_PORT=${NEWSLETTER_SMTP_PORT:-587}
+      - NEWSLETTER_REPLY_TO=${NEWSLETTER_REPLY_TO:-}
+      - NEWSLETTER_TEST_TO=${NEWSLETTER_TEST_TO:-}
+      - NEWSLETTER_SEND_INTERVAL_MS=${NEWSLETTER_SEND_INTERVAL_MS:-1000}
+      - PUBLIC_URL=${PUBLIC_URL:-https://vinamrakumar.com}
     ports:
       - "3000:3000"
     volumes:

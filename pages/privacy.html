@@ -65,6 +65,7 @@
                     <a href="/services" data-nav-path="/services" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Services</a>
                     <a href="/projects" data-nav-path="/projects" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Projects</a>
                     <a href="/experience" data-nav-path="/experience" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Experience</a>
+                    <a href="/insights" data-nav-path="/insights" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Insights</a>
                     <a href="/contact" data-nav-path="/contact" class="text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 hover:text-[var(--color-ink)] transition-colors">Contact</a>
                 </div>
                 <a href="/contact" class="hidden md:inline-block px-5 py-2 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-full text-[11px] font-bold uppercase tracking-wider hover:bg-[var(--color-ink)]/90 transition-all font-mono">Get in touch</a>
@@ -80,6 +81,7 @@
                 <a href="/services" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Services</a>
                 <a href="/projects" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Projects</a>
                 <a href="/experience" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Experience</a>
+                <a href="/insights" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Insights</a>
                 <a href="/contact" onclick="toggleMenu()" class="text-xs font-mono uppercase tracking-widest text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-all py-3 border-b border-[var(--color-border)]/10 block">Contact</a>
             </div>
             <a href="/contact" onclick="toggleMenu()" class="w-full text-center py-4 bg-[var(--color-ink)] text-[var(--color-surface)] rounded-2xl text-[11px] font-bold uppercase tracking-wider hover:opacity-90 transition-all font-mono">Get in touch</a>
@@ -122,6 +124,19 @@
                 <div class="space-y-2">
                     <h2 class="font-bold text-base text-[var(--color-ink)]">3. Intellectual Property &amp; Copy Protection</h2>
                     <p class="pl-4">All content is the exclusive intellectual property of <strong>Vinamra Kumar</strong>. Scrape protection measures are applied. Reproduction is strictly prohibited.</p>
+                </div>
+                <div class="space-y-2 scroll-mt-24" id="newsletter">
+                    <h2 class="font-bold text-base text-[var(--color-ink)]">4. Newsletter (Insights)</h2>
+                    <p class="pl-4"><strong>Who is responsible:</strong> Vinamra Kumar, Zürich, Switzerland. Contact me through the <a href="/contact" class="underline hover:text-[var(--color-accent)]">contact page</a> for any question about your data.</p>
+                    <p class="pl-4"><strong>What is stored:</strong> your email address; where on this site you subscribed; when you asked to subscribe, confirmed and (if so) unsubscribed; which version of the consent wording you agreed to; and which issues were sent to you. Nothing else.</p>
+                    <p class="pl-4"><strong>Purpose and legal basis:</strong> sending you the monthly Insights letter, based on your consent (Art. 6(1)(a) GDPR; Swiss Federal Act on Data Protection). You give consent by ticking the box and then confirming through the link sent to your inbox (double opt-in). Nothing is sent before you confirm.</p>
+                    <p class="pl-4"><strong>Where it is kept and who receives it:</strong> subscriber data is stored on the self-hosted server in Switzerland described above. {{NEWSLETTER_PROCESSOR}} Your address is never sold, shared for marketing or used for anything else.</p>
+                    <p class="pl-4"><strong>No tracking:</strong> emails contain no tracking pixels and links are not redirected, so opens and clicks are not recorded.</p>
+                    <p class="pl-4"><strong>How long:</strong> unconfirmed addresses are deleted after 7 days. When you unsubscribe, your address is kept for 30 days so a mistaken unsubscribe can be undone, then deleted with its history.</p>
+                    <p class="pl-4"><strong>Withdrawing consent:</strong> every email has a one-click unsubscribe link, and supporting mail apps show their own Unsubscribe button. Withdrawal takes effect immediately and does not affect emails sent before it. After unsubscribing you can optionally say why; that answer is stored without your email address.</p>
+                    <p class="pl-4"><strong>Your rights:</strong> you can ask for access to, correction of, or deletion of your data at any time through the contact page, and you may complain to the Swiss Federal Data Protection and Information Commissioner (FDPIC) or, in the EU, your local data protection authority.</p>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -140,6 +155,7 @@
                 <a href="/services" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Services</a>
                 <a href="/projects" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Projects</a>
                 <a href="/experience" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Experience</a>
+                <a href="/insights" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Insights</a>
                 <a href="/contact" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Contact</a>
                 <a href="/privacy" aria-current="page" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
             </div>

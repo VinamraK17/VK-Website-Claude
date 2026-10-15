@@ -1,4 +1,11 @@
 import { notifyContact } from "./lib/notify";
+import fs from "fs";
+import { loadInsights, fill, renderListItems, renderArticleValues, renderRss, extendSitemap } from "./lib/insights";
+import {
+  newsletterConfig, normaliseEmail, isValidEmail, isToken, cleanSource, subscribe, confirmSubscription,
+  unsubscribe, resubscribe, saveFeedback, purgeExpired, confirmEmail, smtpSender, sendIssue, sendJob,
+  subscribeFormHtml, messagePage, feedbackFormHtml, FEEDBACK_REASONS, RETENTION, CONSENT_VERSION,
+} from "./lib/newsletter";
 import express from "express";
 import path from "path";
 import crypto from "crypto";
@@ -286,6 +293,18 @@ async function startServer() {
       res.setHeader("Cache-Control", "no-store");
     }
     next();
+  });
+
+  // Sitemap: the static file plus every published Insights issue. Registered
+  // before express.static so it wins over public/sitemap.xml.
+  app.get("/sitemap.xml", (req, res) => {
+    try {
+      const base = fs.readFileSync(path.join(process.cwd(), "public", "sitemap.xml"), "utf8");
+      res.type("application/xml").setHeader("Cache-Control", "public, max-age=3600");
+      res.send(extendSitemap(base, loadInsights()));
+    } catch (err: any) {
+      res.status(500).type("text/plain").send("Sitemap unavailable");
+    }
   });
 
   // Serve static assets (images, robots.txt, sitemap, etc.) from /public
@@ -769,7 +788,270 @@ async function startServer() {
   app.get("/projects", (req, res) => res.sendFile(path.join(pagesDir, "projects.html")));
   app.get("/experience", (req, res) => res.sendFile(path.join(pagesDir, "experience.html")));
   app.get("/contact", (req, res) => res.sendFile(path.join(pagesDir, "contact.html")));
-  app.get("/privacy", (req, res) => res.sendFile(path.join(pagesDir, "privacy.html")));
+  app.get("/privacy", (req, res) => {
+    const nl = newsletterConfig();
+    res.send(fill(fs.readFileSync(path.join(pagesDir, "privacy.html"), "utf8"), {
+      NEWSLETTER_PROCESSOR: nl.processor
+        ? `Emails are delivered through <strong>${escapeHtml(nl.processor)}</strong>, which acts as a processor on my behalf and receives only your email address and the email content.`
+        : "Newsletter delivery is not active yet. Before it starts, the email delivery provider will be named here.",
+    }));
+  });
+
+  // Insights (monthly newsletter archive) — Markdown in content/insights/
+  const readTemplate = (name: string) => fs.readFileSync(path.join(pagesDir, name), "utf8");
+
+  app.get("/insights", (req, res) => {
+    const items = loadInsights();
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.send(fill(readTemplate("insights.html"), {
+      LIST: renderListItems(items),
+      SUBSCRIBE: newsletterConfig().enabled ? subscribeFormHtml("insights") : "",
+      // An empty archive should not be indexed; it starts ranking once issue #1 is live.
+      ROBOTS: items.length ? "" : '    <meta name="robots" content="noindex" />\n',
+    }));
+  });
+
+  app.get("/insights/feed.xml", (req, res) => {
+    res.type("application/rss+xml").setHeader("Cache-Control", "public, max-age=3600");
+    res.send(renderRss(loadInsights()));
+  });
+
+  app.get("/insights/:slug", (req, res, next) => {
+    const item = loadInsights().find(i => i.slug === req.params.slug);
+    if (!item) return next(); // falls through to the 404 page
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.send(fill(readTemplate("insight.html"), {
+      ...renderArticleValues(item),
+      SUBSCRIBE: newsletterConfig().enabled ? subscribeFormHtml(`issue:${item.slug}`, "Get Insights by email") : "",
+    }));
+  });
+
+  // ── Newsletter: subscribe, confirm, unsubscribe, feedback ──────────────────
+  // Plain HTML forms (no JavaScript needed). See lib/newsletter.ts for the
+  // privacy model these routes implement.
+  const formBody = express.urlencoded({ extended: false, limit: "10kb" });
+  const nlPage = (res: any, status: number, values: Record<string, string>) =>
+    res.status(status).setHeader("Cache-Control", "no-store").send(fill(readTemplate("newsletter.html"), values));
+  const backLink = `<p><a href="/insights" class="text-[var(--color-accent)] hover:opacity-80">← Back to Insights</a></p>`;
+  const expiredPage = (res: any) => nlPage(res, 404, messagePage("Link not active", "This link is no longer active",
+    `<p>It may have expired or already been used. If you were subscribed through it, you are not receiving emails from it now.</p>${backLink}`));
+
+  const NL_MAX_PER_IP = 5;
+  const NL_WINDOW_MS = 15 * 60 * 1000;
+  const NL_MAX_CONFIRMS_PER_HOUR = 100; // protects the relay's sending reputation from form abuse
+  const nlAttempts = new Map<string, { count: number; firstAttempt: number }>();
+  let confirmsThisHour = { count: 0, since: Date.now() };
+  setInterval(() => {
+    const now = Date.now();
+    for (const [ip, e] of nlAttempts) if (now - e.firstAttempt > NL_WINDOW_MS) nlAttempts.delete(ip);
+  }, 60 * 60 * 1000).unref();
+
+  // Hourly retention clean-up (and once shortly after start).
+  const runPurge = () => purgeExpired(prisma)
+    .then(r => { if (r.pending || r.unsubscribed) console.log(`[NEWSLETTER] purged ${r.pending} unconfirmed, ${r.unsubscribed} unsubscribed`); })
+    .catch(err => console.warn("[NEWSLETTER] purge failed:", err?.message ?? err));
+  setTimeout(runPurge, 30 * 1000).unref();
+  setInterval(runPurge, 60 * 60 * 1000).unref();
+
+  app.post("/newsletter/subscribe", formBody, async (req, res) => {
+    const cfg = newsletterConfig();
+    if (!cfg.enabled) return nlPage(res, 503, messagePage("Not open yet", "Subscriptions aren't open yet", `<p>Please check back soon.</p>${backLink}`));
+
+    const ip = (req.ip || req.socket?.remoteAddress || "unknown").toString();
+    const now = Date.now();
+    const a = nlAttempts.get(ip);
+    if (a && now - a.firstAttempt <= NL_WINDOW_MS) {
+      if (a.count >= NL_MAX_PER_IP) {
+        res.setHeader("Retry-After", String(Math.ceil((a.firstAttempt + NL_WINDOW_MS - now) / 1000)));
+        return nlPage(res, 429, messagePage("Too many attempts", "Too many attempts", `<p>Please wait a few minutes and try again.</p>${backLink}`));
+      }
+      a.count++;
+    } else nlAttempts.set(ip, { count: 1, firstAttempt: now });
+
+    const checkInbox = (email: string) => nlPage(res, 200, messagePage("Check your inbox", "Check your inbox",
+      `<p>If <strong>${escapeHtml(email)}</strong> can receive Insights, a confirmation email is on its way. Click the button in it to start your subscription.</p>
+       <p class="text-sm text-[var(--color-ink-faint)]">Nothing arrives? Check your spam folder. Unconfirmed addresses are deleted after ${RETENTION.pendingDays} days.</p>${backLink}`));
+
+    // Bots fill the hidden field. Show the normal page and do nothing.
+    if (req.body?.website_url) return checkInbox(normaliseEmail(req.body?.email).slice(0, 254));
+
+    const email = normaliseEmail(req.body?.email);
+    if (!isValidEmail(email)) {
+      return nlPage(res, 400, messagePage("Check the address", "That email address doesn't look right",
+        `<p>Please go back and check it.</p>${backLink}`));
+    }
+    if (req.body?.consent !== "yes") {
+      return nlPage(res, 400, messagePage("Consent needed", "Please tick the consent box",
+        `<p>I can only send Insights to people who have agreed to receive it.</p>${backLink}`));
+    }
+
+    try {
+      const result = await subscribe(prisma, email, cleanSource(req.body?.source));
+      if (result.action === "confirm-sent") {
+        if (now - confirmsThisHour.since > 60 * 60 * 1000) confirmsThisHour = { count: 0, since: now };
+        if (confirmsThisHour.count >= NL_MAX_CONFIRMS_PER_HOUR) {
+          console.warn("[NEWSLETTER] hourly confirmation cap reached; not sending");
+        } else {
+          confirmsThisHour.count++;
+          await smtpSender(cfg)(confirmEmail(cfg, email, result.subscriber.confirmToken));
+        }
+      }
+      return checkInbox(email);
+    } catch (err: any) {
+      console.error("[NEWSLETTER] subscribe failed:", err?.message ?? err);
+      return nlPage(res, 500, messagePage("Something went wrong", "Something went wrong",
+        `<p>Your subscription could not be started. Please try again later.</p>${backLink}`));
+    }
+  });
+
+  // GET only shows a button: mail scanners that open links must not confirm
+  // a subscription on someone's behalf.
+  app.get("/newsletter/confirm", (req, res) => {
+    const token = req.query.token;
+    if (!isToken(token)) return expiredPage(res);
+    nlPage(res, 200, messagePage("Confirm subscription", "One last step",
+      `<p>Press the button to confirm that you want to receive Insights by email.</p>
+       <form method="post" action="/newsletter/confirm?token=${escapeHtml(token)}"><button type="submit" class="nl-button">Confirm subscription</button></form>`));
+  });
+
+  app.post("/newsletter/confirm", async (req, res) => {
+    const token = req.query.token;
+    if (!isToken(token)) return expiredPage(res);
+    try {
+      const s = await confirmSubscription(prisma, token);
+      if (!s) return expiredPage(res);
+      if (s !== "already") {
+        notifyNewSubscriber(s.email, s.source).catch(() => {});
+      }
+      return nlPage(res, 200, messagePage("Subscribed", "You're subscribed",
+        `<p>Thank you. The next issue of Insights will arrive on the first Tuesday of the month.</p>
+         <p class="text-sm text-[var(--color-ink-faint)]">Every email has a one-click unsubscribe link at the bottom.</p>${backLink}`));
+    } catch (err: any) {
+      console.error("[NEWSLETTER] confirm failed:", err?.message ?? err);
+      return nlPage(res, 500, messagePage("Something went wrong", "Something went wrong", `<p>Please try the link again later.</p>`));
+    }
+  });
+
+  // The link in every email. The page's form submits itself (public/newsletter.js),
+  // so a person clicks once; scanners that fetch without running script do nothing.
+  app.get("/newsletter/unsubscribe", (req, res) => {
+    const token = req.query.token;
+    if (!isToken(token)) return expiredPage(res);
+    nlPage(res, 200, messagePage("Unsubscribe", "Unsubscribing…",
+      `<form method="post" action="/newsletter/unsubscribe?token=${escapeHtml(token)}" data-auto-submit>
+         <p>One moment. If nothing happens, press the button.</p>
+         <button type="submit" class="nl-button mt-4">Unsubscribe</button>
+       </form>`));
+  });
+
+  // Handles the page form and RFC 8058 one-click POSTs from mail clients.
+  app.post("/newsletter/unsubscribe", formBody, async (req, res) => {
+    const token = req.query.token;
+    const oneClick = req.body?.["List-Unsubscribe"] === "One-Click";
+    if (!isToken(token)) return oneClick ? res.status(404).send("Unknown link") : expiredPage(res);
+    try {
+      const r = await unsubscribe(prisma, token);
+      if (oneClick) return res.status(r ? 200 : 404).type("text/plain").send(r ? "Unsubscribed" : "Unknown link");
+      if (!r) return expiredPage(res);
+      return nlPage(res, 200, messagePage("Unsubscribed", "You're unsubscribed",
+        `<p>You won't receive any more emails from Insights.</p>
+         <p class="text-sm text-[var(--color-ink-faint)]">Your address is kept for ${RETENTION.unsubscribedDays} days so a mistaken unsubscribe can be undone, then deleted.</p>
+         ${r.wasActive ? feedbackFormHtml(r.feedbackToken, token) : ""}`));
+    } catch (err: any) {
+      console.error("[NEWSLETTER] unsubscribe failed:", err?.message ?? err);
+      if (oneClick) return res.status(500).send("Error");
+      return nlPage(res, 500, messagePage("Something went wrong", "Something went wrong",
+        `<p>Please try the link again, or reply to any issue and I will remove you by hand.</p>`));
+    }
+  });
+
+  app.post("/newsletter/resubscribe", async (req, res) => {
+    const token = req.query.token;
+    if (!isToken(token)) return expiredPage(res);
+    const ok = await resubscribe(prisma, token).catch(() => false);
+    if (!ok) return expiredPage(res);
+    return nlPage(res, 200, messagePage("Subscribed again", "You're subscribed again",
+      `<p>No harm done. You'll keep receiving Insights.</p>${backLink}`));
+  });
+
+  app.post("/newsletter/feedback", formBody, async (req, res) => {
+    const token = req.body?.token;
+    if (isToken(token)) await saveFeedback(prisma, token, req.body?.reason, req.body?.comment).catch(() => false);
+    return nlPage(res, 200, messagePage("Thank you", "Thank you",
+      `<p>Thanks for taking the time. It helps.</p>${backLink}`));
+  });
+
+  async function notifyNewSubscriber(email: string, source: string | null) {
+    const base = (process.env.NTFY_URL || "").replace(/\/+$/, "");
+    const topic = process.env.NTFY_TOPIC || "";
+    if (!base || !topic) return;
+    const confirmed = await prisma.subscriber.count({ where: { status: "confirmed" } });
+    const headers: Record<string, string> = { Title: "New Insights subscriber", Tags: "mailbox_with_mail" };
+    if (process.env.NTFY_TOKEN) headers.Authorization = `Bearer ${process.env.NTFY_TOKEN}`;
+    await fetch(`${base}/${topic}`, {
+      method: "POST", headers,
+      body: `${email} confirmed (${source || "insights"}). ${confirmed} confirmed subscribers.`,
+      signal: AbortSignal.timeout(8000),
+    });
+  }
+
+  // ── Newsletter admin ───────────────────────────────────────────────────────
+  app.get("/api/admin/newsletter", requireAdmin, async (req, res) => {
+    try {
+      const cfg = newsletterConfig();
+      const [subscribers, feedback, deliveries] = await Promise.all([
+        prisma.subscriber.findMany({ orderBy: { requestedAt: "desc" } }),
+        prisma.unsubscribeFeedback.findMany({ orderBy: { createdAt: "desc" } }),
+        prisma.newsletterDelivery.findMany({ where: { ok: true } }),
+      ]);
+      const sentBySlug: Record<string, number> = {};
+      for (const d of deliveries as any[]) sentBySlug[d.slug] = (sentBySlug[d.slug] || 0) + 1;
+      res.json({
+        configured: cfg.enabled,
+        missing: cfg.missing,
+        testTo: cfg.testTo || null,
+        consentVersion: CONSENT_VERSION,
+        subscribers: (subscribers as any[]).map(s => ({
+          id: s.id, email: s.email, status: s.status, source: s.source, consentVersion: s.consentVersion,
+          requestedAt: s.requestedAt, confirmedAt: s.confirmedAt, unsubscribedAt: s.unsubscribedAt,
+        })),
+        feedback: (feedback as any[]).map(f => ({
+          createdAt: f.createdAt, reason: f.reason ? FEEDBACK_REASONS[f.reason] || f.reason : null, comment: f.comment,
+        })),
+        issues: loadInsights().map(i => ({ slug: i.slug, title: i.title, date: i.date, sent: sentBySlug[i.slug] || 0 })),
+        job: sendJob,
+      });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // Erasure on request (GDPR Art. 17). Deliveries cascade.
+  app.delete("/api/admin/newsletter/subscribers/:id", requireAdmin, async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    if (!Number.isInteger(id)) return res.status(400).json({ error: "Bad id" });
+    try {
+      await prisma.subscriber.delete({ where: { id } });
+      res.json({ success: true });
+    } catch (err: any) {
+      res.status(404).json({ error: "Not found" });
+    }
+  });
+
+  app.post("/api/admin/newsletter/send", requireAdmin, async (req, res) => {
+    const cfg = newsletterConfig();
+    if (!cfg.enabled) return res.status(400).json({ error: `Sending is not configured. Missing: ${cfg.missing.join(", ")}` });
+    const { slug, mode, confirm } = req.body || {};
+    const issue = loadInsights().find(i => i.slug === slug);
+    if (!issue) return res.status(404).json({ error: "Issue not found or not published yet." });
+    if (mode !== "test" && mode !== "all") return res.status(400).json({ error: "mode must be test or all" });
+    if (mode === "all" && confirm !== "SEND") return res.status(400).json({ error: 'Type SEND to confirm.' });
+    if (sendJob.running) return res.status(409).json({ error: "A send is already running." });
+    sendIssue(prisma, cfg, issue, mode, smtpSender(cfg))
+      .then(j => console.log(`[NEWSLETTER] ${mode} send of ${slug}: ${j.sent} sent, ${j.failed} failed, ${j.skipped} skipped`))
+      .catch(err => console.error(`[NEWSLETTER] send of ${slug} failed:`, err?.message ?? err));
+    res.status(202).json({ started: true, job: sendJob });
+  });
 
   // 404 — return a styled page instead of redirecting (redirect hides 404s from search engines)
   app.use((req, res) => {

@@ -43,9 +43,9 @@ The subscribe form, and the processor sentence on `/privacy`, appear only when `
 1. Merge the pull request into `main`. The GitHub Action builds `ghcr.io/vinamrak17/vk-website-claude:latest`, which takes a few minutes; wait until it shows a green tick.
 2. In Dockhand: **pull + redeploy** the stack. On start, `prisma db push` creates the three new tables (additive only; existing data is untouched).
 
-## 5. DNS clean-up (separate from the newsletter, do once)
+## 5. DNS clean-up (done 15 Oct 2026)
 
-Cloudflare → DNS: delete the two leftover GoDaddy MX records, `mailstore1.secureserver.net` and `smtp.secureserver.net`. Mail is handled by Proton. These fallbacks can swallow mail whenever Proton is briefly unreachable.
+Leftover GoDaddy MX records, plus the unused `ftp` and `_domainconnect` CNAMEs, were deleted in Cloudflare. Mail records now point only to Proton. The domain registration (renewal) stays at Squarespace, and DNS is hosted at Cloudflare.
 
 ## 6. Test end to end (15 min)
 
@@ -63,7 +63,8 @@ Cloudflare → DNS: delete the two leftover GoDaddy MX records, `mailstore1.secu
 2. Read it once on the site.
 3. `/admin` → Newsletter → select the issue → **Send test to me** → read it in your inbox.
 4. Type `SEND` → **Send to subscribers**. Progress shows on the page. If it stops, press it again: anyone who already received the issue is skipped.
-5. Two days later, publish it on LinkedIn with "Originally published at vinamrakumar.com/insights/<slug>", put the edition URL in the issue's `linkedin:` field, and redeploy.
+5. **Delete the Sent copies.** Proton keeps a copy of every email sent through SMTP in the Sent folder, one per subscriber, each with their address. Proton → Sent → search `from:insights@vinamrakumar.com` → select all → delete, then empty the Trash. Otherwise addresses outlive the retention promised in the privacy notice.
+6. Two days later, publish it on LinkedIn with "Originally published at vinamrakumar.com/insights/<slug>", put the edition URL in the issue's `linkedin:` field, and redeploy.
 
 ---
 

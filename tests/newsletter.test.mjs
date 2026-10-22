@@ -285,3 +285,12 @@ describe('scheduled issues', () => {
     assert.ok(t.includes('date: 2099-12-31'));
   });
 });
+
+describe('supply chain', () => {
+  test('image uses a supported Node version and installs from the lockfile', () => {
+    const d = read('Dockerfile');
+    assert.ok(!/node:(1\d|20)-/.test(d), 'Node 20 and older are end-of-life');
+    assert.ok(d.includes('COPY package.json package-lock.json ./') && d.includes('npm ci'), 'build must install from package-lock.json');
+    assert.ok(d.includes('npm prune --omit=dev'), 'build-only packages must not ship in the runtime image');
+  });
+});

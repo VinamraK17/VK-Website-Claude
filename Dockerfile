@@ -1,24 +1,31 @@
-FROM node:20-slim AS builder
+# Node 22 LTS (security support until April 2027). Node 20 reached end of life
+# in April 2026 and no longer receives security fixes.
+FROM node:22-slim AS builder
 
 # Update OS packages to apply available security patches, then install openssl for Prisma
 RUN apt-get update && apt-get upgrade -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY package.json ./
+# Install exactly what package-lock.json pins (npm ci), so the image ships the
+# versions that were audited and tested, not whatever is newest on build day.
+COPY package.json package-lock.json ./
 # Copy the Prisma schema before npm install so @prisma/client's postinstall
 # script can find it. Without this, postinstall silently corrupts the cache
 # and the explicit prisma generate step below fails with exit code 1.
 COPY prisma ./prisma
-RUN npm install
+RUN npm ci --no-audit --no-fund
 
 COPY . .
 
 RUN npx prisma generate
 RUN npm run build
+# Drop build-only packages (Tailwind, esbuild, TypeScript...) before they are
+# copied into the runtime image. The Prisma CLI stays: it is a runtime dependency.
+RUN npm prune --omit=dev
 
 # --- Production Image ---
-FROM node:20-slim
+FROM node:22-slim
 
 WORKDIR /app
 

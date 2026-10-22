@@ -612,7 +612,7 @@ function renderSubscribers() {
         <td class="font-mono text-xs">${esc(s.source || '')}</td>
         <td class="font-mono text-xs">${esc(s.consentVersion)}</td>
         <td class="text-xs">${s.confirmedAt ? formatDate(s.confirmedAt) : '—'}</td>
-        <td><button onclick="deleteSubscriber(${s.id}, '${esc(s.email)}')" class="text-xs font-mono uppercase" style="color:var(--danger)">Erase</button></td>
+        <td><button data-id="${s.id}" data-email="${esc(s.email)}" onclick="deleteSubscriber(Number(this.dataset.id), this.dataset.email)" class="text-xs font-mono uppercase" style="color:var(--danger)">Erase</button></td>
     </tr>`).join('') : '<tr><td colspan="6" class="text-center py-10" style="color:var(--ink-faint)">No subscribers yet.</td></tr>';
 }
 function renderFeedback() {

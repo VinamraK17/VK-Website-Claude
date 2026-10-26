@@ -134,16 +134,6 @@ function initEngagementTracking() {
     window.addEventListener('pagehide', sendExit);
 }
 
-// ── Privacy modal ────────────────────────────────────────────────────────────
-window.openPrivacy = () => {
-    const modal = document.getElementById('privacy-modal');
-    if (modal) { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; initIcons(); }
-};
-window.closePrivacy = () => {
-    const modal = document.getElementById('privacy-modal');
-    if (modal) { modal.classList.add('hidden'); document.body.style.overflow = ''; }
-};
-
 // ── DB status badge (footer) ─────────────────────────────────────────────────
 async function updateDbStatus() {
     try {

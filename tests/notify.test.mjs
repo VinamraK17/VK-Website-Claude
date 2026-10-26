@@ -11,28 +11,11 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { execFileSync } from 'node:child_process';
+// tsImport runs the TypeScript source directly via tsx — no temp bundle,
+// no execFileSync('.bin/esbuild') that needs a .cmd extension on Windows.
+import { tsImport } from 'tsx/esm/api';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '..');
-
-// Bundle the TypeScript module so the test exercises the real code rather
-// than a re-implementation of it.
-// Bundled inside the project so `--packages=external` imports (nodemailer)
-// resolve against the repo's node_modules rather than the system temp dir.
-const cacheDir = path.join(ROOT, 'node_modules', '.cache');
-fs.mkdirSync(cacheDir, { recursive: true });
-const bundle = path.join(cacheDir, `notify.${process.pid}.mjs`);
-execFileSync(
-  path.join(ROOT, 'node_modules', '.bin', 'esbuild'),
-  [path.join(ROOT, 'lib', 'notify.ts'), '--bundle', '--platform=node',
-   '--format=esm', '--packages=external', `--outfile=${bundle}`],
-  { stdio: 'pipe' }
-);
-const { notifyViaNtfy, asciiHeader } = await import(bundle);
+const { notifyViaNtfy, asciiHeader } = await tsImport('../lib/notify.ts', import.meta.url);
 
 let server, received, status, base;
 
@@ -52,9 +35,6 @@ before(async () => {
 
 after(() => {
   server.close();
-  // Best-effort: some sandboxed mounts deny unlink, and failing to tidy a temp
-  // file must never fail the suite.
-  try { fs.rmSync(bundle, { force: true }); } catch {}
 });
 
 function env(overrides) {

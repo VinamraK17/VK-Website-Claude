@@ -57,6 +57,9 @@
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-700-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
     <link rel="stylesheet" href="/app.css?v=1.5.0">
+
+    <!-- Theme flash prevention: must run before first paint, so it is intentionally render-blocking. -->
+    <script>(function(){var m=localStorage.getItem("theme-mode");if(m)document.documentElement.setAttribute("data-mode",m);})()</script>
 </head>
 <body class="font-sans">
 
@@ -357,7 +360,7 @@
                 <a href="/experience" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Experience</a>
                 <a href="/insights" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Insights</a>
                 <a href="/contact" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Contact</a>
-                <a href="/privacy" onclick="openPrivacy(); return false;" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
+                <a href="/privacy" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
             </div>
             <div class="flex items-center gap-4">
                 <a href="https://www.linkedin.com/in/vinamrakumar" target="_blank" rel="noopener noreferrer"
@@ -367,51 +370,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Privacy Modal -->
-    <div id="privacy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-        <div class="glass max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-[32px] border border-[var(--color-border)] p-6 md:p-12 relative text-[var(--color-ink)] bg-[var(--color-surface)] bg-opacity-95">
-            <button onclick="closePrivacy()" class="absolute top-6 right-6 p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/10 transition-all cursor-pointer">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <div class="space-y-6 mb-12">
-                <span class="text-[9px] font-mono border border-[var(--color-border)] px-3 py-1 rounded-full uppercase tracking-widest text-[var(--color-accent)] font-bold">Legal & Compliance</span>
-                <h2 class="text-4xl md:text-5xl font-bold tracking-tighter text-[var(--color-ink)] uppercase leading-none">Privacy Policy & <br/><span class="text-[var(--color-ink)]/30 italic font-light">Terms of Use</span></h2>
-                <p class="text-md text-[var(--color-ink-faint)] font-light leading-relaxed max-w-2xl">This policy outlines how data is handled on this site, GDPR compliance details, and the intellectual property protection governing the contents.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-6 p-6 border border-[var(--color-border)] rounded-2xl bg-[var(--color-ink)]/[0.01] mb-12">
-                <div class="flex flex-col gap-2">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-[var(--color-accent)]"></i>
-                    <h4 class="font-bold text-sm mt-1">Self-Hosted Security</h4>
-                    <p class="text-[10px] text-[var(--color-ink-faint)] leading-normal font-light">All data is stored locally on a secure private Synology NAS in Switzerland, with no third-party cloud hosting.</p>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <i data-lucide="eye-off" class="w-5 h-5 text-indigo-500/80"></i>
-                    <h4 class="font-bold text-sm mt-1">No Third-Party Trackers</h4>
-                    <p class="text-[10px] text-[var(--color-ink-faint)] leading-normal font-light">No third-party analytics or advertising cookies. First-party, anonymous usage data (page views, approximate country, device/browser type, on-page engagement) is stored locally to improve the site.</p>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <i data-lucide="lock" class="w-5 h-5 text-emerald-500/80"></i>
-                    <h4 class="font-bold text-sm mt-1">Strict Data Privacy</h4>
-                    <p class="text-[10px] text-[var(--color-ink-faint)] leading-normal font-light">Contact information is used solely to verify identity and communicate. It is never sold or shared.</p>
-                </div>
-            </div>
-            <div class="space-y-8 text-[var(--color-ink)]/80 font-light leading-relaxed text-sm">
-                <div class="space-y-2">
-                    <h3 class="font-bold text-base text-[var(--color-ink)]">1. Data Collection & Usage</h3>
-                    <p class="pl-4">Minimal personal data is collected: name, email, and message (contact form), used solely to enable professional communication. The site also records anonymous, first-party usage analytics &mdash; approximate country (derived from network routing, not your IP address), device/browser/OS type, referring site, and on-page engagement such as time on page and scroll depth &mdash; to understand how the site is used. This data is never shared with third parties.</p>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="font-bold text-base text-[var(--color-ink)]">2. GDPR & Swiss FADP Compliance</h3>
-                    <p class="pl-4">Aligned with Swiss Federal Act on Data Protection (FADP) and GDPR. You have the right to access and request erasure of your data at any time.</p>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="font-bold text-base text-[var(--color-ink)]">3. Intellectual Property &amp; Copy Protection</h3>
-                    <p class="pl-4">All content is the exclusive intellectual property of <strong>Vinamra Kumar</strong>. Scrape protection measures are applied. Reproduction is strictly prohibited.</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Shared JS -->
     <script src="/shared.js?v=1.5.0" defer></script>

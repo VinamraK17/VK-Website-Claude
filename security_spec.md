@@ -19,7 +19,7 @@
 | `/api/db-status` | `GET` | Healthcheck badge | Verifies SQLite connectivity via `SELECT 1`. |
 | `/api/projects` | `GET` | Portfolio showcase | Read-only from SQLite (`order: asc`). |
 | `/api/experiences` | `GET` | Career timeline | Read-only from SQLite (`order: asc`). |
-| `/api/insights` | `GET` | Insights index | Read-only; parsed from `content/insights/*.md` at request time. |
+| `/insights` | `GET` | Insights index | Read-only; parsed from `content/insights/*.md` at request time. |
 | `/newsletter/subscribe` | `POST` | Newsletter sign-up (step 1) | • **Rate Limiting**: per-IP bucket.<br>• **Double opt-in**: confirmation email sent, subscriber not activated until `GET /newsletter/confirm?token=…`. |
 | `/newsletter/confirm` | `GET` | Confirm subscription (step 2) | Token validated; activates subscriber. Mail-scanner-safe (GET only reads token, POST actually confirms). |
 | `/newsletter/unsubscribe` | `GET` | One-click unsubscribe | RFC 8058 `List-Unsubscribe-Post` header supported. Zero-PII anonymous feedback collected. |
@@ -33,7 +33,8 @@
 | `/api/admin/messages` | `GET` | View received contact messages | Requires `Bearer <ADMIN_PASSWORD>`. |
 | `/api/admin/analytics` | `GET` | View aggregate telemetry & sessions | Requires `Bearer <ADMIN_PASSWORD>`. |
 | `/api/admin/messages/:id` | `DELETE` | Delete message record | Requires `Bearer <ADMIN_PASSWORD>`. |
-| `/api/admin/newsletter/subscribers` | `GET` | List newsletter subscribers | Requires `Bearer <ADMIN_PASSWORD>`. |
+| `/api/admin/newsletter` | `GET` | List newsletter subscribers | Requires `Bearer <ADMIN_PASSWORD>`. |
+| `/api/admin/newsletter/subscribers/:id` | `DELETE` | Remove a subscriber record | Requires `Bearer <ADMIN_PASSWORD>`. |
 | `/api/admin/newsletter/send` | `POST` | Trigger newsletter send job | Requires `Bearer <ADMIN_PASSWORD>`. |
 
 #### Admin Security Invariants:

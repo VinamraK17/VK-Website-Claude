@@ -494,9 +494,33 @@ async function startServer() {
   });
 
   // Analytics Endpoint
+  // Per-IP rate limit for analytics: 120 events per minute.
+  const analyticsAttempts = new Map<string, { count: number; windowStart: number }>();
+  const ANALYTICS_LIMIT = 120;
+  const ANALYTICS_WINDOW_MS = 60_000;
+
   app.post("/api/analytics", async (req, res) => {
     try {
+      const ip = req.ip || "unknown";
+      const now = Date.now();
+      const bucket = analyticsAttempts.get(ip);
+      if (bucket && now - bucket.windowStart < ANALYTICS_WINDOW_MS) {
+        if (bucket.count >= ANALYTICS_LIMIT) {
+          return res.status(429).json({ success: false });
+        }
+        bucket.count++;
+      } else {
+        analyticsAttempts.set(ip, { count: 1, windowStart: now });
+      }
+
       const { event, details, sessionId } = req.body;
+
+      // Payload guards — prevent oversized blobs from bloating the DB.
+      if (!event || typeof event !== "string") return res.status(400).json({ success: false });
+      if (event.length > 64) return res.status(400).json({ success: false });
+      if (sessionId && String(sessionId).length > 64) return res.status(400).json({ success: false });
+      const detailsJson = JSON.stringify(details || {});
+      if (detailsJson.length > 1000) return res.status(400).json({ success: false });
 
       // Country: Cloudflare sets this header automatically for proxied requests.
       // Falls back to other common proxy headers if not behind Cloudflare.
@@ -518,7 +542,7 @@ async function startServer() {
       await prisma.analytics.create({
         data: {
           event,
-          details: JSON.stringify(details || {}),
+          details: detailsJson,
           sessionId: sessionId || null,
           country,
           deviceType,

@@ -44,6 +44,9 @@
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-700-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
     <link rel="stylesheet" href="/app.css?v=1.5.0">
+
+    <!-- Theme flash prevention: must run before first paint, so it is intentionally render-blocking. -->
+    <script>(function(){var m=localStorage.getItem("theme-mode");if(m)document.documentElement.setAttribute("data-mode",m);})()</script>
 </head>
 <body class="font-sans">
 

@@ -31,6 +31,9 @@
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-700-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
     <link rel="stylesheet" href="/app.css?v=1.5.0">
+
+    <!-- Theme flash prevention: must run before first paint, so it is intentionally render-blocking. -->
+    <script>(function(){var m=localStorage.getItem("theme-mode");if(m)document.documentElement.setAttribute("data-mode",m);})()</script>
 </head>
 <body class="font-sans">
 
@@ -238,7 +241,7 @@
                 <a href="/experience" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Experience</a>
                 <a href="/insights" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Insights</a>
                 <a href="/contact" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Contact</a>
-                <a href="/privacy" onclick="openPrivacy(); return false;" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
+                <a href="/privacy" class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30 hover:text-[var(--color-accent)] transition-colors">Privacy</a>
             </div>
             <div class="flex items-center gap-4">
                 <a href="https://www.linkedin.com/in/vinamrakumar" target="_blank" rel="noopener noreferrer"
@@ -248,17 +251,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Privacy Modal -->
-    <div id="privacy-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-        <div class="glass max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-[32px] border border-[var(--color-border)] p-6 md:p-12 relative text-[var(--color-ink)] bg-[var(--color-surface)] bg-opacity-95">
-            <button onclick="closePrivacy()" class="absolute top-6 right-6 p-2 rounded-full border border-[var(--color-border)] hover:bg-[var(--color-ink)]/10 transition-all cursor-pointer">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <h2 class="text-3xl font-bold tracking-tighter text-[var(--color-ink)] uppercase mt-2 mb-6">Privacy Policy</h2>
-            <p class="text-[var(--color-ink)]/70 font-light leading-relaxed text-sm">All content is the exclusive intellectual property of Vinamra Kumar. Data is stored on a private Synology NAS in Switzerland (GDPR & Swiss FADP compliant). No third-party cookies &mdash; only anonymous, first-party usage analytics (approximate country, device/browser type, on-page engagement). Contact data is never sold or shared.</p>
-        </div>
-    </div>
 
     <!-- Shared JS -->
     <script src="/shared.js?v=1.5.0" defer></script>

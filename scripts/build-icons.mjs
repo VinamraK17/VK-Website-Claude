@@ -7,8 +7,10 @@
  * they are listed in DYNAMIC below — add to it if you introduce another.
  */
 import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
 import path from 'node:path';
+// Use the esbuild JS API instead of execFileSync('.bin/esbuild') so the script
+// works identically on Windows and Linux (no .cmd extension guessing needed).
+import { buildSync } from 'esbuild';
 
 const DYNAMIC = ['sun', 'moon', 'menu', 'x'];
 const SOURCES = [
@@ -40,9 +42,13 @@ export function createIcons(options = {}) {
 `);
 
 mkdirSync('public/vendor', { recursive: true });
-execFileSync(path.join('node_modules', '.bin', 'esbuild'), [
-  'src/lucide.subset.js', '--bundle', '--minify', '--format=iife',
-  '--global-name=lucide', '--outfile=public/vendor/lucide.min.js',
-], { stdio: 'inherit' });
+buildSync({
+  entryPoints: ['src/lucide.subset.js'],
+  bundle: true,
+  minify: true,
+  format: 'iife',
+  globalName: 'lucide',
+  outfile: 'public/vendor/lucide.min.js',
+});
 
 console.log(`lucide subset: ${used.length} icons — ${used.join(' ')}`);

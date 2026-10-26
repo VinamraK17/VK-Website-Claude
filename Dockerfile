@@ -47,5 +47,11 @@ RUN mkdir -p /app/data
 EXPOSE 3000
 ENV NODE_ENV=production
 
+# Docker/Portainer health check: polls the DB-status endpoint every 30 s.
+# If it fails 3 times in a row the container is marked unhealthy, which
+# Dockhand/Portainer surfaces in the UI and can use to trigger a restart.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD node -e "fetch('http://localhost:3000/api/db-status').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
 # Push schema (creates/migrates the SQLite file), then start the server
 CMD ["sh", "-c", "./node_modules/.bin/prisma db push --skip-generate && npm start"]

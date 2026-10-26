@@ -499,6 +499,16 @@ async function startServer() {
   const ANALYTICS_LIMIT = 120;
   const ANALYTICS_WINDOW_MS = 60_000;
 
+  // Evict stale analytics buckets every 10 minutes so unique visitor IPs
+  // that only fire a handful of events and never return don't stay in the
+  // Map until the server restarts.
+  setInterval(() => {
+    const now = Date.now();
+    for (const [ip, bucket] of analyticsAttempts) {
+      if (now - bucket.windowStart >= ANALYTICS_WINDOW_MS) analyticsAttempts.delete(ip);
+    }
+  }, 10 * 60 * 1000).unref();
+
   app.post("/api/analytics", async (req, res) => {
     try {
       const ip = req.ip || "unknown";

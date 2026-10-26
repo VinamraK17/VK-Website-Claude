@@ -19,30 +19,30 @@ const { notifyViaNtfy, asciiHeader } = await tsImport('../lib/notify.ts', import
 
 let server, received, status, base;
 
-before(async () => {
-  server = http.createServer((req, res) => {
-    let body = '';
-    req.on('data', c => (body += c));
-    req.on('end', () => {
-      received = { url: req.url, headers: req.headers, body };
-      res.writeHead(status, { 'Content-Type': 'text/plain' });
-      res.end(status === 200 ? 'ok' : 'forbidden');
-    });
-  });
-  await new Promise(r => server.listen(0, '127.0.0.1', r));
-  base = `http://127.0.0.1:${server.address().port}`;
-});
-
-after(() => {
-  server.close();
-});
-
 function env(overrides) {
   for (const key of ['NTFY_URL', 'NTFY_TOPIC', 'NTFY_TOKEN', 'NTFY_CLICK_URL']) delete process.env[key];
   Object.assign(process.env, overrides);
 }
 
 describe('ntfy notification', () => {
+  before(async () => {
+    server = http.createServer((req, res) => {
+      let body = '';
+      req.on('data', c => (body += c));
+      req.on('end', () => {
+        received = { url: req.url, headers: req.headers, body };
+        res.writeHead(status, { 'Content-Type': 'text/plain' });
+        res.end(status === 200 ? 'ok' : 'forbidden');
+      });
+    });
+    await new Promise(r => server.listen(0, '127.0.0.1', r));
+    base = `http://127.0.0.1:${server.address().port}`;
+  });
+
+  after(() => {
+    server.close();
+  });
+
   test('posts to the topic with the token and the full message body', async () => {
     status = 200;
     env({ NTFY_URL: base, NTFY_TOPIC: 'vk-contact', NTFY_TOKEN: 'tk_secret', NTFY_CLICK_URL: 'https://vinamrakumar.com/admin' });

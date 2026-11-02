@@ -43,6 +43,7 @@ export interface NewsletterConfig {
   testTo?: string;
   processor: string;
   sendIntervalMs: number;
+  emailFull: boolean;
   smtp: { host: string; port: number; user: string; pass: string };
 }
 
@@ -57,6 +58,7 @@ export function newsletterConfig(env: NodeJS.ProcessEnv = process.env): Newslett
     replyTo: (env.NEWSLETTER_REPLY_TO || "").trim() || undefined,
     testTo: (env.NEWSLETTER_TEST_TO || env.CONTACT_EMAIL || "").trim() || undefined,
     processor: (env.NEWSLETTER_PROCESSOR || "").trim(),
+    emailFull: ["1", "true", "yes"].includes((env.NEWSLETTER_EMAIL_FULL || "").trim().toLowerCase()),
     sendIntervalMs: Math.max(100, parseInt(env.NEWSLETTER_SEND_INTERVAL_MS || "1000", 10) || 1000),
     smtp: {
       host: (env.NEWSLETTER_SMTP_HOST || "").trim(),
@@ -257,20 +259,51 @@ Vinamra Kumar · Zürich, Switzerland · Privacy notice: ${cfg.publicUrl}/privac
   return { to: email, subject: "Confirm your subscription to Insights", html, text };
 }
 
+/**
+ * Splits an issue for the email: the opening section is sent, the rest stays
+ * on the website. The cut is made before the second <h2> (or the first, when
+ * the issue does not open with a heading), and never later than the first <hr>
+ * that separates the main piece from "On the radar". Returns the excerpt and
+ * the headings of the sections left on the web.
+ */
+export function splitForEmail(html: string): { excerpt: string; rest: string[]; cut: boolean } {
+  const h2s = [...html.matchAll(/<h2[\s>]/g)].map(m => m.index as number);
+  const opensWithHeading = h2s.length > 0 && html.slice(0, h2s[0]).trim() === "";
+  let cutAt = opensWithHeading ? h2s[1] : h2s[0];
+  const hr = html.search(/<hr[\s/>]/);
+  if (hr > 0 && (cutAt === undefined || hr < cutAt)) cutAt = hr;
+  if (cutAt === undefined || cutAt <= 0) return { excerpt: html, rest: [], cut: false };
+  const restHtml = html.slice(cutAt);
+  const rest = [...restHtml.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/g)]
+    .map(m => m[1].replace(/<[^>]+>/g, "")
+      .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&")
+      .trim())
+    .filter(Boolean);
+  return { excerpt: html.slice(0, cutAt), rest, cut: true };
+}
+
 export function issueEmail(cfg: NewsletterConfig, issue: Insight, to: string, unsubToken: string, confirmedAt?: Date | string | null): Email {
   const webUrl = `${cfg.publicUrl}/insights/${issue.slug}`;
   const unsubUrl = `${cfg.publicUrl}/newsletter/unsubscribe?token=${unsubToken}`;
   // Relative links in an issue must become absolute inside an email.
-  const content = issue.html.replace(/href="\//g, `href="${cfg.publicUrl}/`);
+  const full = issue.html.replace(/href="\//g, `href="${cfg.publicUrl}/`);
+  // The email carries the opening section; the rest is read on the website.
+  // NEWSLETTER_EMAIL_FULL=1 sends the whole issue instead.
+  const { excerpt, rest, cut } = cfg.emailFull ? { excerpt: full, rest: [] as string[], cut: false } : splitForEmail(full);
   const since = confirmedAt ? ` on ${formatDate(new Date(confirmedAt).toISOString().slice(0, 10))}` : "";
+  const alsoHtml = rest.length
+    ? `<p style="color:#555;font-size:14px">Also in this issue: ${rest.map(escapeHtml).join(" · ")}</p>`
+    : "";
+  const cta = cut
+    ? `<p style="margin-top:28px"><a class="btn" href="${webUrl}">Continue reading on vinamrakumar.com →</a></p>${alsoHtml}`
+    : `<p><a href="${webUrl}">Read this issue on the web</a></p>`;
   const html = emailShell(`
     <div class="eyebrow">Insights · ${escapeHtml(formatDate(issue.date))}</div>
     <h1>${escapeHtml(issue.title)}</h1>
     ${issue.summary ? `<p style="color:#555">${escapeHtml(issue.summary)}</p>` : ""}
     <hr>
-    ${content}
-    <hr>
-    <p><a href="${webUrl}">Read this issue on the web</a></p>
+    ${excerpt}
+    ${cta}
     <div class="foot">
       You're receiving this because you subscribed at vinamrakumar.com${escapeHtml(since)}.<br>
       <a href="${unsubUrl}">Unsubscribe with one click</a> · <a href="${cfg.publicUrl}/privacy#newsletter">Privacy notice</a><br>
@@ -280,9 +313,9 @@ export function issueEmail(cfg: NewsletterConfig, issue: Insight, to: string, un
 
 ${issue.title.toUpperCase()}
 ${issue.summary ? `\n${issue.summary}\n` : ""}
-${htmlToText(content)}
+${htmlToText(excerpt)}
 
-Read on the web: ${webUrl}
+${cut ? `Continue reading: ${webUrl}${rest.length ? `\nAlso in this issue: ${rest.join(" · ")}` : ""}` : `Read on the web: ${webUrl}`}
 
 —
 You're receiving this because you subscribed at vinamrakumar.com${since}.

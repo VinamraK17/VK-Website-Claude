@@ -378,3 +378,60 @@ describe('CSS — shipped app.css hides everything the toggles control', () => {
     assert.ok(!btn.includes('data-service-only'), `"${def}" must stay visible when Services is off`);
   });
 });
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  4. Wording sweep — no toggle-controlled phrase is left uncontrolled
+// ══════════════════════════════════════════════════════════════════════════════
+// The innermost element wrapping each phrase must carry the controlling
+// attribute. Adding new service or job-search copy without wrapping it makes
+// this fail, instead of the copy silently staying visible when toggled off.
+describe('wording sweep — controlled phrases are wrapped on every public page', () => {
+  const SWEPT_PAGES = PUBLIC_PAGES.filter(f => f !== 'services.html'); // /services redirects when off
+  const body = html => html.slice(html.indexOf('<body'));               // skip <head> meta descriptions
+  const innermostOpenTag = (html, at) => {
+    const before = html.slice(0, at);
+    const tags = [...before.matchAll(/<(\/?)([a-z][a-z0-9]*)\b[^>]*>/gi)];
+    const stack = [];
+    for (const m of tags) {
+      if (/\/>$/.test(m[0]) || /^(i|br|img|input|meta|link)$/i.test(m[2])) continue;
+      if (m[1]) { const i = stack.map(t => t.name).lastIndexOf(m[2].toLowerCase()); if (i !== -1) stack.splice(i); }
+      else stack.push({ name: m[2].toLowerCase(), tag: m[0] });
+    }
+    return stack.at(-1)?.tag ?? '';
+  };
+  const RULES = [
+    { attr: 'data-service-only', phrases: ['Work With Me', 'Available for engagements', 'advisory engagements',
+      'commercial engagements', 'consulting roles', 'advisory conversation', 'AI strategy that ships',
+      'transformation needs someone'] },
+    { attr: 'data-job-signal', phrases: ['Open to VP'] },
+  ];
+  for (const { attr, phrases } of RULES) {
+    for (const f of SWEPT_PAGES) {
+      test(`${f}: every ${phrases.length > 1 ? 'service' : 'job-search'} phrase sits inside a [${attr}] element`, () => {
+        const html = body(read(`pages/${f}`));
+        for (const p of phrases) {
+          for (let at = html.indexOf(p); at !== -1; at = html.indexOf(p, at + 1)) {
+            const tag = innermostOpenTag(html, at);
+            assert.ok(tag.includes(attr), `${f}: "${p}" is inside ${tag || '(no element)'}, which lacks ${attr}`);
+          }
+        }
+      });
+    }
+  }
+
+  test('contact.html: the Status & Availability card is controlled by the availability toggle', () => {
+    const html = read('pages/contact.html');
+    const card = html.indexOf('<div data-availability');
+    assert.ok(card !== -1, 'status card must carry data-availability');
+    const label = html.indexOf('Status & Availability');
+    assert.ok(label > card && label < html.indexOf('Response time', card), 'the label must be inside the data-availability card');
+  });
+
+  test('every services-off alternative on index.html pairs with a services-on original', () => {
+    const html = read('pages/index.html');
+    const on  = (html.match(/data-service-only/g) || []).length;
+    const off = (html.match(/data-services-off-only/g) || []).length;
+    assert.equal(off, 4, 'expected alternatives for: hero badge, bio, CTA text, CTA button');
+    assert.ok(on >= off);
+  });
+});

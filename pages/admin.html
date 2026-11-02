@@ -46,7 +46,15 @@
         input[type="password"]:focus, input[type="text"]:focus { border-color: var(--accent); }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
         .pulse-dot { animation: pulse 2s ease-in-out infinite; }
-    </style>
+    
+        /* ── Settings toggle switch ─────────────────────────────────── */
+        .settings-toggle { position:relative; display:inline-flex; align-items:center; cursor:pointer; flex-shrink:0; }
+        .settings-toggle input { opacity:0; width:0; height:0; position:absolute; }
+        .settings-track { display:inline-block; width:44px; height:24px; background:var(--border); border-radius:12px; transition:background .2s; position:relative; }
+        .settings-thumb { position:absolute; top:3px; left:3px; width:18px; height:18px; background:#fff; border-radius:50%; transition:transform .2s; }
+        .settings-toggle input:checked + .settings-track { background:var(--accent); }
+        .settings-toggle input:checked + .settings-track .settings-thumb { transform:translateX(20px); }
+</style>
 </head>
 <body class="font-sans">
 
@@ -101,6 +109,7 @@
         <button class="tab-btn active pb-3 text-sm font-semibold" data-tab="messages" onclick="switchTab('messages')">Messages</button>
         <button class="tab-btn pb-3 text-sm font-semibold" style="color:var(--ink-faint)" data-tab="analytics" onclick="switchTab('analytics')">Analytics</button>
         <button class="tab-btn pb-3 text-sm font-semibold" style="color:var(--ink-faint)" data-tab="newsletter" onclick="switchTab('newsletter')">Newsletter</button>
+        <button class="tab-btn pb-3 text-sm font-semibold" style="color:var(--ink-faint)" data-tab="settings" onclick="switchTab('settings')">Settings</button>
     </div>
 
     <main class="px-6 py-6 max-w-7xl mx-auto">
@@ -241,6 +250,52 @@
                 <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Unsubscribe feedback (anonymous)</h3>
                 <div id="nl-feedback" class="space-y-3 text-sm"></div>
             </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="tab-settings" class="hidden">
+            <h2 class="text-sm font-semibold uppercase tracking-widest mb-6" style="color:var(--ink-faint)">Site Visibility Settings</h2>
+            <p class="text-xs mb-6" style="color:var(--ink-faint)">Changes take effect immediately for new visitors. Sections hidden below will not appear on the public site.</p>
+            <div class="card p-6 max-w-lg space-y-6">
+
+                <!-- Services toggle -->
+                <div class="flex items-center justify-between gap-6">
+                    <div>
+                        <p class="text-sm font-semibold" style="color:var(--ink)">Professional Services section</p>
+                        <p class="text-xs mt-1" style="color:var(--ink-faint)">Service cards on homepage and the /services page link.</p>
+                    </div>
+                    <label class="settings-toggle" title="Toggle services section">
+                        <input type="checkbox" id="toggle-show_services" onchange="saveSetting('show_services', this.checked)">
+                        <span class="settings-track"><span class="settings-thumb"></span></span>
+                    </label>
+                </div>
+
+                <!-- Availability badge toggle -->
+                <div class="flex items-center justify-between gap-6">
+                    <div>
+                        <p class="text-sm font-semibold" style="color:var(--ink)">&#34;Available for engagements&#34; badge</p>
+                        <p class="text-xs mt-1" style="color:var(--ink-faint)">Green availability indicator in the homepage hero.</p>
+                    </div>
+                    <label class="settings-toggle" title="Toggle availability badge">
+                        <input type="checkbox" id="toggle-show_availability" onchange="saveSetting('show_availability', this.checked)">
+                        <span class="settings-track"><span class="settings-thumb"></span></span>
+                    </label>
+                </div>
+
+                <!-- Job signals toggle -->
+                <div class="flex items-center justify-between gap-6">
+                    <div>
+                        <p class="text-sm font-semibold" style="color:var(--ink)">Job-search signals</p>
+                        <p class="text-xs mt-1" style="color:var(--ink-faint)">"Open to VP / Head of Digital Product roles in Europe" line in the hero.</p>
+                    </div>
+                    <label class="settings-toggle" title="Toggle job signals">
+                        <input type="checkbox" id="toggle-show_job_signals" onchange="saveSetting('show_job_signals', this.checked)">
+                        <span class="settings-track"><span class="settings-thumb"></span></span>
+                    </label>
+                </div>
+
+            </div>
+            <p id="settings-status" class="text-xs mt-4 font-mono" style="color:var(--accent);display:none"></p>
         </div>
     </main>
 </div>
@@ -571,7 +626,9 @@ function switchTab(name) {
     document.getElementById('tab-messages').classList.toggle('hidden', name !== 'messages');
     document.getElementById('tab-analytics').classList.toggle('hidden', name !== 'analytics');
     document.getElementById('tab-newsletter').classList.toggle('hidden', name !== 'newsletter');
+    document.getElementById('tab-settings').classList.toggle('hidden', name !== 'settings');
     if (name === 'newsletter') loadNewsletter();
+    if (name === 'settings') loadSettings();
 }
 
 
@@ -668,6 +725,36 @@ function esc(str) {
 function formatDate(iso) {
     const d = new Date(iso);
     return d.toLocaleDateString('en-CH',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('en-CH',{hour:'2-digit',minute:'2-digit'});
+}
+
+// ── Site Settings ────────────────────────────────────────────────────────────
+async function loadSettings() {
+    const res = await fetch('/api/site-settings');
+    if (!res.ok) return;
+    const s = await res.json();
+    for (const [key, val] of Object.entries(s)) {
+        const el = document.getElementById('toggle-' + key);
+        if (el) el.checked = Boolean(val);
+    }
+}
+
+async function saveSetting(key, value) {
+    const status = document.getElementById('settings-status');
+    try {
+        const res = await fetch('/api/admin/site-settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN },
+            body: JSON.stringify({ [key]: value }),
+        });
+        const data = await res.json();
+        if (status) {
+            status.textContent = res.ok ? '✓ Saved' : ('Error: ' + (data.error || res.status));
+            status.style.display = 'block';
+            setTimeout(() => { status.style.display = 'none'; }, 2500);
+        }
+    } catch (e) {
+        if (status) { status.textContent = 'Network error'; status.style.display = 'block'; }
+    }
 }
 </script>
 </body>

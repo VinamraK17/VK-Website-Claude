@@ -29,6 +29,8 @@ services:
       - NEWSLETTER_REPLY_TO=${NEWSLETTER_REPLY_TO:-}
       - NEWSLETTER_TEST_TO=${NEWSLETTER_TEST_TO:-}
       - NEWSLETTER_SEND_INTERVAL_MS=${NEWSLETTER_SEND_INTERVAL_MS:-1000}
+      # Email carries the opening section + a link; set to 1 to send whole issues.
+      - NEWSLETTER_EMAIL_FULL=${NEWSLETTER_EMAIL_FULL:-}
       - PUBLIC_URL=${PUBLIC_URL:-https://vinamrakumar.com}
     ports:
       - "3000:3000"

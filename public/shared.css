@@ -322,5 +322,7 @@ html[data-hide-services] a[href="/services"],
 html[data-hide-services] #services-section,
 html[data-hide-services] [data-service-only],
 html[data-hide-availability] #availability-badge,
+html[data-hide-availability] [data-availability],
+html[data-hide-job-signals] [data-job-signal],
 html[data-hide-job-signals] #job-signals { display: none !important; }
 html:not([data-hide-services]) [data-services-off-only] { display: none !important; }

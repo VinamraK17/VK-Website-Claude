@@ -56,7 +56,7 @@
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-400-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-700-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
-    <link rel="stylesheet" href="/app.css?v=1.5.3">
+    <link rel="stylesheet" href="/app.css?v=1.5.4">
 
     <!-- Theme + site-visibility flash prevention: must run before first paint, so it is intentionally render-blocking. -->
     <script>(function(){var d=document.documentElement,m=localStorage.getItem("theme-mode");if(m)d.setAttribute("data-mode",m);try{var s=JSON.parse(localStorage.getItem("vk_site_settings")||"{}");if(s.show_services===false)d.setAttribute("data-hide-services","");if(s.show_availability===false)d.setAttribute("data-hide-availability","");if(s.show_job_signals===false)d.setAttribute("data-hide-job-signals","");}catch(e){}})()</script>
@@ -113,7 +113,8 @@
                     <div class="mb-6" id="availability-badge">
                         <span class="available-badge">
                             <span class="available-dot"></span>
-                            Available for engagements
+                            <span data-service-only>Available for engagements</span>
+                            <span data-services-off-only>Open to new opportunities</span>
                         </span>
                     </div>
                     <span class="section-label mb-8 block">From Controlling Airspace to Controlling Roadmaps</span>
@@ -123,8 +124,10 @@
                     <p class="max-w-2xl text-xl text-[var(--color-ink)]/50 font-light leading-relaxed mb-8">
                         MIT-certified Product Leader with 20+ years of experience bridging business strategy with technical execution to unlock multi-million franc value. Currently leading three of the four streams of Sunrise&rsquo;s enterprise AI transformation programme, having led the team that built NEXUS &mdash; an AI troubleshooting platform reaching 5M+ customers &mdash; after a distinguished tenure at Lufthansa Systems FlightNav AG and early career foundations in Air Traffic Control.
                     </p>
-                    <p class="max-w-xl text-sm text-[var(--color-ink)]/30 font-light leading-relaxed mb-12 italic border-l-2 border-[var(--color-accent)]/20 pl-6" id="job-signals">
-                        Available for advisory engagements, fractional leadership, coaching, and speaking. Open to VP / Head of Digital Product &amp; Transformation roles in Europe. Swiss-based. Globally experienced.
+                    <p class="max-w-xl text-sm text-[var(--color-ink)]/30 font-light leading-relaxed mb-12 italic border-l-2 border-[var(--color-accent)]/20 pl-6">
+                        <span data-service-only>Available for advisory engagements, fractional leadership, coaching, and speaking.</span>
+                        <span id="job-signals" data-job-signal>Open to VP / Head of Digital Product &amp; Transformation roles in Europe.</span>
+                        Swiss-based. Globally experienced.
                     </p>
                     <div class="flex flex-wrap gap-4 items-center">
                         <a href="/contact" class="flex items-center gap-2 group border border-[var(--color-ink)]/10 px-6 py-3 rounded-2xl hover:bg-[var(--color-ink)]/5 transition-all">
@@ -223,7 +226,7 @@
                 <div class="text-lg text-[var(--color-ink)]/60 font-light leading-relaxed space-y-6">
                     <p>Product and transformation leader with a proven track record of owning product vision, driving cross-functional execution, and delivering measurable outcomes in ambiguous and evolving contexts. I specialise in AI-driven product development &mdash; agentic AI platform selection and delivery, LLM-powered customer platforms, and the governance that keeps them safe to run in regulated industries.</p>
                     <p>My experience spans highly regulated, large-scale environments &mdash; telecom (Sunrise GmbH) and aviation (Lufthansa Systems FlightNav AG) &mdash; where I lead teams across IT, engineering, and business to design and validate MVPs from concept to rollout. Aviation taught me to work to ICAO standards, defined data quality requirements and audit-ready documentation; that is the same discipline enterprise AI governance now demands.</p>
-                    <p>Outside of commercial engagements, I give back through pro bono mentoring — helping professionals navigate career transitions, first-time leadership roles, and pivots into AI and product management.</p>
+                    <p><span data-service-only>Outside of commercial engagements,</span><span data-services-off-only>Outside of my day-to-day work,</span> I give back through pro bono mentoring — helping professionals navigate career transitions, first-time leadership roles, and pivots into AI and product management.</p>
                     <div class="p-8 border border-[var(--color-border)] rounded-3xl bg-[var(--color-glass)] backdrop-blur-md relative overflow-hidden mt-8">
                         <div class="absolute top-0 right-0 w-64 h-64 bg-[var(--color-accent)]/5 blur-[80px] -mr-32 -mt-32 rounded-full"></div>
                         <span class="text-[10px] font-mono text-[var(--color-accent)] uppercase tracking-wider mb-4 block font-bold">Leadership Philosophy</span>
@@ -288,10 +291,10 @@
             <div class="cta-banner rounded-[32px] p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div class="max-w-2xl">
                     <p class="text-[10px] font-mono text-[var(--color-accent)] uppercase tracking-widest mb-3">Why it matters</p>
-                    <p class="text-2xl md:text-3xl font-bold text-[var(--color-ink)] tracking-tight leading-snug">20 years of high-stakes delivery — from controlling airspace to shipping AI products at CHF 1B+ scale. If your transformation needs someone who has done it, not just advised on it, let's talk.</p>
+                    <p class="text-2xl md:text-3xl font-bold text-[var(--color-ink)] tracking-tight leading-snug">20 years of high-stakes delivery — from controlling airspace to shipping AI products at CHF 1B+ scale. <span data-service-only>If your transformation needs someone who has done it, not just advised on it, let's talk.</span><span data-services-off-only>If you are hiring a product leader who has done it, not just advised on it, let's talk.</span></p>
                 </div>
                 <a href="/contact" class="shrink-0 flex items-center gap-3 px-8 py-4 bg-[var(--color-accent)] text-[var(--color-surface)] rounded-2xl text-[11px] font-bold uppercase tracking-wider hover:opacity-90 transition-all font-mono">
-                    Work With Me <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <span data-service-only>Work With Me</span><span data-services-off-only>Get in Touch</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
             </div>
         </section>
@@ -372,6 +375,6 @@
     </footer>
 
     <!-- Shared JS -->
-    <script src="/shared.js?v=1.5.3" defer></script>
+    <script src="/shared.js?v=1.5.4" defer></script>
 </body>
 </html>

@@ -112,3 +112,11 @@ model UnsubscribeFeedback {
   comment   String?
   createdAt DateTime @default(now())
 }
+
+// Key/value store for site-wide feature toggles controlled from the admin panel.
+// Keys: show_services | show_availability | show_job_signals
+// Values: "true" | "false"
+model SiteSettings {
+  key   String @id
+  value String
+}

@@ -241,6 +241,21 @@ async function seedData() {
       await prisma.experience.create({ data: row });
     }
   }
+
+  // Seed default site-settings if not already present. upsert(create-only)
+  // means re-deploys never overwrite values the admin has changed.
+  const DEFAULT_SETTINGS: Array<{ key: string; value: string }> = [
+    { key: "show_services",    value: "true" },
+    { key: "show_availability", value: "true" },
+    { key: "show_job_signals", value: "true" },
+  ];
+  for (const s of DEFAULT_SETTINGS) {
+    await prisma.siteSettings.upsert({
+      where:  { key: s.key },
+      update: {},          // never overwrite an admin change
+      create: s,
+    });
+  }
 }
 
 async function startServer() {
@@ -490,6 +505,59 @@ async function startServer() {
         persistence: "Storage Unavailable",
         status: "offline"
       });
+    }
+  });
+
+  // ── Site Settings API ──────────────────────────────────────────────────────
+  // In-memory cache so every page-load doesn't round-trip to SQLite.
+  // The cache is invalidated whenever an admin writes a new value.
+  const SETTINGS_KEYS = ["show_services", "show_availability", "show_job_signals"] as const;
+  type SettingsKey = typeof SETTINGS_KEYS[number];
+  type SiteSettingsMap = Record<SettingsKey, boolean>;
+  let settingsCache: { data: SiteSettingsMap; at: number } | null = null;
+  const SETTINGS_CACHE_MS = 30_000;
+
+  async function readSettings(): Promise<SiteSettingsMap> {
+    if (settingsCache && Date.now() - settingsCache.at < SETTINGS_CACHE_MS) {
+      return settingsCache.data;
+    }
+    const rows = await prisma.siteSettings.findMany();
+    const data = Object.fromEntries(
+      SETTINGS_KEYS.map(k => [k, rows.find(r => r.key === k)?.value !== "false"])
+    ) as SiteSettingsMap;
+    settingsCache = { data, at: Date.now() };
+    return data;
+  }
+
+  // Public: returns the three boolean toggles. Used by shared.js on every page.
+  app.get("/api/site-settings", async (_req, res) => {
+    try {
+      res.json(await readSettings());
+    } catch {
+      // Fail open — all sections visible if DB is unavailable.
+      res.json({ show_services: true, show_availability: true, show_job_signals: true });
+    }
+  });
+
+  // Admin: update one or more settings values.
+  app.post("/api/admin/site-settings", requireAdmin, async (req, res) => {
+    try {
+      const updates: Partial<Record<SettingsKey, boolean>> = req.body;
+      const validKeys = SETTINGS_KEYS.filter(k => k in updates);
+      if (validKeys.length === 0) return res.status(400).json({ error: "No valid keys provided." });
+      await Promise.all(
+        validKeys.map(k =>
+          prisma.siteSettings.upsert({
+            where:  { key: k },
+            update: { value: String(updates[k]) },
+            create: { key: k, value: String(updates[k]) },
+          })
+        )
+      );
+      settingsCache = null; // invalidate
+      res.json({ ok: true, updated: validKeys });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
     }
   });
 

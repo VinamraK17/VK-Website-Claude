@@ -215,10 +215,52 @@ function highlightActiveNav() {
     });
 }
 
+// ── Site settings (section visibility toggles) ───────────────────────────────
+async function applySiteSettings() {
+    try {
+        const res = await fetch('/api/site-settings');
+        if (!res.ok) return; // fail open — all sections stay visible
+        const s = await res.json();
+
+        // Availability badge (index.html)
+        const badge = document.getElementById('availability-badge');
+        if (badge) badge.style.display = s.show_availability ? '' : 'none';
+
+        // Job signals paragraph (index.html)
+        const jobSignals = document.getElementById('job-signals');
+        if (jobSignals) jobSignals.style.display = s.show_job_signals ? '' : 'none';
+
+        // Services section (index.html)
+        const services = document.getElementById('services-section');
+        if (services) services.style.display = s.show_services ? '' : 'none';
+
+        // Services-related interest pill on contact.html
+        // When services are off, hide the "Enterprise AI Advisory" pill and
+        // fall back to whichever pill is first.
+        const pillContainer = document.getElementById('interest-pills-container');
+        if (pillContainer && !s.show_services) {
+            const servicePill = pillContainer.dataset.servicePill;
+            const pills = pillContainer.querySelectorAll('.interest-pill');
+            pills.forEach(btn => {
+                if (btn.textContent.trim() === servicePill) btn.style.display = 'none';
+            });
+            // If that pill is currently selected, switch to the first visible one
+            const hidden = document.getElementById('selected-interest-input');
+            if (hidden && hidden.value === servicePill) {
+                const first = [...pills].find(b => b.style.display !== 'none');
+                if (first) first.click();
+            }
+        }
+    } catch (_) {
+        // Fail open — leave all sections visible if the fetch fails.
+    }
+}
+
 // ── Bootstrap on DOM ready ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     updateThemeUI();
     initIcons();
+    applySiteSettings();
     initScrollReveal();
     initStatCounters();
     initLinkTracking();

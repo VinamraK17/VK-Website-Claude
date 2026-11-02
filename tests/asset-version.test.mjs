@@ -52,12 +52,5 @@ describe('asset version guard — edits to cached assets must bump ?v=', () => {
   }
 });
 
-describe('/api/site-settings is never cached', () => {
-  test('server.ts sets Cache-Control: no-store on GET /api/site-settings', () => {
-    const server = fs.readFileSync(path.join(ROOT, 'server.ts'), 'utf8');
-    const i = server.indexOf('app.get("/api/site-settings"');
-    assert.ok(i !== -1, 'GET /api/site-settings not found');
-    assert.match(server.slice(i, i + 400), /Cache-Control["'],\s*["']no-store/,
-      'GET /api/site-settings must send Cache-Control: no-store so admin toggles take effect on the next page load');
-  });
-});
+// Cache-Control: no-store on /api/site-settings is verified over HTTP in
+// tests/site-settings.e2e.test.mjs.

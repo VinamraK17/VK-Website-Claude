@@ -330,3 +330,14 @@ textarea.nl-input { border-radius: 12px; }
 .nl-check { accent-color: var(--color-accent); width: 1rem; height: 1rem; flex-shrink: 0; }
 .newsletter-box { background: color-mix(in srgb, var(--color-ink) 2%, transparent); }
 
+/* ── Site visibility toggles (admin → Settings) ──────────────────────────────
+   The data-hide-* attributes are set on <html> before first paint by the inline
+   head script (from the last-known settings in localStorage) and refreshed by
+   applySiteSettings() in shared.js, so hidden items never flash into view. */
+html[data-hide-services] a[href="/services"],
+html[data-hide-services] #services-section,
+html[data-hide-services] [data-service-only],
+html[data-hide-availability] #availability-badge,
+html[data-hide-job-signals] #job-signals { display: none !important; }
+html:not([data-hide-services]) [data-services-off-only] { display: none !important; }
+

@@ -531,6 +531,9 @@ async function startServer() {
 
   // Public: returns the three boolean toggles. Used by shared.js on every page.
   app.get("/api/site-settings", async (_req, res) => {
+    // Never cache: a toggle in the admin panel must reach visitors on their
+    // next page load, not after a browser or Cloudflare cache expires.
+    res.setHeader("Cache-Control", "no-store");
     try {
       res.json(await readSettings());
     } catch {

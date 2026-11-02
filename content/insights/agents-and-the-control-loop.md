@@ -45,3 +45,17 @@ Even so, two figures are worth holding side by side, because they measure the sa
 For someone running AI in operations, the useful reading is the window between "immediately" and "within minutes", which is where an incident grows. Your own measured time-to-stop for each agent will tell you more than any survey, this one included.
 
 Source: [Guild.ai, "The AI Agent Management Gap Is Growing", GlobeNewswire, 22 September 2026](https://www.globenewswire.com/news-release/2026/09/22/3366611/0/en/the-ai-agent-management-gap-is-growing.html)
+
+---
+
+## From the logbook
+
+In my early years, I was a tower controller at New Delhi airport, responsible for departures and arrivals.
+
+One morning shift, a helicopter flying under visual flight rules came in from the north without contacting me on the tower frequency. Nobody had told me it had been handed over, and it stayed silent for several minutes. Then it crossed the landing runway, just above an arriving aircraft. I could see exactly what was happening in front of me, and I could not control it. I could only act once the helicopter finally called on tower frequency.
+
+That gap, between having the right information and getting the handover at the right time, meant I had to report it as an incident.
+
+What I took from it: seeing a problem is not the same as controlling it. Control lives in the channel and the handover, and a system is only as safe as the moment nobody can reach it.
+
+I still ask the same question of every automated system I work with: if it does something unexpected right now, who can reach it, and how fast?

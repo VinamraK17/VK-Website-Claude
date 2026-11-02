@@ -216,43 +216,42 @@ function highlightActiveNav() {
 }
 
 // ── Site settings (section visibility toggles) ───────────────────────────────
+// Hiding is done by CSS (html[data-hide-*] rules in shared.css). This function
+// syncs the attributes with the server and remembers the result so the inline
+// head script can apply it before first paint on the next page load.
+const SITE_FLAGS = {
+    show_services:     'data-hide-services',
+    show_availability: 'data-hide-availability',
+    show_job_signals:  'data-hide-job-signals',
+};
+
 async function applySiteSettings() {
     try {
-        const res = await fetch('/api/site-settings');
-        if (!res.ok) return; // fail open — all sections stay visible
+        const res = await fetch('/api/site-settings', { cache: 'no-store' });
+        if (!res.ok) return; // fail open: keep whatever is currently shown
         const s = await res.json();
+        const root = document.documentElement;
+        for (const [key, attr] of Object.entries(SITE_FLAGS)) {
+            if (s[key] === false) root.setAttribute(attr, '');
+            else root.removeAttribute(attr);
+        }
+        try { localStorage.setItem('vk_site_settings', JSON.stringify(s)); } catch (_) {}
 
-        // Availability badge (index.html)
-        const badge = document.getElementById('availability-badge');
-        if (badge) badge.style.display = s.show_availability ? '' : 'none';
-
-        // Job signals paragraph (index.html)
-        const jobSignals = document.getElementById('job-signals');
-        if (jobSignals) jobSignals.style.display = s.show_job_signals ? '' : 'none';
-
-        // Services section (index.html)
-        const services = document.getElementById('services-section');
-        if (services) services.style.display = s.show_services ? '' : 'none';
-
-        // Services-related interest pill on contact.html
-        // When services are off, hide the "Enterprise AI Advisory" pill and
-        // fall back to whichever pill is first.
-        const pillContainer = document.getElementById('interest-pills-container');
-        if (pillContainer && !s.show_services) {
-            const servicePill = pillContainer.dataset.servicePill;
-            const pills = pillContainer.querySelectorAll('.interest-pill');
-            pills.forEach(btn => {
-                if (btn.textContent.trim() === servicePill) btn.style.display = 'none';
-            });
-            // If that pill is currently selected, switch to the first visible one
-            const hidden = document.getElementById('selected-interest-input');
-            if (hidden && hidden.value === servicePill) {
-                const first = [...pills].find(b => b.style.display !== 'none');
-                if (first) first.click();
+        // contact.html: if the selected interest pill is a service that is now
+        // hidden, select the services-off default ("Career Role") instead.
+        const pills = document.getElementById('interest-pills-container');
+        const selected = document.getElementById('selected-interest-input');
+        if (pills && selected && s.show_services === false) {
+            const all = [...pills.querySelectorAll('.interest-pill')];
+            const current = all.find(b => b.textContent.trim() === selected.value);
+            if (!current || current.hasAttribute('data-service-only')) {
+                const target = all.find(b => b.textContent.trim() === pills.dataset.servicesOffDefault)
+                    || all.find(b => !b.hasAttribute('data-service-only'));
+                if (target) target.click();
             }
         }
     } catch (_) {
-        // Fail open — leave all sections visible if the fetch fails.
+        // Fail open: leave everything visible if the request fails.
     }
 }
 

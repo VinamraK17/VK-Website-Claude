@@ -53,53 +53,23 @@ describe('SiteSettings Prisma model', () => {
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  SUITE 2 — server.ts seeding and API
+//  SUITE 2 — server.ts wiring (behaviour is tested in site-settings.e2e.test.mjs)
 // ══════════════════════════════════════════════════════════════════════════════
-describe('server.ts — site-settings seed and API endpoints', () => {
-  const SETTING_KEYS = ['show_services', 'show_availability', 'show_job_signals'];
-
-  for (const key of SETTING_KEYS) {
-    test(`seeds "${key}" with a default value`, () => {
-      assert.ok(
-        SERVER.includes(`key: "${key}"`),
-        `server.ts must upsert a default for "${key}" in seedData()`
-      );
-    });
-  }
-
-  test('GET /api/site-settings endpoint is registered', () => {
-    assert.match(SERVER, /app\.get\(["']\/api\/site-settings["']/, 'GET /api/site-settings not found');
+describe('server.ts — wires lib/site-settings.ts', () => {
+  test('creates the settings instance from the Prisma client', () => {
+    assert.match(SERVER, /createSiteSettings\(prisma\)/);
   });
-
-  test('POST /api/admin/site-settings endpoint is registered', () => {
-    assert.match(SERVER, /app\.post\(["']\/api\/admin\/site-settings["']/, 'POST /api/admin/site-settings not found');
+  test('seeds defaults during seedData()', () => {
+    assert.ok(SERVER.includes('await siteSettings.seedDefaults()'));
   });
-
-  test('POST /api/admin/site-settings requires admin auth (requireAdmin middleware)', () => {
-    const idx = SERVER.indexOf('"/api/admin/site-settings"');
-    assert.ok(idx !== -1, '/api/admin/site-settings not found in server.ts');
-    const surrounding = SERVER.slice(idx - 10, idx + 60);
-    assert.ok(
-      surrounding.includes('requireAdmin'),
-      'POST /api/admin/site-settings must pass requireAdmin middleware'
-    );
+  test('registers the settings routes behind requireAdmin', () => {
+    assert.match(SERVER, /registerSiteSettingsRoutes\(app, siteSettings, requireAdmin\)/);
   });
-
-  test('settings cache is invalidated after a write (settingsCache = null)', () => {
-    assert.ok(
-      SERVER.includes('settingsCache = null'),
-      'server.ts must set settingsCache = null after a successful admin write'
-    );
+  test('/services is gated by servicesGate', () => {
+    assert.match(SERVER, /app\.get\("\/services", servicesGate\(siteSettings\)/);
   });
-
-  test('GET /api/site-settings fails open (returns all-true on error)', () => {
-    // Check the catch block returns safe defaults
-    const getIdx = SERVER.indexOf('app.get("/api/site-settings"');
-    const block  = SERVER.slice(getIdx, getIdx + 800);
-    assert.ok(
-      block.includes('show_services: true') && block.includes('show_availability: true'),
-      'GET /api/site-settings catch block must return all-true defaults'
-    );
+  test('sitemap drops /services while it is switched off', () => {
+    assert.ok(SERVER.includes('removeServicesFromSitemap(base)'));
   });
 });
 
@@ -124,10 +94,10 @@ describe('index.html — toggleable section IDs', () => {
 //  SUITE 4 — contact.html service pill attribute
 // ══════════════════════════════════════════════════════════════════════════════
 describe('contact.html — service pill data attribute', () => {
-  test('interest-pills-container has data-service-pill attribute', () => {
+  test('interest-pills-container declares the services-off default pill', () => {
     assert.ok(
-      CONTACT.includes('data-service-pill='),
-      'contact.html: #interest-pills-container must have a data-service-pill attribute for JS-driven hiding'
+      CONTACT.includes('data-services-off-default='),
+      'contact.html: #interest-pills-container must declare data-services-off-default'
     );
   });
 });
@@ -141,11 +111,11 @@ describe('shared.js — applySiteSettings()', () => {
   });
 
   test('applySiteSettings fetches /api/site-settings', () => {
-    assert.ok(SHARED_JS.includes("fetch('/api/site-settings')"), 'applySiteSettings must fetch /api/site-settings');
+    assert.ok(SHARED_JS.includes("fetch('/api/site-settings'"), 'applySiteSettings must fetch /api/site-settings');
   });
 
   test('applySiteSettings handles all three toggle keys', () => {
-    const fn = SHARED_JS.slice(SHARED_JS.indexOf('async function applySiteSettings()'));
+    const fn = SHARED_JS.slice(SHARED_JS.indexOf('const SITE_FLAGS'));
     assert.ok(fn.includes('show_availability'), 'applySiteSettings must handle show_availability');
     assert.ok(fn.includes('show_job_signals'),  'applySiteSettings must handle show_job_signals');
     assert.ok(fn.includes('show_services'),     'applySiteSettings must handle show_services');

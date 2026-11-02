@@ -32,10 +32,10 @@
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-400-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-700-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
-    <link rel="stylesheet" href="/app.css?v=1.5.2">
+    <link rel="stylesheet" href="/app.css?v=1.5.3">
 
-    <!-- Theme flash prevention: must run before first paint, so it is intentionally render-blocking. -->
-    <script>(function(){var m=localStorage.getItem("theme-mode");if(m)document.documentElement.setAttribute("data-mode",m);})()</script>
+    <!-- Theme + site-visibility flash prevention: must run before first paint, so it is intentionally render-blocking. -->
+    <script>(function(){var d=document.documentElement,m=localStorage.getItem("theme-mode");if(m)d.setAttribute("data-mode",m);try{var s=JSON.parse(localStorage.getItem("vk_site_settings")||"{}");if(s.show_services===false)d.setAttribute("data-hide-services","");if(s.show_availability===false)d.setAttribute("data-hide-availability","");if(s.show_job_signals===false)d.setAttribute("data-hide-job-signals","");}catch(e){}})()</script>
 </head>
 <body class="font-sans">
 
@@ -281,6 +281,6 @@
         </div>
     </footer>
 
-    <script src="/shared.js?v=1.5.2" defer></script>
+    <script src="/shared.js?v=1.5.3" defer></script>
 </body>
 </html>

@@ -12,6 +12,7 @@ import crypto from "crypto";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { UAParser } from "ua-parser-js";
+import { createSiteSettings, registerSiteSettingsRoutes, servicesGate, removeServicesFromSitemap } from "./lib/site-settings";
 
 dotenv.config();
 
@@ -24,6 +25,9 @@ const prisma = new PrismaClient({
     },
   },
 });
+
+// Site visibility toggles (admin → Settings). See lib/site-settings.ts.
+const siteSettings = createSiteSettings(prisma);
 
 // Escape HTML special characters to prevent injection in email bodies
 function escapeHtml(str: string): string {
@@ -242,20 +246,8 @@ async function seedData() {
     }
   }
 
-  // Seed default site-settings if not already present. upsert(create-only)
-  // means re-deploys never overwrite values the admin has changed.
-  const DEFAULT_SETTINGS: Array<{ key: string; value: string }> = [
-    { key: "show_services",    value: "true" },
-    { key: "show_availability", value: "true" },
-    { key: "show_job_signals", value: "true" },
-  ];
-  for (const s of DEFAULT_SETTINGS) {
-    await prisma.siteSettings.upsert({
-      where:  { key: s.key },
-      update: {},          // never overwrite an admin change
-      create: s,
-    });
-  }
+  // Create any missing site-settings rows as "true"; never overwrites admin changes.
+  await siteSettings.seedDefaults();
 }
 
 async function startServer() {
@@ -312,9 +304,11 @@ async function startServer() {
 
   // Sitemap: the static file plus every published Insights issue. Registered
   // before express.static so it wins over public/sitemap.xml.
-  app.get("/sitemap.xml", (req, res) => {
+  app.get("/sitemap.xml", async (req, res) => {
     try {
-      const base = fs.readFileSync(path.join(process.cwd(), "public", "sitemap.xml"), "utf8");
+      let base = fs.readFileSync(path.join(process.cwd(), "public", "sitemap.xml"), "utf8");
+      // Leave /services out while it is switched off in admin → Settings.
+      if (!(await siteSettings.readOrDefault()).show_services) base = removeServicesFromSitemap(base);
       res.type("application/xml").setHeader("Cache-Control", "public, max-age=3600");
       res.send(extendSitemap(base, loadInsights()));
     } catch (err: any) {
@@ -508,61 +502,8 @@ async function startServer() {
     }
   });
 
-  // ── Site Settings API ──────────────────────────────────────────────────────
-  // In-memory cache so every page-load doesn't round-trip to SQLite.
-  // The cache is invalidated whenever an admin writes a new value.
-  const SETTINGS_KEYS = ["show_services", "show_availability", "show_job_signals"] as const;
-  type SettingsKey = typeof SETTINGS_KEYS[number];
-  type SiteSettingsMap = Record<SettingsKey, boolean>;
-  let settingsCache: { data: SiteSettingsMap; at: number } | null = null;
-  const SETTINGS_CACHE_MS = 30_000;
-
-  async function readSettings(): Promise<SiteSettingsMap> {
-    if (settingsCache && Date.now() - settingsCache.at < SETTINGS_CACHE_MS) {
-      return settingsCache.data;
-    }
-    const rows = await prisma.siteSettings.findMany();
-    const data = Object.fromEntries(
-      SETTINGS_KEYS.map(k => [k, rows.find(r => r.key === k)?.value !== "false"])
-    ) as SiteSettingsMap;
-    settingsCache = { data, at: Date.now() };
-    return data;
-  }
-
-  // Public: returns the three boolean toggles. Used by shared.js on every page.
-  app.get("/api/site-settings", async (_req, res) => {
-    // Never cache: a toggle in the admin panel must reach visitors on their
-    // next page load, not after a browser or Cloudflare cache expires.
-    res.setHeader("Cache-Control", "no-store");
-    try {
-      res.json(await readSettings());
-    } catch {
-      // Fail open — all sections visible if DB is unavailable.
-      res.json({ show_services: true, show_availability: true, show_job_signals: true });
-    }
-  });
-
-  // Admin: update one or more settings values.
-  app.post("/api/admin/site-settings", requireAdmin, async (req, res) => {
-    try {
-      const updates: Partial<Record<SettingsKey, boolean>> = req.body;
-      const validKeys = SETTINGS_KEYS.filter(k => k in updates);
-      if (validKeys.length === 0) return res.status(400).json({ error: "No valid keys provided." });
-      await Promise.all(
-        validKeys.map(k =>
-          prisma.siteSettings.upsert({
-            where:  { key: k },
-            update: { value: String(updates[k]) },
-            create: { key: k, value: String(updates[k]) },
-          })
-        )
-      );
-      settingsCache = null; // invalidate
-      res.json({ ok: true, updated: validKeys });
-    } catch (err: any) {
-      res.status(500).json({ error: err.message });
-    }
-  });
+  // ── Site Settings (admin → Settings toggles) — see lib/site-settings.ts ──
+  registerSiteSettingsRoutes(app, siteSettings, requireAdmin);
 
   // Analytics Endpoint
   // Per-IP rate limit for analytics: 120 events per minute.
@@ -889,7 +830,8 @@ async function startServer() {
 
   app.get("/admin", (req, res) => res.sendFile(path.join(pagesDir, "admin.html")));
   app.get("/", (req, res) => res.sendFile(path.join(pagesDir, "index.html")));
-  app.get("/services", (req, res) => res.sendFile(path.join(pagesDir, "services.html")));
+  // Redirects home while Services is switched off in admin → Settings.
+  app.get("/services", servicesGate(siteSettings), (req, res) => res.sendFile(path.join(pagesDir, "services.html")));
   app.get("/projects", (req, res) => res.sendFile(path.join(pagesDir, "projects.html")));
   app.get("/experience", (req, res) => res.sendFile(path.join(pagesDir, "experience.html")));
   app.get("/contact", (req, res) => res.sendFile(path.join(pagesDir, "contact.html")));

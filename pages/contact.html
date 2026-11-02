@@ -30,10 +30,10 @@
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-400-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-700-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
-    <link rel="stylesheet" href="/app.css?v=1.5.2">
+    <link rel="stylesheet" href="/app.css?v=1.5.3">
 
-    <!-- Theme flash prevention: must run before first paint, so it is intentionally render-blocking. -->
-    <script>(function(){var m=localStorage.getItem("theme-mode");if(m)document.documentElement.setAttribute("data-mode",m);})()</script>
+    <!-- Theme + site-visibility flash prevention: must run before first paint, so it is intentionally render-blocking. -->
+    <script>(function(){var d=document.documentElement,m=localStorage.getItem("theme-mode");if(m)d.setAttribute("data-mode",m);try{var s=JSON.parse(localStorage.getItem("vk_site_settings")||"{}");if(s.show_services===false)d.setAttribute("data-hide-services","");if(s.show_availability===false)d.setAttribute("data-hide-availability","");if(s.show_job_signals===false)d.setAttribute("data-hide-job-signals","");}catch(e){}})()</script>
 </head>
 <body class="font-sans">
 
@@ -85,7 +85,10 @@
             <h1 class="text-4xl sm:text-6xl md:text-8xl font-bold tracking-tighter uppercase display-gradient leading-[0.85] mb-6">
                 Let's build <br><span class="text-[var(--color-ink)]/30 italic font-light">something real.</span>
             </h1>
-            <p class="text-[var(--color-ink)]/40 max-w-2xl text-lg font-light">
+            <p class="text-[var(--color-ink)]/40 max-w-2xl text-lg font-light" data-services-off-only>
+                Hiring for a VP or Head of Digital Product &amp; Transformation role in Europe? I would welcome the conversation. All enquiries are answered personally.
+            </p>
+            <p class="text-[var(--color-ink)]/40 max-w-2xl text-lg font-light" data-service-only>
                 Whether you need an AI strategy that ships, senior product leadership on a fractional basis, coaching toward a VP role, or a speaker who has lived the transformation — reach out. All enquiries are answered personally.
             </p>
         </section>
@@ -96,7 +99,8 @@
                 <div class="p-10 md:p-14 flex flex-col justify-center order-2">
                     <span class="section-label block mb-4">Get in touch</span>
                     <p class="text-2xl md:text-3xl font-bold text-[var(--color-ink)] tracking-tight leading-snug mb-5">All enquiries answered personally.</p>
-                    <p class="text-[var(--color-ink)]/50 text-base font-light leading-relaxed">Response time under 24 hours. Whether it is a short advisory conversation or a longer fractional engagement, the first reply comes from me.</p>
+                    <p class="text-[var(--color-ink)]/50 text-base font-light leading-relaxed" data-services-off-only>Response time under 24 hours. Whether it is an introductory call or a hiring conversation, the first reply comes from me.</p>
+                    <p class="text-[var(--color-ink)]/50 text-base font-light leading-relaxed" data-service-only>Response time under 24 hours. Whether it is a short advisory conversation or a longer fractional engagement, the first reply comes from me.</p>
                 </div>
                 <div class="order-1 relative min-h-[420px] md:min-h-[560px]">
                     <picture>
@@ -146,7 +150,8 @@
                                     <div class="w-2 h-2 rounded-full bg-[var(--color-accent)] animate-pulse"></div>
                                     <span class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]">Status & Availability</span>
                                 </div>
-                                <p class="text-xs text-[var(--color-ink-faint)] leading-normal font-light">Available for consulting roles, advisory mandates, and board consultations.</p>
+                                <p class="text-xs text-[var(--color-ink-faint)] leading-normal font-light" data-services-off-only>Open to VP / Head of Digital Product &amp; Transformation roles in Europe.</p>
+                                <p class="text-xs text-[var(--color-ink-faint)] leading-normal font-light" data-service-only>Available for consulting roles, advisory mandates, and board consultations.</p>
                                 <div class="flex items-center gap-2 mt-1">
                                     <i data-lucide="calendar" class="w-3.5 h-3.5 text-[var(--color-accent)]"></i>
                                     <span class="text-[10px] font-mono text-[var(--color-accent)] uppercase tracking-wider">Response time: &lt; 24 Hours</span>
@@ -167,11 +172,11 @@
                             <!-- Interest pills -->
                             <div class="space-y-2">
                                 <label class="text-[10px] uppercase tracking-widest text-[var(--color-ink)]/30 ml-2">Area of Interest</label>
-                                <div class="flex flex-wrap gap-2" id="interest-pills-container" data-service-pill="Enterprise AI Advisory">
-                                    <button type="button" onclick="selectInterest(this, 'Enterprise AI Advisory')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-[var(--color-ink)] text-[var(--color-surface)] border-[var(--color-ink)] font-bold shadow-md">Enterprise AI Advisory</button>
-                                    <button type="button" onclick="selectInterest(this, 'Fractional HoP')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Fractional HoP</button>
-                                    <button type="button" onclick="selectInterest(this, 'Coaching')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Coaching</button>
-                                    <button type="button" onclick="selectInterest(this, 'Speaking')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Speaking</button>
+                                <div class="flex flex-wrap gap-2" id="interest-pills-container" data-services-off-default="Career Role">
+                                    <button type="button" data-service-only onclick="selectInterest(this, 'Enterprise AI Advisory')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-[var(--color-ink)] text-[var(--color-surface)] border-[var(--color-ink)] font-bold shadow-md">Enterprise AI Advisory</button>
+                                    <button type="button" data-service-only onclick="selectInterest(this, 'Fractional HoP')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Fractional HoP</button>
+                                    <button type="button" data-service-only onclick="selectInterest(this, 'Coaching')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Coaching</button>
+                                    <button type="button" data-service-only onclick="selectInterest(this, 'Speaking')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Speaking</button>
                                     <button type="button" onclick="selectInterest(this, 'Mentoring')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Mentoring</button>
                                     <button type="button" onclick="selectInterest(this, 'Career Role')" class="interest-pill px-4 py-2 rounded-full text-[10px] font-mono uppercase tracking-widest transition-all border bg-transparent text-[var(--color-ink-faint)] border-[var(--color-border)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]">Career Role</button>
                                 </div>
@@ -253,7 +258,7 @@
     </footer>
 
     <!-- Shared JS -->
-    <script src="/shared.js?v=1.5.2" defer></script>
+    <script src="/shared.js?v=1.5.3" defer></script>
 
     <!-- Page-specific JS: Contact form -->
     <script type="module">

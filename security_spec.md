@@ -17,6 +17,7 @@
 | `/api/contact` | `POST` | Contact form submission | • **Rate Limiting**: Max 5 submissions per 15 minutes per IP (`HTTP 429` with `Retry-After`).<br>• **Honeypot Protection**: Hidden `website_url` field catches automated bots (returns synthetic `200 OK` without DB write or email trigger).<br>• **Payload Validation**: Name <= 100 chars, Email <= 254 chars + RFC-compliant regex, Message <= 5000 chars.<br>• **HTML Sanitization**: All fields escaped (`&`, `<`, `>`, `"`, `'`) before template rendering. |
 | `/api/analytics` | `POST` | First-party telemetry | • **Rate Limiting**: 120 events per minute per IP.<br>• **Payload Guards**: `event` <= 64 chars, `sessionId` <= 64 chars, serialised `details` <= 1000 chars.<br>• No tracking cookies or PII stored.<br>• Geolocation derived from proxy headers (`cf-ipcountry`). |
 | `/api/db-status` | `GET` | Healthcheck badge | Verifies SQLite connectivity via `SELECT 1`. |
+| `/api/site-settings` | `GET` | Section visibility toggles | Read-only booleans (`show_services`, `show_availability`, `show_job_signals`). `Cache-Control: no-store`. Fails open (all `true`) if the DB is unreachable. |
 | `/api/projects` | `GET` | Portfolio showcase | Read-only from SQLite (`order: asc`). |
 | `/api/experiences` | `GET` | Career timeline | Read-only from SQLite (`order: asc`). |
 | `/insights` | `GET` | Insights index | Read-only; parsed from `content/insights/*.md` at request time. |
@@ -36,6 +37,7 @@
 | `/api/admin/newsletter` | `GET` | List newsletter subscribers | Requires `Bearer <ADMIN_PASSWORD>`. |
 | `/api/admin/newsletter/subscribers/:id` | `DELETE` | Remove a subscriber record | Requires `Bearer <ADMIN_PASSWORD>`. |
 | `/api/admin/newsletter/send` | `POST` | Trigger newsletter send job | Requires `Bearer <ADMIN_PASSWORD>`. |
+| `/api/admin/site-settings` | `POST` | Update section visibility toggles | Requires `Bearer <ADMIN_PASSWORD>`. Accepts only the three known keys with boolean values; anything else returns `400` and stores nothing. |
 
 #### Admin Security Invariants:
 1. **Timing-Safe Comparison**: Passwords are compared using SHA-256 digests and `crypto.timingSafeEqual` to eliminate timing attack vectors.

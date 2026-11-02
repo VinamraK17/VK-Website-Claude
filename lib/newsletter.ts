@@ -21,6 +21,7 @@ import { escapeHtml, formatDate, type Insight } from "./insights";
 export const CONSENT_VERSION = "2026-11-v1";
 export const CONSENT_TEXT =
   "I agree to receive the monthly Insights letter by email. I can unsubscribe at any time with one click.";
+export const TAGLINE = "A monthly letter on AI in operations, seen through a systems lens.";
 export const RETENTION = { pendingDays: 7, unsubscribedDays: 30 };
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -211,6 +212,11 @@ const EMAIL_STYLE = `
   hr { border:0; border-top:1px solid #e6e6e3; margin:32px 0; }
   ul, ol { padding-left:22px; margin:0 0 16px; }
   .btn { display:inline-block; background:#1a1a1a; color:#ffffff !important; text-decoration:none; padding:12px 22px; border-radius:6px; font-weight:600; }
+  .mast { padding-bottom:10px; border-bottom:2px solid #1a1a1a; }
+  .mast .name { font-size:20px; font-weight:700; letter-spacing:-0.01em; color:#1a1a1a; line-height:1.3; }
+  .mast .name span { color:#8a6d0b; }
+  .mast .meta { margin-top:4px; font-family:Menlo, Consolas, monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#8a8a85; }
+  .tagline { margin:8px 0 28px; font-size:13px; color:#8a8a85; }
   .foot { margin-top:40px; padding-top:20px; border-top:1px solid #e6e6e3; font-size:12px; line-height:1.6; color:#8a8a85; }
   .foot a { color:#8a8a85; }
 `;
@@ -298,7 +304,11 @@ export function issueEmail(cfg: NewsletterConfig, issue: Insight, to: string, un
     ? `<p style="margin-top:28px"><a class="btn" href="${webUrl}">Continue reading on vinamrakumar.com →</a></p>${alsoHtml}`
     : `<p><a href="${webUrl}">Read this issue on the web</a></p>`;
   const html = emailShell(`
-    <div class="eyebrow">Insights · ${escapeHtml(formatDate(issue.date))}</div>
+    <div class="mast">
+      <div class="name">Insights <span>·</span> Vinamra Kumar</div>
+      <div class="meta">${issue.issueNumber ? `Issue ${issue.issueNumber} · ` : ""}${escapeHtml(formatDate(issue.date))}</div>
+    </div>
+    <p class="tagline">${escapeHtml(TAGLINE)}</p>
     <h1>${escapeHtml(issue.title)}</h1>
     ${issue.summary ? `<p style="color:#555">${escapeHtml(issue.summary)}</p>` : ""}
     <hr>
@@ -309,7 +319,9 @@ export function issueEmail(cfg: NewsletterConfig, issue: Insight, to: string, un
       <a href="${unsubUrl}">Unsubscribe with one click</a> · <a href="${cfg.publicUrl}/privacy#newsletter">Privacy notice</a><br>
       Vinamra Kumar · Zürich, Switzerland · Views are my own and do not represent any employer.
     </div>`, issue.summary);
-  const text = `INSIGHTS · ${formatDate(issue.date)}
+  const text = `INSIGHTS · VINAMRA KUMAR
+${issue.issueNumber ? `Issue ${issue.issueNumber} · ` : ""}${formatDate(issue.date)}
+${TAGLINE}
 
 ${issue.title.toUpperCase()}
 ${issue.summary ? `\n${issue.summary}\n` : ""}

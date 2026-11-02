@@ -15,6 +15,7 @@ Each issue is one Markdown file in `content/insights/`. The site serves:
 2. Fill in the front matter:
    - `title` — required
    - `date` — required, `YYYY-MM-DD`. **The issue stays hidden until this date in Zurich**, so you can deploy it days early and it goes live on its own.
+   - `issue` — the issue number (1, 2, 3…), shown as "Issue 1" in the email masthead and on the page
    - `summary` — one or two sentences for the archive, search results and link previews
    - `linkedin` — leave empty at first; add the LinkedIn Newsletter URL once that edition is out, then redeploy
    - `published` — set to `false` to keep a finished file off the site

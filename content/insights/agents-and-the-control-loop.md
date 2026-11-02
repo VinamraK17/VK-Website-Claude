@@ -1,6 +1,7 @@
 ---
 title: Agents need a control loop
 date: 2026-11-03
+issue: 1
 summary: Operations leaders usually ask how much an AI agent can do. A better first question is how quickly you can see what it does and stop it.
 linkedin:
 ---

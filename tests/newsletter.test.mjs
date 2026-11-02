@@ -329,3 +329,14 @@ describe('email excerpt', () => {
     assert.equal(nl.splitForEmail('<p>Only text.</p>').cut, false);
   });
 });
+
+describe('masthead', () => {
+  test('email shows name, issue number, date and tagline at the top', () => {
+    const cfg = nl.newsletterConfig({ NEWSLETTER_SMTP_HOST: 'h', NEWSLETTER_SMTP_USER: 'u', NEWSLETTER_SMTP_PASS: 'p', NEWSLETTER_FROM: 'f', NEWSLETTER_PROCESSOR: 'x' });
+    const m = nl.issueEmail(cfg, { slug: 'x', title: 'T', date: '2026-11-03', summary: 'S', html: '<p>x</p>', readingMinutes: 1, issueNumber: 1 }, 'a@x.com', 'TOKEN_abcdefghijklmnopqrstuv');
+    assert.ok(m.html.includes('Insights <span>·</span> Vinamra Kumar'));
+    assert.ok(m.html.includes('Issue 1 · 3 November 2026'));
+    assert.ok(m.html.includes(nl.TAGLINE) && m.text.includes('Issue 1 · 3 November 2026'));
+    assert.ok(!/<img/i.test(m.html), 'masthead must stay text-only (no tracking images)');
+  });
+});

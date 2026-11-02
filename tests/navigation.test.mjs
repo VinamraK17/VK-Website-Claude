@@ -727,7 +727,7 @@ describe('services.html — service offerings content', () => {
   const services = getPage('services.html');
 
   const EXPECTED_SERVICES = [
-    'GenAI',
+    'Enterprise AI',
     'Fractional',
     'Product Leadership',
     'Speaking',

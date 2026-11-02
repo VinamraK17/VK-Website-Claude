@@ -13,6 +13,8 @@ Apply that to an operations agent. Sensing means knowing which agents exist and 
 
 Air traffic control gives the cleanest picture of the two halves. A controller who sees a conflict developing but has no radio to reach the aircraft has a fine display and no control. Many agent deployments will have the reverse problem, a working radio and a poor picture.
 
+When I worked as an air traffic controller at one of the busiest airports in India, the moment I trusted least was the handover, because once the aircraft switched frequency, I had no way to reach it until the pilot checked in with the next controller.
+
 ## Why agents strain the loop
 
 Traditional automation was narrow. A script did one thing on a schedule, and its failure modes were few enough to list on a page. An agent chooses between actions at runtime, calls other systems, and can be created by anyone with the right access. W. Ross Ashby's law of requisite variety, set out in his 1956 book *An Introduction to Cybernetics*, says a regulator can only absorb as much variety as it has itself. If the agent population grows faster than your ability to observe and intervene, control degrades even when every individual agent is well built.

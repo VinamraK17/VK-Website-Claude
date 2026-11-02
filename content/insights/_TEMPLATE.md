@@ -1,6 +1,7 @@
 ---
 title: Issue title in plain words
 date: 2026-11-03
+issue: 1
 summary: One or two sentences that appear under the title, in the archive list, in search results and in link previews.
 linkedin:
 published: true

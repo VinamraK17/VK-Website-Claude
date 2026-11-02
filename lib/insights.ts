@@ -23,6 +23,7 @@ export interface Insight {
   linkedin?: string;     // URL of the LinkedIn Newsletter edition, once it exists
   html: string;
   readingMinutes: number;
+  issueNumber?: number;  // from front matter `issue: 1`; shown as "Issue 1"
 }
 
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -92,6 +93,7 @@ function parseFile(file: string): Insight | null {
     date: meta.date,
     summary: meta.summary || "",
     linkedin,
+    issueNumber: /^\d{1,4}$/.test(meta.issue || "") ? parseInt(meta.issue, 10) : undefined,
     html: markdown.parse(body, { async: false }) as string,
     readingMinutes: Math.max(1, Math.round(words / 220)),
   };
@@ -127,7 +129,7 @@ export function renderListItems(items: Insight[]): string {
   }
   return items.map(i => `
                 <article class="py-8 border-b border-[var(--color-border)]">
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/40">${escapeHtml(formatDate(i.date))} · ${i.readingMinutes} min read</p>
+                    <p class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/40">${i.issueNumber ? `Issue ${i.issueNumber} · ` : ""}${escapeHtml(formatDate(i.date))} · ${i.readingMinutes} min read</p>
                     <h2 class="mt-3 text-2xl md:text-3xl font-bold tracking-tight text-[var(--color-ink)]"><a href="/insights/${i.slug}" class="hover:text-[var(--color-accent)] transition-colors">${escapeHtml(i.title)}</a></h2>
                     ${i.summary ? `<p class="mt-3 text-sm text-[var(--color-ink-faint)] font-light leading-relaxed max-w-2xl">${escapeHtml(i.summary)}</p>` : ""}
                     <a href="/insights/${i.slug}" class="inline-block mt-4 text-[10px] font-mono uppercase tracking-widest text-[var(--color-accent)] hover:opacity-80">Read issue →</a>
@@ -152,6 +154,7 @@ export function renderArticleValues(i: Insight): Record<string, string> {
     DATE_ISO: i.date,
     DATE: escapeHtml(formatDate(i.date)),
     READING: String(i.readingMinutes),
+    ISSUE: i.issueNumber ? `Issue ${i.issueNumber} · ` : "",
     CONTENT: i.html,
     // JSON in a <script> block: escape "<" so the content can never close the tag.
     JSON_LD: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),

@@ -294,3 +294,49 @@ describe('supply chain', () => {
     assert.ok(d.includes('npm prune --omit=dev'), 'build-only packages must not ship in the runtime image');
   });
 });
+
+describe('email excerpt', () => {
+  const CFG = () => nl.newsletterConfig({ NEWSLETTER_SMTP_HOST: 'h', NEWSLETTER_SMTP_USER: 'u', NEWSLETTER_SMTP_PASS: 'p', NEWSLETTER_FROM: 'f', NEWSLETTER_PROCESSOR: 'x' });
+  const html = '<h2>First</h2><p>Opening paragraph.</p><h2>Second &amp; more</h2><p>Web only.</p><hr><h2>On the radar</h2><p>Radar.</p>';
+  const issue = { slug: 'x', title: 'T', date: '2026-11-03', summary: 'S', html, readingMinutes: 4 };
+
+  test('cuts before the second section and lists what is left on the web', () => {
+    const r = nl.splitForEmail(html);
+    assert.equal(r.excerpt, '<h2>First</h2><p>Opening paragraph.</p>');
+    assert.deepEqual(r.rest, ['Second & more', 'On the radar']);
+  });
+
+  test('never cuts past the rule before "On the radar"', () => {
+    const r = nl.splitForEmail('<p>Intro.</p><hr><h2>On the radar</h2><p>R</p>');
+    assert.equal(r.excerpt, '<p>Intro.</p>');
+  });
+
+  test('email carries the excerpt and a continue-reading link, not the rest', () => {
+    const m = nl.issueEmail(CFG(), issue, 'a@x.com', 'TOKEN_abcdefghijklmnopqrstuv');
+    assert.ok(m.html.includes('Opening paragraph.') && !m.html.includes('Web only.') && !m.html.includes('Radar.'));
+    assert.ok(m.html.includes('Continue reading on vinamrakumar.com') && m.html.includes('Second &amp; more'));
+    assert.ok(m.text.includes('Continue reading: https://vinamrakumar.com/insights/x'));
+    assert.ok(!m.text.includes('Web only.'));
+  });
+
+  test('NEWSLETTER_EMAIL_FULL=1 sends the whole issue', () => {
+    const cfg = nl.newsletterConfig({ NEWSLETTER_SMTP_HOST: 'h', NEWSLETTER_SMTP_USER: 'u', NEWSLETTER_SMTP_PASS: 'p', NEWSLETTER_FROM: 'f', NEWSLETTER_PROCESSOR: 'x', NEWSLETTER_EMAIL_FULL: '1' });
+    const m = nl.issueEmail(cfg, issue, 'a@x.com', 'TOKEN_abcdefghijklmnopqrstuv');
+    assert.ok(m.html.includes('Web only.') && m.html.includes('Radar.'));
+  });
+
+  test('an issue with no sections is sent whole', () => {
+    assert.equal(nl.splitForEmail('<p>Only text.</p>').cut, false);
+  });
+});
+
+describe('masthead', () => {
+  test('email shows name, issue number, date and tagline at the top', () => {
+    const cfg = nl.newsletterConfig({ NEWSLETTER_SMTP_HOST: 'h', NEWSLETTER_SMTP_USER: 'u', NEWSLETTER_SMTP_PASS: 'p', NEWSLETTER_FROM: 'f', NEWSLETTER_PROCESSOR: 'x' });
+    const m = nl.issueEmail(cfg, { slug: 'x', title: 'T', date: '2026-11-03', summary: 'S', html: '<p>x</p>', readingMinutes: 1, issueNumber: 1 }, 'a@x.com', 'TOKEN_abcdefghijklmnopqrstuv');
+    assert.ok(m.html.includes('Insights <span>·</span> Vinamra Kumar'));
+    assert.ok(m.html.includes('Issue 1 · 3 November 2026'));
+    assert.ok(m.html.includes(nl.TAGLINE) && m.text.includes('Issue 1 · 3 November 2026'));
+    assert.ok(!/<img/i.test(m.html), 'masthead must stay text-only (no tracking images)');
+  });
+});

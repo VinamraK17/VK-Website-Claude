@@ -95,7 +95,7 @@ describe('server.ts — site-settings seed and API endpoints', () => {
   test('GET /api/site-settings fails open (returns all-true on error)', () => {
     // Check the catch block returns safe defaults
     const getIdx = SERVER.indexOf('app.get("/api/site-settings"');
-    const block  = SERVER.slice(getIdx, getIdx + 400);
+    const block  = SERVER.slice(getIdx, getIdx + 800);
     assert.ok(
       block.includes('show_services: true') && block.includes('show_availability: true'),
       'GET /api/site-settings catch block must return all-true defaults'

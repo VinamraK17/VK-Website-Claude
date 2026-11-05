@@ -444,6 +444,9 @@ export async function sendIssue(db: Db, cfg: NewsletterConfig, issue: Insight, m
 }
 
 // ── Page fragments ──────────────────────────────────────────────────────────
+/** Public "follow" link for the Insights LinkedIn Newsletter. */
+export const LINKEDIN_NEWSLETTER_URL = "https://www.linkedin.com/build-relation/newsletter-follow?entityUrn=7524210314972856321";
+
 export function subscribeFormHtml(source: string, heading = "Get the next issue by email"): string {
   return `
             <section id="subscribe" class="newsletter-box mt-12 p-6 md:p-8 border border-[var(--color-border)] rounded-2xl" aria-labelledby="subscribe-heading">
@@ -463,6 +466,7 @@ export function subscribeFormHtml(source: string, heading = "Get the next issue 
                         <span>${escapeHtml(CONSENT_TEXT)} See the <a href="/privacy#newsletter" class="underline hover:text-[var(--color-accent)]">privacy notice</a>.</span>
                     </label>
                 </form>
+                <p class="mt-5 text-xs text-[var(--color-ink-faint)] font-light">Prefer LinkedIn? <a href="${LINKEDIN_NEWSLETTER_URL}" target="_blank" rel="noopener noreferrer" class="underline hover:text-[var(--color-accent)]">Subscribe to Insights on LinkedIn</a>.</p>
             </section>`;
 }
 

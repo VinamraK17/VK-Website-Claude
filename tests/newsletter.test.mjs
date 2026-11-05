@@ -340,3 +340,12 @@ describe('masthead', () => {
     assert.ok(!/<img/i.test(m.html), 'masthead must stay text-only (no tracking images)');
   });
 });
+
+describe('LinkedIn alternative', () => {
+  test('subscribe box offers the LinkedIn Newsletter as a plain link in a new tab', () => {
+    const html = nl.subscribeFormHtml('insights');
+    assert.match(nl.LINKEDIN_NEWSLETTER_URL, /^https:\/\/www\.linkedin\.com\/build-relation\/newsletter-follow\?entityUrn=\d+$/);
+    assert.ok(html.includes(`href="${nl.LINKEDIN_NEWSLETTER_URL}"`));
+    assert.ok(html.includes('rel="noopener noreferrer"') && html.includes('Subscribe to Insights on LinkedIn'));
+  });
+});

@@ -136,6 +136,17 @@
             <h2 class="text-sm font-semibold uppercase tracking-widest mb-4" style="color:var(--ink-faint)">Analytics Overview</h2>
 
             <div class="card p-6 mb-6">
+                <h3 class="text-xs font-mono uppercase tracking-widest mb-1" style="color:var(--accent)">Insights · per issue</h3>
+                <p class="text-xs mb-4" style="color:rgba(255,255,255,0.35)">All time. Read time is the median; "Read to end" is the share of measured visits that scrolled at least 90%. Email readers mostly show as Direct. Sign-ups count confirmed subscribers from that page's form (pending in brackets).</p>
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead><tr><th>Page</th><th class="text-right">Views</th><th class="text-right">Sessions</th><th class="text-right">Median read</th><th class="text-right">Read to end</th><th>Came from</th><th class="text-right">Sign-ups</th></tr></thead>
+                        <tbody id="insights-stats-tbody"><tr><td colspan="7" class="text-center py-10" style="color:var(--ink-faint)">Loading…</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card p-6 mb-6">
                 <h3 class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--accent)">Page Views by URL</h3>
                 <div id="page-views-chart" class="space-y-3"></div>
             </div>
@@ -429,6 +440,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadAnalytics() {
+    loadInsightsStats();
     try {
         const res = await fetch('/api/admin/analytics', { headers: { Authorization: 'Bearer ' + TOKEN } });
         const data = await res.json();
@@ -515,6 +527,36 @@ function renderEngagement(pageViews, avgTimeOnPage, avgScrollDepth) {
                 <td class="font-mono text-xs text-right" style="color:${r.scroll != null ? '#60a5fa' : 'rgba(255,255,255,0.2)'}">${r.scroll != null ? r.scroll + '%' : '—'}</td>
             </tr>`).join('')
         : '<tr><td colspan="4" class="text-center py-10" style="color:rgba(255,255,255,0.3)">No engagement data yet.</td></tr>';
+}
+
+// Per-issue Insights stats (separate endpoint, not capped at 1000 events).
+async function loadInsightsStats() {
+    const tbody = document.getElementById('insights-stats-tbody');
+    try {
+        const res = await fetch('/api/admin/insights-stats', { headers: { Authorization: 'Bearer ' + TOKEN } });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        tbody.innerHTML = [...(data.issues || []), data.list].filter(Boolean).map(insightsRow).join('');
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-10" style="color:rgba(255,255,255,0.3)">Could not load Insights stats.</td></tr>';
+    }
+}
+
+function insightsRow(r) {
+    const dim = 'rgba(255,255,255,0.2)';
+    const src = r.sources || {};
+    const parts = [['LinkedIn', src.linkedin], ['Search', src.search], ['Direct', src.direct], ['Site', src.internal], ['Other', src.other]]
+        .filter(([, n]) => n > 0).map(([k, n]) => `${k} ${n}`).join(' · ');
+    return `
+            <tr>
+                <td class="text-xs" style="color:rgba(255,255,255,0.75)"><div>${esc(r.label)}</div><div class="font-mono" style="color:rgba(255,255,255,0.3)">${esc(r.path)}${r.date ? ' · ' + esc(r.date) : ''}</div></td>
+                <td class="font-mono text-xs text-right" style="color:rgba(255,255,255,0.6)">${r.views}</td>
+                <td class="font-mono text-xs text-right" style="color:rgba(255,255,255,0.6)">${r.sessions}</td>
+                <td class="font-mono text-xs text-right" style="color:${r.medianReadSec != null ? '#4ecca3' : dim}">${r.medianReadSec != null ? formatDuration(r.medianReadSec) : '—'}</td>
+                <td class="font-mono text-xs text-right" style="color:${r.finishedPct != null ? '#60a5fa' : dim}" title="${r.measured} measured visits">${r.finishedPct != null ? r.finishedPct + '%' : '—'}</td>
+                <td class="font-mono text-xs" style="color:rgba(255,255,255,0.5)">${parts || '—'}</td>
+                <td class="font-mono text-xs text-right" style="color:#fbbf24">${r.signups}${r.pendingSignups ? ' <span style="color:rgba(255,255,255,0.3)">(' + r.pendingSignups + ')</span>' : ''}</td>
+            </tr>`;
 }
 
 // Delivery status for a message. A failed notification used to be invisible

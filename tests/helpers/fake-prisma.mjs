@@ -1,7 +1,7 @@
 /**
  * Minimal in-memory stand-in for the Prisma client, for tests and local
  * previews where the Prisma engines cannot be downloaded. Supports only what
- * the newsletter code uses: equality / null / lt / gt filters, unique lookups
+ * the newsletter code uses: equality / null / lt / gt / in / contains filters, unique lookups
  * (including the subscriberId_slug compound key), single-field orderBy,
  * and cascade-delete of deliveries when a subscriber is deleted.
  */
@@ -30,6 +30,7 @@ function matches(row, where = {}) {
       if ('gt' in cond && !(val != null && val > n(cond.gt))) return false;
       if ('gte' in cond && !(val != null && val >= n(cond.gte))) return false;
       if ('in' in cond && !cond.in.includes(v)) return false;
+      if ('contains' in cond && !(typeof v === 'string' && v.includes(cond.contains))) return false;
       continue;
     }
     if (v !== cond) return false;

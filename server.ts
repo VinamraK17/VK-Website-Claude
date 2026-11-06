@@ -1,5 +1,6 @@
 import { notifyContact } from "./lib/notify";
 import fs from "fs";
+import { insightsStats } from "./lib/insights-stats";
 import { loadInsights, fill, renderListItems, renderArticleValues, renderRss, extendSitemap, todayInZurich } from "./lib/insights";
 import {
   newsletterConfig, normaliseEmail, isValidEmail, isToken, cleanSource, subscribe, confirmSubscription,
@@ -648,6 +649,23 @@ async function startServer() {
     try {
       const messages = await prisma.message.findMany({ orderBy: { createdAt: "desc" } });
       res.json(messages);
+    } catch (error: any) { res.status(500).json({ error: error.message }); }
+  });
+
+  // Admin: per-issue reading stats for Insights. Groups existing first-party
+  // events by page; it adds no tracking of its own. Unlike the summary below
+  // it is not capped at the latest 1000 events, so older issues stay complete.
+  app.get("/api/admin/insights-stats", requireAdmin, async (_req, res) => {
+    try {
+      const [events, subscribers] = await Promise.all([
+        prisma.analytics.findMany({
+          where: { event: { in: ["page_view", "page_exit"] }, details: { contains: '"path":"/insights' } },
+          select: { event: true, details: true, sessionId: true, referrer: true },
+        }),
+        prisma.subscriber.findMany({ select: { source: true, status: true } }),
+      ]);
+      const issues = loadInsights().map(i => ({ slug: i.slug, title: i.title, issue: i.issueNumber, date: i.date }));
+      res.json(insightsStats(events, subscribers, issues));
     } catch (error: any) { res.status(500).json({ error: error.message }); }
   });
 

@@ -470,6 +470,33 @@ export function subscribeFormHtml(source: string, heading = "Get the next issue 
             </section>`;
 }
 
+/** One quiet line under an issue's header, pointing to the sign-up box. */
+export function subscribeTopLineHtml(): string {
+  return `
+                <p class="insight-nudge-top text-sm text-[var(--color-ink-faint)] font-light">You're reading Insights, a monthly letter on AI in operations. <a href="#subscribe" class="text-[var(--color-accent)] hover:opacity-80 whitespace-nowrap">Get it by email →</a></p>`;
+}
+
+/** Short prompt placed inside the article, after its first section. */
+export function subscribeInlineHtml(): string {
+  return `
+<aside class="insight-nudge my-10 py-4 pl-5 border-l-2 border-[var(--color-accent)] text-sm font-light text-[var(--color-ink-faint)]" aria-label="Newsletter">
+    <p><span class="font-semibold text-[var(--color-ink)]">Enjoying this?</span> Insights arrives by email on the first Tuesday of each month. <a href="#subscribe" class="text-[var(--color-accent)] hover:opacity-80 whitespace-nowrap">Subscribe →</a></p>
+</aside>
+`;
+}
+
+/**
+ * Inserts `block` just before the article's second <h2>, i.e. after the first
+ * section. Articles with fewer than two sections are returned unchanged.
+ */
+export function insertAfterFirstSection(html: string, block: string): string {
+  const first = html.indexOf("<h2");
+  if (first === -1) return html;
+  const second = html.indexOf("<h2", first + 3);
+  if (second === -1) return html;
+  return html.slice(0, second) + block + html.slice(second);
+}
+
 /** Values for pages/newsletter.html. `body` is trusted HTML built by the server. */
 export function messagePage(title: string, heading: string, body: string, eyebrow = "Insights · newsletter"): Record<string, string> {
   return { TITLE: escapeHtml(title), EYEBROW: escapeHtml(eyebrow), HEADING: escapeHtml(heading), BODY: body };

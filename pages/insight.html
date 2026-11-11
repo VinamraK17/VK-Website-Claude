@@ -42,7 +42,7 @@
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-400-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-700-normal.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
-    <link rel="stylesheet" href="/app.css?v=1.5.4">
+    <link rel="stylesheet" href="/app.css?v=1.5.5">
 
     <!-- Theme + site-visibility flash prevention: must run before first paint, so it is intentionally render-blocking. -->
     <script>(function(){var d=document.documentElement,m=localStorage.getItem("theme-mode");if(m)d.setAttribute("data-mode",m);try{var s=JSON.parse(localStorage.getItem("vk_site_settings")||"{}");if(s.show_services===false)d.setAttribute("data-hide-services","");if(s.show_availability===false)d.setAttribute("data-hide-availability","");if(s.show_job_signals===false)d.setAttribute("data-hide-job-signals","");}catch(e){}})()</script>
@@ -96,7 +96,7 @@
             <header class="mt-8 mb-12 space-y-5">
                 <p class="text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/40">{{ISSUE}}<time datetime="{{DATE_ISO}}">{{DATE}}</time> · {{READING}} min read</p>
                 <h1 class="text-3xl md:text-5xl font-bold tracking-tighter text-[var(--color-ink)] leading-tight">{{TITLE}}</h1>
-                <p class="text-lg text-[var(--color-ink-faint)] font-light leading-relaxed">{{SUMMARY}}</p>
+                <p class="text-lg text-[var(--color-ink-faint)] font-light leading-relaxed">{{SUMMARY}}</p>{{SUBSCRIBE_TOP}}
             </header>
             <div class="prose-insight">
 {{CONTENT}}
@@ -104,7 +104,7 @@
 {{SUBSCRIBE}}
             <footer class="mt-16 pt-8 border-t border-[var(--color-border)] text-sm text-[var(--color-ink-faint)] font-light leading-relaxed">
                 <p>{{LINKEDIN}}<a href="/insights" class="hover:text-[var(--color-accent)] transition-colors">More issues</a> · <a href="/contact" class="hover:text-[var(--color-accent)] transition-colors">Get in touch</a></p>
-                <p class="mt-4 text-[10px] font-mono uppercase tracking-widest text-[var(--color-ink)]/30">Views are my own and do not represent any employer.</p>
+                <p class="mt-4 text-xs text-[var(--color-ink)]/40">Written by me, with AI assistance in research and editing. Views are my own and do not represent any employer.</p>
             </footer>
         </article>
     </main>
@@ -138,6 +138,6 @@
     </footer>
 
     <!-- Shared JS -->
-    <script src="/shared.js?v=1.5.4" defer></script>
+    <script src="/shared.js?v=1.5.5" defer></script>
 </body>
 </html>

@@ -5,7 +5,7 @@ import { loadInsights, fill, renderListItems, renderArticleValues, renderRss, ex
 import {
   newsletterConfig, normaliseEmail, isValidEmail, isToken, cleanSource, subscribe, confirmSubscription,
   unsubscribe, resubscribe, saveFeedback, purgeExpired, confirmEmail, smtpSender, sendIssue, sendJob,
-  subscribeFormHtml, messagePage, feedbackFormHtml, FEEDBACK_REASONS, RETENTION, CONSENT_VERSION,
+  subscribeFormHtml, subscribeTopLineHtml, subscribeInlineHtml, insertAfterFirstSection, messagePage, feedbackFormHtml, FEEDBACK_REASONS, RETENTION, CONSENT_VERSION,
 } from "./lib/newsletter";
 import express from "express";
 import path from "path";
@@ -885,9 +885,15 @@ async function startServer() {
     const item = loadInsights().find(i => i.slug === req.params.slug);
     if (!item) return next(); // falls through to the 404 page
     res.setHeader("Cache-Control", "public, max-age=300");
+    const values = renderArticleValues(item);
+    const nl = newsletterConfig().enabled;
     res.send(fill(readTemplate("insight.html"), {
-      ...renderArticleValues(item),
-      SUBSCRIBE: newsletterConfig().enabled ? subscribeFormHtml(`issue:${item.slug}`, "Get Insights by email") : "",
+      ...values,
+      // Sign-up prompts only when the newsletter is configured; each links to
+      // the one form at the end, so there is never a second form on the page.
+      CONTENT: nl ? insertAfterFirstSection(values.CONTENT, subscribeInlineHtml()) : values.CONTENT,
+      SUBSCRIBE_TOP: nl ? subscribeTopLineHtml() : "",
+      SUBSCRIBE: nl ? subscribeFormHtml(`issue:${item.slug}`, "Get Insights by email") : "",
     }));
   });
 

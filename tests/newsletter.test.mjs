@@ -374,3 +374,13 @@ describe('sign-up prompts on issue pages', () => {
     assert.ok(tpl.includes('{{SUBSCRIBE_TOP}}'));
   });
 });
+
+describe('AI note placement', () => {
+  test('sits right after the article body, before the sign-up form and the footer', () => {
+    const tpl = read('pages/insight.html');
+    const note = tpl.indexOf('Written by me, with AI assistance');
+    assert.ok(note > tpl.indexOf('{{CONTENT}}'));
+    assert.ok(note < tpl.indexOf('{{SUBSCRIBE}}'));
+    assert.equal(tpl.split('Written by me, with AI assistance').length, 2, 'note appears once');
+  });
+});

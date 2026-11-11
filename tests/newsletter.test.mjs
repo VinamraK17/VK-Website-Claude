@@ -349,3 +349,28 @@ describe('LinkedIn alternative', () => {
     assert.ok(html.includes('rel="noopener noreferrer"') && html.includes('Subscribe to Insights on LinkedIn'));
   });
 });
+
+describe('sign-up prompts on issue pages', () => {
+  test('inline prompt goes after the first section, only when there are two', () => {
+    const block = nl.subscribeInlineHtml();
+    const html = '<p>intro</p><h2>One</h2><p>a</p><h2>Two</h2><p>b</p>';
+    const out = nl.insertAfterFirstSection(html, block);
+    assert.ok(out.indexOf(block) > out.indexOf('<h2>One</h2>') && out.indexOf(block) < out.indexOf('<h2>Two</h2>'));
+    assert.equal(nl.insertAfterFirstSection('<h2>Only</h2><p>x</p>', block), '<h2>Only</h2><p>x</p>');
+    assert.equal(nl.insertAfterFirstSection('<p>none</p>', block), '<p>none</p>');
+  });
+
+  test('prompts link to the one form instead of adding another', () => {
+    for (const h of [nl.subscribeInlineHtml(), nl.subscribeTopLineHtml()]) {
+      assert.ok(h.includes('href="#subscribe"'));
+      assert.ok(!/<form/i.test(h));
+    }
+    assert.ok(nl.subscribeFormHtml('insights').includes('id="subscribe"'));
+  });
+
+  test('issue page carries the AI note and the views-are-my-own line', () => {
+    const tpl = read('pages/insight.html');
+    assert.ok(tpl.includes('Written by me, with AI assistance in research and editing. Views are my own and do not represent any employer.'));
+    assert.ok(tpl.includes('{{SUBSCRIBE_TOP}}'));
+  });
+});
